@@ -25,8 +25,8 @@ const InvolvementCard: React.FC<InvolvementCardProps> = ({
             <div className="bg-red-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Icon className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">{title}</h3>
-            <p className="text-gray-600 mb-6">{description}</p>
+            <h3 className="lg:text-2xl text-lg font-bold text-gray-900 mb-4">{title}</h3>
+            <p className="lg:text-base text-xs text-gray-600 mb-6">{description}</p>
             <ul className="text-sm text-gray-600 space-y-2 mb-6 text-left">
                 {bulletPoints.map((point, index) => (
                     <li key={index}>• {point}</li>

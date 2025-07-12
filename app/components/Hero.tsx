@@ -21,8 +21,8 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
     }, [imageList.length]);
 
     return (
-        <div className="relative top-0 left-0 w-screen h-[100vh] overflow-hidden group">
-            <div className="w-full h-full relative">
+        <div className="relative  max-w-screen h-[100vh] overflow-hidden group">
+            <div className="w-full h-full relative flex flex-col justify-center ">
                 <div className="absolute top-0 left-0 w-full h-full flex items-end justify-center">
                     {imageList.map((image: StaticImageData, index: number) => (
                         <Image
@@ -34,7 +34,7 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
                             className={`object-cover absolute w-full h-full ${index === currentBgImageIndex ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000`}
                         />
                     ))}
-                    <div className="mb-8 mx-auto relative z-10 flex gap-3 ">
+                    <div className="mb-8 relative z-10 flex gap-3 ">
                         {imageList.map((image: StaticImageData, index: number) => (
                             <div
                                 key={`imageCir${index}`}

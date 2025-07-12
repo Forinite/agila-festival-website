@@ -5,7 +5,7 @@ import React from "react";
 
 const HomePage = () => {
     return (
-        <section id="home">
+        <section id="home w-screen">
             <HeroInfo />
             <Hero
                 imageList={heroImages}

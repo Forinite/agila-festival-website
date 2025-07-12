@@ -8,14 +8,14 @@ import {paegentQueenImgList} from "@/app/constants";
 
 const PaegentPage = () => {
     return (
-        <section className={`mt-16`}>
+        <section id={'pageant'} className={`mt-16`}>
             <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-5xl font-black text-black mb-4">
                     Face of <span className="text-red-500">Idoma</span>
                 </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                <p className="md:text-lg text-sm text-gray-600 max-w-3xl mx-auto">
                     Six days of cultural celebration, traditional performances, and community festivities. December
-                    23-28, 2024
+                    23-26, 2024
                 </p>
             </div>
             <div className="bg-gray-50 rounded-3xl p-8 md:p-12 mb-12 commonPadding">

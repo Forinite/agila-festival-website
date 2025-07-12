@@ -17,7 +17,7 @@ export default async function Home()
   // const { data: feedList }  = await sanityFetch({query: FEED_QUERY, params})
 
   return (
-      <section className={'min-w-screen max-w-fit'}>
+      <section className={'max-w-screen '}>
         <HomePage />;
         <MediaFeed feedList={feedList} query={'query'} />;
         <AboutPage />;

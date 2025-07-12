@@ -9,9 +9,9 @@ const SchedulePage = () => {
                 <h2 className="text-4xl md:text-5xl font-black text-black mb-4">
                     Event <span className="text-red-500">Schedule</span>
                 </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                <p className="md:text-lg text-sm text-gray-600 max-w-3xl mx-auto">
                     Four days of cultural celebration, traditional performances, and community festivities. December
-                    23-24, 2025
+                    23-26, 2025
                 </p>
             </div>
             <div className={'commonPadding gap-8 flex flex-col '}>

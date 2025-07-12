@@ -9,11 +9,13 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { label: 'Home', href: '/' },
-    { label: 'About Festival', href: 'about' },
-    { label: 'Schedule', href: 'schedule' },
-    { label: 'Gallery', href: 'gallery' },
-    { label: 'Contact', href: 'contact' },
+    { label: 'Home', href: '#home' },
+    { label: 'Gallery', href: '#media' },
+    { label: 'About Festival', href: '#about' },
+    { label: 'Schedule', href: '#schedule' },
+    { label: 'Pageant', href: '#pageant' },
+    { label: 'Get Involved', href: '#involvement' },
+    { label: 'Contact Us', href: '#contact' },
 ];
 
 const Navbar: React.FC =  () => {
