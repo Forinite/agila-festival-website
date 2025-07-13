@@ -47,9 +47,9 @@ export default async function MediaFeed({feedList, query}:{
 
                 {feedList.length > 8 && (
                     <div className="text-center mt-12">
-                        <button className="bg-red-500 text-white px-8 py-3 rounded-full font-bold hover:bg-red-600 transition-colors cursor-pointer">
+                        <a href={'/mediapage'} className="bg-red-500 text-white px-8 py-3 rounded-full font-bold hover:bg-red-600 transition-colors cursor-pointer">
                             Load More Moments
-                        </button>
+                        </a>
                     </div>
                 )}
             </div>

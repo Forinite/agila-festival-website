@@ -13,24 +13,29 @@ import fillerImage12 from "../Assets/FeedImages/fillerImage12.jpg"
 import fillerImage13 from "../Assets/FeedImages/fillerImage13.jpg"
 import fillerImage14 from "../Assets/FeedImages/fillerImage14.jpg"
 import fillerImage15 from "../Assets/FeedImages/fillerImage15.jpg"
+import fillerVideo1 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
+import fillerVideo2 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
 
 export const feedFilterBtnList = ['Masquerade', 'Dance', 'Music', 'FaceOfIdoma']
 
 export const feedList = [
-    {image: fillerImage8, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage9, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Paegent']},
-    {image: fillerImage10, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Masquerade']},
-    {image: fillerImage11, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage12, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage13, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March']},
-    {image: fillerImage14, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade']},
-    {image: fillerImage15, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage2, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Paegent']},
-    {image: fillerImage3, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Masquerade']},
-    {image: fillerImage4, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage5, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance']},
-    {image: fillerImage6, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March']},
-    {image: fillerImage7, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade']},
+    {image: fillerImage8, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'], id: 'feed1'},
+    {image: fillerImage9, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Paegent'] , id: 'feed2'},
+    {image: fillerImage10, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Masquerade'] , id: 'feed3'},
+    {image: fillerImage11, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed4'},
+    {image: fillerImage12, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed5'},
+    {image: fillerImage13, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March'], id: 'feed6'},
+    {image: fillerImage14, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'] , id: 'feed7'},
+    {image: fillerImage15, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed8'},
+    {image: fillerImage2, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Paegent'] , id: 'feed9'},
+    {image: fillerImage3, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Masquerade'] , id: 'feed10'},
+    {image: fillerImage4, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed11'},
+    {image: fillerImage5, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed12'},
+    {image: fillerImage6, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March'], id: 'feed13' },
+    {image: fillerImage7, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'], id: 'feed14' +
+            ''},
+    // {image: fillerVideo1, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March'], video: true},
+    // {image: fillerVideo2, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'], video: true},
 
 
 

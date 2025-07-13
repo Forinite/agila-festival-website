@@ -7,6 +7,7 @@ import ContactSection from "@/app/(components)/contact/page";
 import Footer from "@/app/(components)/footer/page";
 import InvolvementSection from "@/app/(components)/involvement/page";
 import {feedList} from "@/app/constants/feedInfo";
+import Navbar from "@/app/(components)/navbar/navbar";
 
 
 export default async function Home()
@@ -18,7 +19,8 @@ export default async function Home()
 
   return (
       <section className={'max-w-screen '}>
-        <HomePage />;
+
+          <HomePage />;
         <MediaFeed feedList={feedList} query={'query'} />;
         <AboutPage />;
         <SchedulePage />

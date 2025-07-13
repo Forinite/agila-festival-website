@@ -4,26 +4,33 @@ import {FeedType} from "@/app/(components)/mediafeed/page";
 import Image from "next/image";
 
 
-// interface FeedType {
-//     title: string;
-//     description: string;
-//     image: string;
-//     category: string;
-// }
-
 const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
     console.log(feedInfo.image)
     return (
         <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all h-full">
-            <div className="aspect-auto relative">
-                <Image
-                    src={feedInfo.image}
-                    alt={feedInfo.title}
-                    className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
-                    width={600}
-                    height={400}
-                />
-            </div>
+            { !feedInfo.video &&
+                <div className="aspect-auto relative">
+                    <Image
+                        src={feedInfo.image}
+                        alt={feedInfo.title}
+                        className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
+                        width={600}
+                        height={400}
+                    />
+                </div>
+            }
+            {/*{ feedInfo.video &&*/}
+            {/*    <div className="aspect-auto relative hidden">*/}
+            {/*        <video*/}
+            {/*            src={feedInfo.image}*/}
+            {/*            className="w-full h-auto group-hover:scale-105 transition-transform duration-300"*/}
+            {/*            width={600}*/}
+            {/*            height={400}*/}
+            {/*            controls*/}
+            {/*        />*/}
+            {/*    </div>*/}
+            {/*}*/}
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                     <h3 className="font-bold text-lg mb-1">{feedInfo.title}</h3>
