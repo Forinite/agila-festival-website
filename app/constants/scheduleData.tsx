@@ -1,6 +1,6 @@
 // import scheduleDoc from '../files/SCHEDULE.pdf'
 
-
+// scheduleData.tsx
 export const scheduleData = [
     {
         title: 'Opening Ceremony & Cultural Parade',

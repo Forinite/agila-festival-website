@@ -2,18 +2,20 @@ import React from 'react'
 import Image from "next/image";
 import FeedCard from "@/app/components/ui/feed";
 import {feedList} from "@/app/constants/feedInfo";
+import {Home, Phone} from "lucide-react"
+
 
 // pages/index.js
 export default function MediaPage() {
     return (
         <div className="flex min-h-screen h-screen overflow-hidden absolute z-50 bg-white">
             {/* Sidebar */}
-            <nav className="flex flex-col items-center w-18 h-screen border-r overflow-auto   ">
+            <nav className="flex flex-col items-center w-18 h-screen border-r overflow-auto pt-20  ">
                 <a href="/ " className="p-4 hover:bg-gray-100  rounded-full" >
-                    H
+                    <Home />
                 </a>
                 <a href="/contact" aria-label="Your boards" className="p-4 hover:bg-gray-100">
-                    C
+                    <Phone/>
                 </a>
 
             </nav>
@@ -31,9 +33,9 @@ export default function MediaPage() {
                             className="flex-1 bg-transparent border-none focus:outline-none ml-2 text-gray-800"
                         />
                     </div>
-                    <a href="/profile" className="ml-4">
+                    <a href="/signin" className="ml-4">
                         <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold">F</span>
+                            <span className="text-white font-bold">S</span>
                         </div>
                     </a>
                     <button className="ml-2 p-2 hover:bg-gray-100 rounded-full">

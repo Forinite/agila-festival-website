@@ -5,6 +5,9 @@ import fillerImage14 from "../Assets/FeedImages/fillerImage14.jpg"
 import fillerImage15 from "../Assets/FeedImages/fillerImage15.jpg"
 
 
+
+
+// admincontact.tsx
 export const adminContacts = [
     {
         image: fillerImage13,

@@ -37,11 +37,13 @@ export default async function MediaFeed({feedList, query}:{
                 {/*</section>*/}
 
                 <div className="masonry-grid columns-2 sm:columns-2 md:columns-3 lg:columns-5 gap-4 space-y-4">
-                    {feedList.map((item) => (
-                        <div key={`${item.title}`} className="masonry-item break-insie-avoid group cursor-pointer mb-4">
+                    {feedList.map((item, index) => (
+                        <div key={`${item.title}-${index}`}
+                               className={`masonry-item break-insie-avoid group cursor-pointer mb-4 ${index >9? 'hidden' : ''}`}>
 
-                            <FeedCard feedInfo={item} />
+                            <FeedCard feedInfo={item}/>
                         </div>
+
                     ))}
                 </div>
 

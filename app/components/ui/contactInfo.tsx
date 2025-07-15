@@ -1,5 +1,6 @@
 // components/contact/ContactInfo.tsx
-import { MapPin, Phone, Mail } from 'lucide-react';
+
+import {contactItems} from "@/app/constants/contacts";
 
 interface ContactItemProps {
     icon: React.ReactNode;
@@ -24,23 +25,6 @@ const ContactItem: React.FC<ContactItemProps> = ({ icon, title, lines }) => (
 );
 
 const ContactInfo = () => {
-    const contactItems = [
-        {
-            icon: <MapPin className="w-6 h-6 text-white" />,
-            title: "Location",
-            lines: ["Otukpo Local Government Area", "Benue State, Nigeria"]
-        },
-        {
-            icon: <Phone className="w-6 h-6 text-white" />,
-            title: "Phone",
-            lines: ["+234 803 XXX XXXX", "+234 806 XXX XXXX"]
-        },
-        {
-            icon: <Mail className="w-6 h-6 text-white" />,
-            title: "Email",
-            lines: ["info@agilacarnival.com", "media@agilacarnival.com"]
-        }
-    ];
 
     return (
         <div className="space-y-6">

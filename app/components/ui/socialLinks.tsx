@@ -1,5 +1,6 @@
 // components/contact/SocialLinks.tsx
-import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+
+import {socialLinks} from "@/app/constants/contacts";
 
 interface SocialLinkProps {
     href: string;
@@ -17,28 +18,7 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, icon, bgColor }) => (
 );
 
 const SocialLinks = () => {
-    const socialLinks = [
-        {
-            href: "#",
-            icon: <Facebook className="w-6 h-6 text-white" />,
-            bgColor: "bg-blue-600"
-        },
-        {
-            href: "#",
-            icon: <Instagram className="w-6 h-6 text-white" />,
-            bgColor: "bg-pink-600"
-        },
-        {
-            href: "#",
-            icon: <Youtube className="w-6 h-6 text-white" />,
-            bgColor: "bg-red-600"
-        },
-        {
-            href: "#",
-            icon: <Twitter className="w-6 h-6 text-white" />,
-            bgColor: "bg-blue-400"
-        }
-    ];
+
 
     return (
         <div>

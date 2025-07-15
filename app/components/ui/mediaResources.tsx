@@ -1,11 +1,7 @@
 // components/contact/MediaResources.tsx
+import {resources} from "@/app/constants/contacts";
+
 const MediaResources = () => {
-    const resources = [
-        { text: "📁 Download Media Kit", href: "#" },
-        { text: "🎨 Official Logos & Branding", href: "#" },
-        { text: "📺 Previous Media Coverage", href: "#" },
-        { text: "📰 Press Inquiries", href: "#" }
-    ];
 
     return (
         <div className="bg-gray-50 rounded-2xl p-6">

@@ -16,6 +16,8 @@ import fillerImage15 from "../Assets/FeedImages/fillerImage15.jpg"
 import fillerVideo1 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
 import fillerVideo2 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
 
+
+// feedInfo.tsx
 export const feedFilterBtnList = ['Masquerade', 'Dance', 'Music', 'FaceOfIdoma']
 
 export const feedList = [
@@ -32,10 +34,7 @@ export const feedList = [
     {image: fillerImage4, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed11'},
     {image: fillerImage5, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'] , id: 'feed12'},
     {image: fillerImage6, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March'], id: 'feed13' },
-    {image: fillerImage7, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'], id: 'feed14' +
-            ''},
-    // {image: fillerVideo1, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['March'], video: true},
-    // {image: fillerVideo2, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'], video: true},
+    {image: fillerImage7, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Parade'], id: 'feed14'},
 
 
 
