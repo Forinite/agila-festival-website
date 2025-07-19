@@ -1,9 +1,11 @@
 import paegentQueenImg1 from  '../Assets/PaegentImages/queen_2021.jpg'
 import paegentQueenImg2 from  '../Assets/PaegentImages/queen_2022.jpg'
 import paegentQueenImg3 from  '../Assets/PaegentImages/queen_2023.jpg'
+import {useFeeds} from "@/app/hooks/useFeeds";
 
 // pastQueen.tsx
 // Assume currentQueen and PastQueensData are gotten from one constant called allQueens already have a seperation logic in place
+
 export const currentQueen =  {
         name: "Grace Ochida Alih",
         year: 2024,

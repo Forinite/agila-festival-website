@@ -1,7 +1,12 @@
 
 import { MapPin, Phone, Mail } from 'lucide-react';
 
-//contact.tsx
+// //contact.tsx
+// export const contactInfo = {
+//     ...contactItems,
+//     ...socialLinks
+// }
+
 export const contactItems = [
     {
         icon: <MapPin className="w-6 h-6 text-white" />,
@@ -25,22 +30,22 @@ import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
 
 export const socialLinks = [
     {
-        href: "#",
+        href: "facebook@agila",
         icon: <Facebook className="w-6 h-6 text-white" />,
         bgColor: "bg-blue-600"
     },
     {
-        href: "#",
+        href: "instagram@agila",
         icon: <Instagram className="w-6 h-6 text-white" />,
         bgColor: "bg-pink-600"
     },
     {
-        href: "#",
+        href: "youtube@agila",
         icon: <Youtube className="w-6 h-6 text-white" />,
         bgColor: "bg-red-600"
     },
     {
-        href: "#",
+        href: "twitter@agila",
         icon: <Twitter className="w-6 h-6 text-white" />,
         bgColor: "bg-blue-400"
     }

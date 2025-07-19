@@ -1,16 +1,18 @@
 'use client';
 import React, { useState } from 'react';
-import { Film, Users, Mail, Settings } from 'lucide-react';
+import { Film, Users, Mail, Settings, Book } from 'lucide-react';
 import { FeedsSection } from '@/app/admin/Sections/feedsSection';
 import { QueenSection } from '@/app/admin/Sections/queenSection';
 import { ContactSection } from '@/app/admin/Sections/contactSection';
 import { AdminSection } from '@/app/admin/Sections/adminSection';
+import ScheduleSection from "@/app/admin/Sections/scheduleSection";
 
 const navItems = [
     { label: 'Feeds', icon: <Film size={18} />, section: 'feeds' },
     { label: 'Queen Info', icon: <Users size={18} />, section: 'queen' },
     { label: 'Contact Info', icon: <Mail size={18} />, section: 'contact' },
     { label: 'Admin Management', icon: <Settings size={18} />, section: 'admins' },
+    { label: 'Event Schedule', icon: <Book size={18} />, section: 'schedule' },
 ];
 
 export default function AdminLayout() {
@@ -69,6 +71,7 @@ export default function AdminLayout() {
                     {activeSection === 'queen' && <QueenSection />}
                     {activeSection === 'contact' && <ContactSection />}
                     {activeSection === 'admins' && <AdminSection />}
+                    {activeSection === 'schedule' && <ScheduleSection />}
                 </main>
             </div>
         </div>

@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import {createFeedItem, uploadImageToSanity} from "@/sanity/lib/sanityClient";
+import {urlFor} from "@/app/utils/imageBuilder";
+// import { urlFor } from '@/utils/imageBuilder';
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
-const AddFeedFormModal = ({ onClose, onSubmit }) => {
+const EditFeedFormModal = ({ onClose, onSubmit, initialData }) => {
     const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        category: [],
-        image: null,
+        title: initialData.title || '',
+        description: initialData.description || '',
+        category: initialData.category || [],
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,42 +29,62 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
         }));
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setFormData((prev) => ({ ...prev, image: file }));
-    };
-
-
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     setIsSubmitting(true);
+    //
+    //     try {
+    //         const updatedData = {
+    //             _id: initialData.id,
+    //             title: formData.title,
+    //             description: formData.description,
+    //             category: formData.category,
+    //         };
+    //
+    //         const updateRes = await fetch('/api/create-feed/update', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(updatedData),
+    //         });
+    //
+    //         if (!updateRes.ok) throw new Error('Failed to update feed');
+    //
+    //         const json = await updateRes.json();
+    //         onSubmit(json.updated);
+    //     } catch (err) {
+    //         console.error('Update error:', err);
+    //     } finally {
+    //         setIsSubmitting(false);
+    //     }
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (isSubmitting) return;
-        if (!formData.title || !formData.description || !formData.image) return;
-        setIsSubmitting(true)
-
-        const formPayload = new FormData();
-        formPayload.append('title', formData.title);
-        formPayload.append('description', formData.description);
-        formPayload.append('category', JSON.stringify(formData.category));
-        formPayload.append('image', formData.image);
+        setIsSubmitting(true);
+        const updatedData = {
+            id: initialData.id,
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+        };
 
         try {
-            const res = await fetch('/api/create-feed', {
+            const res = await fetch('/api/create-feed/update', {
                 method: 'POST',
-                body: formPayload,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData),
             });
 
-            const result = await res.json();
-
-            if (result.success) {
-                console.log('✅ Feed added:', result.feed);
-                onSubmit(result.feed); // optional: update local state
-                onClose();
-            } else {
-                console.error('❌ Error:', result.error);
+            if (!res.ok) {
+                throw new Error('Failed to update');
             }
+
+            const json = await res.json();
+            onSubmit(json.updated);
         } catch (err) {
-            console.error('❌ Network error:', err);
+            console.error(err);
+        } finally {
+            setIsSubmitting(false);
+
         }
     };
 
@@ -75,7 +95,7 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
                 onSubmit={handleSubmit}
                 className="bg-white rounded-xl p-6 w-full max-w-lg text-gray-800 shadow-xl"
             >
-                <h3 className="text-xl font-bold mb-6 text-center">Add New Feed</h3>
+                <h3 className="text-xl font-bold mb-6 text-center">Edit Feed</h3>
 
                 {/* Title */}
                 <div className="mb-4">
@@ -123,17 +143,17 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
                     </div>
                 </div>
 
-                {/* Image Upload */}
-                <div className="mb-6">
-                    <label className="block text-sm font-medium mb-1">Upload Image</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        required
-                        className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                    />
-                </div>
+                {/* Current Image (View Only) */}
+                {initialData.image && (
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium mb-1">Current Image</label>
+                        <img
+                            src={urlFor(initialData.image).width(600).url()}
+                            alt="Current Feed Image"
+                            className="w-full h-48 object-cover rounded-md border"
+                        />
+                    </div>
+                )}
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-4">
@@ -150,7 +170,7 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
                         className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? 'Uploading...' : 'Add Feed'}
+                        {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </form>
@@ -158,4 +178,4 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
     );
 };
 
-export default AddFeedFormModal;
+export default EditFeedFormModal;

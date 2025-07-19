@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { feedList, feedFilterBtnList } from '@/app/constants/feedInfo';
 import {FeedType} from "@/app/(components)/mediafeed/page";
-import Image from "next/image";
 
 
 const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
@@ -10,7 +8,7 @@ const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
         <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all h-full">
             { !feedInfo.video &&
                 <div className="aspect-auto relative">
-                    <Image
+                    <img
                         src={feedInfo.image}
                         alt={feedInfo.title}
                         className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
@@ -41,7 +39,7 @@ const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
                                 key={`${feedInfo.title}-${category}`}
                                 className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-red-500 text-white"
                             >
-                            #{feedInfo.category}
+                            #{category}
                           </span>
                         ))}
                     </div>

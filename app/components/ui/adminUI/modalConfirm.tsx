@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 
 interface ConfirmModalProps {
     title: string;
@@ -19,6 +19,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                    }) => {
     if (!isOpen) return null;
 
+    const [clicked, setClicked] = useState(false);
+
     return (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white rounded-lg shadow-md p-6 max-w-md w-full">
@@ -33,10 +35,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                         Cancel
                     </button>
                     <button
-                        onClick={onConfirm}
-                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                        onClick={() => {
+                            setClicked(true);
+                            onConfirm()
+                        }}
+                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        disabled={clicked}
                     >
-                        Yes, Delete
+                        {clicked? 'Deleting...' : 'Yes, Delete'}
                     </button>
                 </div>
             </div>

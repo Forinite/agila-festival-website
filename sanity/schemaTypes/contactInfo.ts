@@ -1,35 +1,48 @@
-import { defineType, defineField } from 'sanity'
+import { defineType } from 'sanity';
 
-export default defineType({
-    name: 'adminContact',
-    title: 'Admin Contact',
+export default  defineType({
+    name: 'contactInfo',
+    title: 'Contact Info',
     type: 'document',
     fields: [
-        defineField({
-            name: 'image',
-            title: 'Image',
-            type: 'image',
-            options: { hotspot: true },
-        }),
-        defineField({
-            name: 'name',
-            title: 'Name',
+        {
+            name: 'location',
+            title: 'Location',
+            type: 'array',
+            of: [{ type: 'string' }],
+            description: 'Physical location lines',
+        },
+        {
+            name: 'emails',
+            title: 'Emails',
+            type: 'array',
+            of: [{ type: 'string' }],
+        },
+        {
+            name: 'phones',
+            title: 'Phones',
+            type: 'array',
+            of: [{ type: 'string' }],
+        },
+        {
+            name: 'instagram',
+            title: 'Instagram',
             type: 'string',
-        }),
-        defineField({
-            name: 'title',
-            title: 'Title',
+        },
+        {
+            name: 'twitter',
+            title: 'Twitter',
             type: 'string',
-        }),
-        defineField({
-            name: 'phone',
-            title: 'Phone',
+        },
+        {
+            name: 'facebook',
+            title: 'Facebook',
             type: 'string',
-        }),
-        defineField({
-            name: 'email',
-            title: 'Email',
+        },
+        {
+            name: 'youtube',
+            title: 'YouTube',
             type: 'string',
-        }),
+        },
     ],
-})
+});

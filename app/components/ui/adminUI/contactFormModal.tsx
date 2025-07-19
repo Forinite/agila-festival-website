@@ -1,47 +1,95 @@
+'use client'
 import React, { useState } from 'react';
 
 const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
-    const [formData, setFormData] = useState(initialData || {});
+    const [isSumbiting, setIsSumbiting] = useState(false);
+    const [formState, setFormState] = useState(() => {
+        return {
+            location1: initialData?.info?.[0]?.lines?.[0] || '',
+            location2: initialData?.info?.[0]?.lines?.[1] || '',
+            email1: initialData?.info?.[1]?.lines?.[0] || '',
+            email2: initialData?.info?.[1]?.lines?.[1] || '',
+            phone1: initialData?.info?.[2]?.lines?.[0] || '',
+            phone2: initialData?.info?.[2]?.lines?.[1] || '',
+            instagram: initialData?.social?.find(s => s.href?.includes('instagram'))?.href || '',
+            twitter: initialData?.social?.find(s => s.href?.includes('twitter'))?.href || '',
+            facebook: initialData?.social?.find(s => s.href?.includes('facebook'))?.href || '',
+            youtube: initialData?.social?.find(s => s.href?.includes('youtube'))?.href || '',
+
+        };
+    });
 
     const handleChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
+        const { name, value } = e.target;
+        setFormState((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        setIsSumbiting(true);
+        const updatedData = {
+            id: initialData?.id, // You need to pass the `_id` of the document in `initialData`
+            location: [formState.location1, formState.location2].filter(Boolean), // optional: derive from formState
+            emails: [formState.email1, formState.email2].filter(Boolean),
+            phones: [formState.phone1, formState.phone2].filter(Boolean),
+            instagram: formState.instagram,
+            twitter: formState.twitter,
+            facebook: formState.facebook,
+            youtube: formState.youtube,
+        };
+
+        try {
+            const res = await fetch('/api/contact-info/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData),
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to update');
+            }
+
+            const json = await res.json();
+            onSubmit(json.updated);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const fields = ['email', 'phone', 'instagram', 'twitter', 'facebook'];
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 bg-opacity-50 flex justify-center items-center px-4">
+        <div className="fixed inset-0 z-50 bg-black/50 w-screen h-screen overflow-y-scroll flex justify-center items-center px-4">
             <form
                 onSubmit={handleSubmit}
                 className="bg-white text-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md"
             >
                 <h3 className="text-2xl font-semibold mb-6 text-center">Edit Contact Info</h3>
 
-                <div className="space-y-4">
-                    {fields.map((field) => (
-                        <div key={field} className="flex flex-col">
-                            <label
-                                htmlFor={field}
-                                className="text-sm font-medium capitalize mb-1"
-                            >
-                                {field}
+                <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4">
+                    {[
+                        { label: 'Location 1', name: 'location1' },
+                        { label: 'Location 2', name: 'location2' },
+                        { label: 'Email 1', name: 'email1' },
+                        { label: 'Email 2', name: 'email2' },
+                        { label: 'Phone 1', name: 'phone1' },
+                        { label: 'Phone 2', name: 'phone2' },
+                        { label: 'Instagram', name: 'instagram' },
+                        { label: 'Twitter', name: 'twitter' },
+                        { label: 'Facebook', name: 'facebook' },
+                        { label: 'Youtube', name: 'youtube' },
+                    ].map(({ label, name }) => (
+                        <div key={name} className="flex flex-col ">
+                            <label htmlFor={name} className="text-sm font-medium mb-1">
+                                {label}
                             </label>
                             <input
-                                id={field}
-                                name={field}
                                 type="text"
-                                placeholder={`Enter ${field}`}
-                                value={formData[field] || ''}
+                                name={name}
+                                id={name}
+                                value={formState[name] || ''}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder={`Enter ${label}`}
+                                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     ))}
@@ -58,8 +106,9 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
                     <button
                         type="submit"
                         className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition"
+                        disabled={isSumbiting}
                     >
-                        Save
+                        {isSumbiting? 'Saving...' : 'Save'}
                     </button>
                 </div>
             </form>
@@ -68,4 +117,3 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
 };
 
 export default ContactFormModal;
-

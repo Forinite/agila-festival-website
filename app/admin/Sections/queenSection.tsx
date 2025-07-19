@@ -1,29 +1,55 @@
-import React, { useState } from "react";
+'use client'
+import React, {useEffect, useState} from "react";
 import QueenCard from "@/app/components/ui/adminUI/queenCard";
-import {currentQueen, pastQueensData} from "@/app/constants/pastQueens";
 import QueenFormModal from "@/app/components/ui/adminUI/queenFormModal";
 import ConfirmDialog from "@/app/components/ui/adminUI/confirmDialog"; // Assuming you've split them already
+import { useQueens } from '@/app/hooks/useQueens';
 
 
-export const QueenSection = () => {
-    const [queens, setQueens] = useState(pastQueensData);
+
+export  const  QueenSection  = () => {
+    const { currentQueen, pastQueens, loading } = useQueens();
+    const [queens, setQueens] = useState([]);
     const [queenToEdit, setQueenToEdit] = useState(null);
     const [queenToDelete, setQueenToDelete] = useState(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-    const handleDelete = () => {
+    useEffect(() => {
+        if (!loading && pastQueens.length > 0) {
+            setQueens(pastQueens);
+        }
+    }, [loading]);
+
+    if (loading) return <p>Loading queens...</p>;
+
+
+    const handleDelete = async () => {
         if (!queenToDelete) return;
         setQueens((prev) => prev.filter((q) => q.name !== queenToDelete.name));
+        const id = queenToDelete?._id;
+        console.log(id, queenToDelete)
+        try {
+            const res = await fetch('/api/queen/deletion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }),
+            })
+
+            if (!res.ok) throw new Error('Failed to delete')
+
+            // Optimistically update local state/UI
+            // setQueens((prev) => prev.filter((item) => item._id !== id))
+        } catch (err) {
+            console.error('Delete failed:', err)
+            alert('Could not delete queen')
+        }
         setQueenToDelete(null);
         setConfirmOpen(false);
     };
 
     const handleUpdateQueen = (updatedQueen) => {
-        setQueens((prev) =>
-            prev.map((queen) => (queen.name === updatedQueen.name ? updatedQueen : queen))
-        );
-        setQueenToEdit(null);
+        return null
     };
 
     const handleAddQueen = (newQueen) => {

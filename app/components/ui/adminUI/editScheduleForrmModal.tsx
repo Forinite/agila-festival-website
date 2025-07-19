@@ -1,0 +1,161 @@
+'use client';
+
+import React, { useState } from 'react';
+
+interface ScheduleItem {
+    time: string;
+    event: string;
+}
+
+interface ScheduleData {
+    title: string;
+    desc: string;
+    date: string;
+    schedule: ScheduleItem[];
+}
+
+interface Props {
+    initialData: ScheduleData;
+    onSubmit: (updated: ScheduleData) => void;
+    onClose: () => void;
+}
+
+const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose }) => {
+    const [formData, setFormData] = useState<ScheduleData>({ ...initialData });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleScheduleChange = (index: number, field: keyof ScheduleItem, value: string) => {
+        const updatedSchedule = [...formData.schedule];
+        updatedSchedule[index][field] = value;
+        setFormData(prev => ({ ...prev, schedule: updatedSchedule }));
+    };
+
+    const addScheduleItem = () => {
+        setFormData(prev => ({
+            ...prev,
+            schedule: [...prev.schedule, { time: '', event: '' }],
+        }));
+    };
+
+    const removeScheduleItem = (index: number) => {
+        const updated = [...formData.schedule];
+        updated.splice(index, 1);
+        setFormData(prev => ({ ...prev, schedule: updated }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        onSubmit(formData);
+        setIsSubmitting(false);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-xl p-6 w-full max-w-2xl text-gray-800 shadow-xl"
+            >
+                <h3 className="text-xl font-bold mb-6 text-center">Edit Schedule</h3>
+
+                {/* Title */}
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Title</label>
+                    <input
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    />
+                </div>
+
+                {/* Description */}
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Description</label>
+                    <textarea
+                        name="desc"
+                        value={formData.desc}
+                        onChange={handleChange}
+                        rows={3}
+                        required
+                        className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    />
+                </div>
+
+                {/* Date */}
+                <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Date</label>
+                    <input
+                        name="date"
+                        value={formData.date}
+                        onChange={handleChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    />
+                </div>
+
+                {/* Schedule Items */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium mb-2">Schedule</label>
+                    {formData.schedule.map((item, index) => (
+                        <div key={index} className="flex items-center gap-4 mb-3">
+                            <input
+                                placeholder="Time"
+                                value={item.time}
+                                onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
+                                className="flex-1 border border-gray-300 rounded-md px-3 py-2"
+                            />
+                            <input
+                                placeholder="Event"
+                                value={item.event}
+                                onChange={(e) => handleScheduleChange(index, 'event', e.target.value)}
+                                className="flex-[2] border border-gray-300 rounded-md px-3 py-2"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => removeScheduleItem(index)}
+                                className="text-red-500 hover:text-red-700 text-sm"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addScheduleItem}
+                        className="mt-2 px-4 py-1 border rounded text-sm text-indigo-600 border-indigo-400 hover:bg-indigo-50"
+                    >
+                        + Add Schedule Item
+                    </button>
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-4">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Saving...' : 'Save Changes'}
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default EditScheduleFormModal;

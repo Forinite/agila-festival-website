@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Image from "next/image";
 
-const QueenFormModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) => {
+
+
+const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit }) => {
     const [name, setName] = useState(initialData.name || "");
     const [year, setYear] = useState(initialData.year || "");
     const [role, setRole] = useState(initialData.role || "");
@@ -9,6 +10,7 @@ const QueenFormModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) =
     const [previewUrl, setPreviewUrl] = useState<string | null>(
         initialData.imageUrl || null
     );
+    const [loading, setLoading] = useState(false);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -17,23 +19,61 @@ const QueenFormModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) =
         setPreviewUrl(URL.createObjectURL(file)); // Live preview
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (loading) return;
 
-        if (!name || !year || !role || (!imageFile && !initialData.imageUrl)) {
-            alert("Please fill out all fields and upload an image.");
+        // Validate required fields
+        if (!name || !year || !role || (mode !== 'edit' && !imageFile)) {
+            alert("Please fill in all required fields.");
             return;
         }
 
-        const queenData = {
-            name,
-            year,
-            role,
-            imageUrl: imageFile || initialData.imageUrl, // Could be File or existing URL
-        };
+        setLoading(true);
+        try {
+            const data = new FormData();
+            data.append("name", name);
+            data.append("year", year);
+            data.append("role", role);
 
-        onSubmit(queenData);
+            if (mode === 'edit') {
+                console.log('edit mode');
+                data.append('_id', initialData._id);
+            }
+            console.log(mode);
+
+            console.log(initialData._id);
+
+
+            // Only append image if it's available (e.g., in add mode)
+            if (imageFile) {
+                data.append("image", imageFile);
+            }
+
+
+            const endpoint = mode === "edit" ? "/api/queen/update" : "/api/queen";
+
+            const res = await fetch(endpoint, {
+                method: "POST",
+                body: data,
+            });
+
+            if (!res.ok) throw new Error("API error");
+
+            const result = await res.json();
+            console.log("Queen saved:", result.data);
+
+            alert(mode === "edit" ? "Queen updated successfully" : "Queen added successfully");
+            onClose();
+        } catch (err) {
+            console.error("Error saving queen:", err);
+            alert("There was an error processing the queen data.");
+        } finally {
+            setLoading(false);
+        }
     };
+
+
 
     return (
         <div className="fixed inset-0 bg-black/40 bg-opacity-40 flex items-center justify-center z-50">
@@ -68,16 +108,21 @@ const QueenFormModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) =
                         onChange={(e) => setRole(e.target.value)}
                     />
 
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="w-full"
-                    />
+                    {mode !== "edit" && (
+                        <>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="w-full"
+                            />
+
+                        </>
+                    )}
 
                     {previewUrl && (
                         <div className="w-full h-40 rounded overflow-hidden">
-                            <Image
+                            <img
                                 src={previewUrl}
                                 alt="Preview"
                                 width={400}
@@ -86,26 +131,28 @@ const QueenFormModal = ({ mode = "add", initialData = {}, onClose, onSubmit }) =
                             />
                         </div>
                     )}
-                </div>
 
-                <div className="flex justify-end gap-3 mt-6">
-                    <button
-                        type="button"
-                        className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >
-                        {mode === "edit" ? "Update" : "Add"}
-                    </button>
+
+
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button
+                            type="button"
+                            className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        >
+                            {loading ? 'Submitting...' : 'Submit'}
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
-    );
+    )
 };
 
 export default QueenFormModal;

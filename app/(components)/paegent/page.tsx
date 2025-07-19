@@ -1,12 +1,18 @@
-import React from 'react'
+'use client';
 
+import React from 'react'
 import Image from "next/image";
-import {pastQueensData} from "@/app/constants/pastQueens";
+// import {pastQueensData} from "@/app/constants/pastQueens";
 import QueenCard from "@/app/components/ui/queenCard";
 import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
-import {paegentQueenImgList} from "@/app/constants";
+// import {paegentQueenImgList} from "@/app/constants";
+
+import { useQueens } from '@/app/hooks/useQueens';
 
 const PaegentPage = () => {
+    const { currentQueen, pastQueens, loading } = useQueens();
+
+    if (loading) return <p>Loading queens...</p>;
     return (
         <section id={'pageant'} className={`mt-16`}>
             <div className="text-center mb-12">
@@ -49,8 +55,8 @@ const PaegentPage = () => {
                         </div>
                     </div>
                     <div className="order-1 lg:order-2">
-                        <Image
-                            src={paegentQueenImgList[2]}
+                        <img
+                            src={currentQueen?.imageUrl}
                             alt="Face of Idoma 2023 winner"
                             width={800}
                             height={600}
@@ -64,7 +70,7 @@ const PaegentPage = () => {
                         Past Queens
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {pastQueensData.map((queen, index) => (
+                        {pastQueens.map((queen, index) => (
                             <QueenCard
                                 key={queen.year}
                                 name={queen.name}

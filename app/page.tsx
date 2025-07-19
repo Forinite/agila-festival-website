@@ -20,7 +20,7 @@ export default async function Home()
       <section className={'max-w-screen '}>
 
           <HomePage />;
-        <MediaFeed feedList={feedList} query={'query'} />;
+        <MediaFeed  />;
         <AboutPage />;
         <SchedulePage />
         <PaegentPage />

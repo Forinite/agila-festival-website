@@ -2,25 +2,38 @@
 import React from 'react';
 import Image from 'next/image';
 import { Pencil, Trash2 } from 'lucide-react';
-import { adminContacts } from '@/app/constants/admincontacts';
+import { useAdminContacts } from '@/app/hooks/useAdminContacts';
 
 const AdminContactList = ({ onEdit, onDelete }) => {
+    const { contacts, loading } = useAdminContacts();
+    if (loading) return <p className="text-white">Loading contact info...</p>;
+
+    if (!contacts.length) {
+        return <p className="text-gray-300 italic">No admin contacts available.</p>;
+    }
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {adminContacts.map((contact, index) => (
+            {contacts.map((contact) => (
                 <div
-                    key={index}
+                    key={contact._id}
                     className="bg-white border border-gray-300 rounded-xl p-5 flex items-start gap-4 shadow-lg hover:shadow-xl transition-all relative"
                 >
                     {/* Avatar */}
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-300 shadow">
-                        <Image
-                            src={contact.image}
-                            alt={contact.name}
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-cover"
-                        />
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-300 shadow shrink-0">
+                        {contact.imageUrl ? (
+                            <Image
+                                src={contact.imageUrl}
+                                alt={contact.name}
+                                width={64}
+                                height={64}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+                                No Image
+                            </div>
+                        )}
                     </div>
 
                     {/* Info */}

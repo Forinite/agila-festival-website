@@ -20,6 +20,7 @@ import fillerVideo2 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
 // feedInfo.tsx
 export const feedFilterBtnList = ['Masquerade', 'Dance', 'Music', 'FaceOfIdoma']
 
+
 export const feedList = [
     {image: fillerImage8, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Dance'], id: 'feed1'},
     {image: fillerImage9, title: 'This is a very nice Title', description: 'This is a brief description' ,  category: ['Paegent'] , id: 'feed2'},

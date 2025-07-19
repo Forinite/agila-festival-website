@@ -1,5 +1,4 @@
 // components/QueenCard.tsx
-import Image from 'next/image';
 
 interface QueenCardProps {
     name: string;
@@ -11,7 +10,7 @@ interface QueenCardProps {
 const QueenCard: React.FC<QueenCardProps> = ({ name, year, role, imageUrl }) => {
     return (
         <div className="text-center group hover:shadow-xl hover:scale-105 transition-all duration-500">
-            <Image
+            <img
                 src={imageUrl}
                 alt={`Face of Idoma ${year}`}
                 width={400}

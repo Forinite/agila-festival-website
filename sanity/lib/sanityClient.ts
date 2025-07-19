@@ -43,4 +43,24 @@ export const createFeedItem = async (formData: {
     });
 };
 
-console.log('Sanity Token:', process.env.SANITY_API_WRITE_TOKEN);
+// Create Queen
+export const createQueen = async (data: {
+    name: string;
+    year: number;
+    role: string;
+    imageAssetId: string;
+}) => {
+    return sanityWriteClient.create({
+        _type: 'queen',
+        name: data.name,
+        year: data.year,
+        role: data.role,
+        imageUrl: {
+            _type: 'image',
+            asset: {
+                _type: 'reference',
+                _ref: data.imageAssetId,
+            },
+        },
+    });
+};

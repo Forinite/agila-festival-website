@@ -3,12 +3,14 @@ import Image from "next/image";
 import FeedCard from "@/app/components/ui/feed";
 import {feedList} from "@/app/constants/feedInfo";
 import {Home, Phone} from "lucide-react"
+import {useFeeds} from "@/app/hooks/useFeeds";
+import {Feed} from "@/app/(media)/mediapage/feed";
 
 
 // pages/index.js
 export default function MediaPage() {
     return (
-        <div className="flex min-h-screen h-screen overflow-hidden absolute z-50 bg-white">
+        <div className="flex min-h-screen h-screen w-screen overflow-hidden absolute z-50 bg-white">
             {/* Sidebar */}
             <nav className="flex flex-col items-center w-18 h-screen border-r overflow-auto pt-20  ">
                 <a href="/ " className="p-4 hover:bg-gray-100  rounded-full" >
@@ -47,15 +49,7 @@ export default function MediaPage() {
                 <main className="flex-1 overflow-auto p-4 mt-4">
                     <h1 className="text-2xl font-semibold mb-4">Agila Festival Media Page</h1>
                     <div role="status" aria-live="polite" className="mb-4">See More Media from Agila Festival</div>
-                    <div className="columns-2 md:columns-3 lg:columns-6 gap-4">
-                        {/* Repeat this PinCard component for each pin */}
-                        {feedList.map((item) => (
-                            <div key={`${item.title}`} className="masonry-item break-insie-avoid group cursor-pointer mb-4">
-                                <FeedCard feedInfo={item} />
-                            </div>
-                        ))}
-                        {/* ...etc */}
-                    </div>
+                    <Feed />
                 </main>
 
                 {/* Footer could go here if needed */}
