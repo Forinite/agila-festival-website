@@ -1,29 +1,45 @@
-
 import React, { useState } from 'react';
 import ConfirmDialog from '@/app/components/ui/adminUI/confirmDialog';
-import InviteAdminFormModal from "@/app/components/ui/adminUI/inviteAdminFormModal";
-import AdminList from "@/app/components/ui/adminUI/adminList";
-
-const defaultAdmins = [
-    { id: '1', name: 'Fortune Obe', email: 'fort@agila.com' },
-    { id: '2', name: 'Jane Doe', email: 'jane@example.com' },
-];
+import InviteAdminFormModal from '@/app/components/ui/adminUI/inviteAdminFormModal';
+import AdminList from '@/app/components/ui/adminUI/adminList';
+import { useAdminAccounts } from '@/app/hooks/useAdminAccounts';
 
 export const AdminSection = () => {
-    const [admins, setAdmins] = useState(defaultAdmins);
+    const { admins, loading, setAdmins } = useAdminAccounts();
     const [showInviteModal, setShowInviteModal] = useState(false);
     const [adminToRemove, setAdminToRemove] = useState(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleInvite = (newAdmin) => {
-        setAdmins((prev) => [...prev, newAdmin]);
+    const handleInvite = async (newAdmin) => {
+        try {
+            const res = await fetch('/api/admin-account/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newAdmin),
+            });
+            if (!res.ok) throw new Error('Failed to add admin');
+            const result = await res.json();
+            setAdmins((prev) => [result.data, ...prev]);
+        } catch (err) {
+            console.error('Invite error:', err);
+        }
         setShowInviteModal(false);
     };
 
-    const handleDelete = () => {
-        setAdmins((prev) => prev.filter((admin) => admin.id !== adminToRemove.id));
-        setAdminToRemove(null);
+    const handleDelete = async () => {
+        try {
+            const res = await fetch('/api/admin-account/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ _id: adminToRemove._id }),
+            });
+            if (!res.ok) throw new Error('Failed to delete admin');
+            setAdmins((prev) => prev.filter((admin) => admin._id !== adminToRemove._id));
+        } catch (err) {
+            console.error('Delete error:', err);
+        }
         setConfirmOpen(false);
+        setAdminToRemove(null);
     };
 
     return (
@@ -38,13 +54,15 @@ export const AdminSection = () => {
                 </button>
             </div>
 
-            <AdminList
-                admins={admins}
-                onDelete={(admin) => {
-                    setAdminToRemove(admin);
-                    setConfirmOpen(true);
-                }}
-            />
+            {!loading && (
+                <AdminList
+                    admins={admins}
+                    onDelete={(admin) => {
+                        setAdminToRemove(admin);
+                        setConfirmOpen(true);
+                    }}
+                />
+            )}
 
             <ConfirmDialog
                 open={confirmOpen}
@@ -55,7 +73,8 @@ export const AdminSection = () => {
                     setAdminToRemove(null);
                 }}
                 onConfirm={handleDelete}
-            />
+                />
+
 
             {showInviteModal && (
                 <InviteAdminFormModal
@@ -67,4 +86,3 @@ export const AdminSection = () => {
     );
 };
 
-export default AdminSection;

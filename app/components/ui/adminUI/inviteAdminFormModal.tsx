@@ -1,24 +1,50 @@
 'use client';
 import React, { useState } from 'react';
 
-const InviteAdminFormModal = ({ onClose, onSubmit }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-    });
+const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSubmit: (admin: any) => void }) => {
+    const [formData, setFormData] = useState({ name: '', email: '' });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleChange = (e) => {
-        setFormData((prev) => ({
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData(prev => ({
             ...prev,
             [e.target.name]: e.target.value,
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.email || !formData.name) return;
-        onSubmit(formData);
-        onClose();
+        const { name, email } = formData;
+
+        if (!name || !email) {
+            setError('Both fields are required');
+            return;
+        }
+
+        setError(null);
+        setLoading(true);
+
+        try {
+            const res = await fetch('/api/admin-account/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data?.error || 'Failed to invite admin');
+            }
+
+            const result = await res.json();
+            onSubmit(result.data); // Send the new admin back to AdminSection
+            onClose(); // Close only on success
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -37,6 +63,7 @@ const InviteAdminFormModal = ({ onClose, onSubmit }) => {
                     onChange={handleChange}
                     className="w-full mb-3 p-2 border border-gray-300 rounded"
                     required
+                    disabled={loading}
                 />
                 <input
                     name="email"
@@ -46,21 +73,30 @@ const InviteAdminFormModal = ({ onClose, onSubmit }) => {
                     onChange={handleChange}
                     className="w-full mb-3 p-2 border border-gray-300 rounded"
                     required
+                    disabled={loading}
                 />
+
+                {error && (
+                    <p className="text-sm text-red-600 mb-3">{error}</p>
+                )}
 
                 <div className="flex justify-end space-x-4 mt-6">
                     <button
                         type="button"
                         onClick={onClose}
                         className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+                        disabled={loading}
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded"
+                        className={`px-4 py-2 rounded text-white ${
+                            loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'
+                        }`}
+                        disabled={loading}
                     >
-                        Send Invite
+                        {loading ? 'Sending...' : 'Send Invite'}
                     </button>
                 </div>
             </form>

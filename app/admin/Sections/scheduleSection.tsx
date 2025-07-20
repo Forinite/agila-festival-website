@@ -5,10 +5,21 @@ import EditScheduleFormModal from "@/app/components/ui/adminUI/editScheduleForrm
 
 const ScheduleSection = () => {
     const [editModalOpen, setEditModalOpen] = React.useState(false);
+    const [addModalOpen, setAddModalOpen] = React.useState(false);
     const [activeSchedule, setActiveSchedule] = React.useState(null);
     const handleEditClick = (schedule) => {
         setActiveSchedule(schedule)
         setEditModalOpen(true);
+    }
+    const handleAddClick = () => {
+        setAddModalOpen(true);
+    }
+
+    const clearFormData = {
+        title: '',
+        desc: '',
+        date: '',
+        schedule: [{time: '', event: '' }]
     }
 
     return (
@@ -16,10 +27,10 @@ const ScheduleSection = () => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="md:text-2xl font-bold ">Event Schedule</h2>
                 <button
-                    onClick={handleEditClick}
+                    onClick={handleAddClick}
                     className=" md:text-base text-sm px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
                 >
-                    Edit
+                    Add
                 </button>
             </div>
             <div className="grid lg:grid-cols-3 gap-6">
@@ -32,9 +43,11 @@ const ScheduleSection = () => {
             </div>
 
             {editModalOpen && (
-                <EditScheduleFormModal initialData={activeSchedule } onSubmit={()=> {}} onClose={()=> {setEditModalOpen(false)}} />
+                <EditScheduleFormModal initialData={activeSchedule} onSubmit={()=> {}} onClose={()=> {setEditModalOpen(false)}} mode="edit" />
             )}
-
+            {addModalOpen && (
+                <EditScheduleFormModal initialData={clearFormData} onSubmit={()=> {}} onClose={()=> {setAddModalOpen(false)}} mode="add" />
+            )}
 
 
         </div>

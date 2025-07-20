@@ -18,18 +18,10 @@ interface Props {
     initialData: ScheduleData;
     onSubmit: (updated: ScheduleData) => void;
     onClose: () => void;
-    mode: string;
 }
 
-const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose, mode }) => {
-    const data = initialData? {  ...initialData } : {
-        title: '',
-        desc: '',
-        date: '',
-        schedule: [{time: '', event: '' }]
- }
-
-    const [formData, setFormData] = useState<ScheduleData>(data);
+const EditScheduleFormModal: React.FC<Props> = ({  onSubmit, onClose }) => {
+    const [formData, setFormData] = useState<ScheduleData>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -70,7 +62,7 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                     onSubmit={handleSubmit}
                     className="bg-white rounded-xl p-6 w-full max-w-2xl text-gray-800 shadow-xl"
                 >
-                    <h3 className="text-xl font-bold mb-6 text-center" > {mode==='edit'? 'Edit' : 'Add'} Schedule</h3>
+                    <h3 className="text-xl font-bold mb-6 text-center">Edit Schedule</h3>
 
                     {/* Title */}
                     <div className="mb-4">
@@ -93,7 +85,7 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                             onChange={handleChange}
                             rows={3}
                             required
-                            className="w-full md:min-h-auto min-h-40 border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs "
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs"
                         />
                     </div>
 
@@ -113,23 +105,23 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                     <div className="mb-6">
                         <label className="block text-sm font-medium mb-2">Schedule</label>
                         {formData.schedule.map((item, index) => (
-                            <div key={index} className="md:flex items-center gap-4 mb-3 ">
+                            <div key={index} className="md:flex items-center gap-4 mb-3">
                                 <input
                                     placeholder="Time"
                                     value={item.time}
                                     onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
-                                    className="md:flex-1 border border-gray-300 rounded-md px-3 py-2  md:text-base text-xs md:mr-0 mr-4 md:mt-3 mb-3 max-w-full"
+                                    className="md:flex-1 border border-gray-300 rounded-md px-3 py-2  md:text-base text-xs md:mr-0 mr-4  md:mt-3 mb-3"
                                 />
                                 <input
                                     placeholder="Event"
                                     value={item.event}
                                     onChange={(e) => handleScheduleChange(index, 'event', e.target.value)}
-                                    className="md:flex-[2] border border-gray-300 rounded-md px-3 py-2  md:text-base text-xs  max-w-full"
+                                    className="md:flex-[2] border border-gray-300 rounded-md px-3 py-2  md:text-base text-xs"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => removeScheduleItem(index)}
-                                    className="text-red-500 hover:text-red-700 md:text-sm text-xs md:inline block"
+                                    className="text-red-500 hover:text-red-700 text-sm md:inline block"
                                 >
                                     <span className="inline">Remove</span>
                                 </button>
@@ -138,25 +130,25 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                         <button
                             type="button"
                             onClick={addScheduleItem}
-                            className="mt-2 md:px-4 px-2 py-1 border rounded md:text-sm text-[10px] text-indigo-600 border-indigo-400 hover:bg-indigo-50"
+                            className="mt-2 px-4 py-1 border rounded text-sm text-indigo-600 border-indigo-400 hover:bg-indigo-50"
                         >
                             + Add Schedule Item
                         </button>
                     </div>
 
                     {/* Actions */}
-                    <div className=" justify-end gap-4 md:text-base text-[10px]">
+                    <div className="flex justify-end gap-4 md:text-base text-[10px]">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 mx-2 bg-gray-200 hover:bg-gray-300 rounded min-w-min inline w-full md:w-fit my-1"
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
                             disabled={isSubmitting}
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded min-w-min inline w-full md:w-fit my-1"
+                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Saving...' : 'Save Changes'}
