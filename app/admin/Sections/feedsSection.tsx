@@ -27,7 +27,7 @@ export const FeedsSection = () => {
     const [feedToRemove, setFeedToRemove] = useState<Feed | null>(null);
     const [feedToEdit, setFeedToEdit] = useState<Feed | null>(null);
 
-    const {feeds, loading} = useFeeds();
+    const {feeds, loading, refetch} = useFeeds();
 
     useEffect(()=> {
         setFeeds(feeds)
@@ -139,6 +139,7 @@ export const FeedsSection = () => {
                 isOpen={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onConfirm={confirmRemove}
+
             />
 
             {showAddModal && (
@@ -147,6 +148,7 @@ export const FeedsSection = () => {
                     onSubmit={(newFeed) => {
                         setActiveFeeds((prev) => [...prev, newFeed]);
                     }}
+                    refetch={refetch}
                 />
             )}
             {showEditModal && (
@@ -154,14 +156,18 @@ export const FeedsSection = () => {
                     onClose={() => setShowEditModal(false)}
                     onSubmit={(newFeed) => {
                         setActiveFeeds((prev) => [...prev, newFeed]);
+                        setFeedToEdit(null);
                     }}
                     initialData={{
-                        id: feedToEdit?.id,
+                        id: feedToEdit?._id,
                         title: feedToEdit?.title,
                         description: feedToEdit?.description,
                         category: feedToEdit?.category,
-                        image: feedToEdit?.image, // for fallback
+                        image: feedToEdit?.image,
                     }}
+                    showModal={setShowEditModal}
+                    refetch={refetch}
+
                 />
             )}
 

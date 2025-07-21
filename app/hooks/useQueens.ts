@@ -17,7 +17,6 @@ export const useQueens = () => {
     const [queens, setQueens] = useState<Queen[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
         const fetchQueens = async () => {
             try {
                 const data = await sanityClient.fetch(`*[_type == "queen"] | order(year desc) {
@@ -44,11 +43,14 @@ export const useQueens = () => {
             }
         };
 
+
+    useEffect(() => {
         fetchQueens();
     }, []);
 
     const currentQueen = queens[0] || null;
     const pastQueens = queens.slice(1);
 
-    return { queens, currentQueen, pastQueens, loading };
+
+    return { queens, currentQueen, pastQueens, loading , refetch: fetchQueens};
 };

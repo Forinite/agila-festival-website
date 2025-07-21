@@ -3,12 +3,14 @@ import ConfirmDialog from '@/app/components/ui/adminUI/confirmDialog';
 import InviteAdminFormModal from '@/app/components/ui/adminUI/inviteAdminFormModal';
 import AdminList from '@/app/components/ui/adminUI/adminList';
 import { useAdminAccounts } from '@/app/hooks/useAdminAccounts';
+import {Loading} from "@/app/components/ui/loading";
 
 export const AdminSection = () => {
     const { admins, loading, setAdmins } = useAdminAccounts();
     const [showInviteModal, setShowInviteModal] = useState(false);
     const [adminToRemove, setAdminToRemove] = useState(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
+
 
     const handleInvite = async (newAdmin) => {
         try {
@@ -41,6 +43,8 @@ export const AdminSection = () => {
         setConfirmOpen(false);
         setAdminToRemove(null);
     };
+
+    if (loading) return <Loading />
 
     return (
         <div className="relative">

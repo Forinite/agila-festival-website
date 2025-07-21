@@ -5,7 +5,7 @@ import {createFeedItem, uploadImageToSanity} from "@/sanity/lib/sanityClient";
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
-const AddFeedFormModal = ({ onClose, onSubmit }) => {
+const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -63,6 +63,7 @@ const AddFeedFormModal = ({ onClose, onSubmit }) => {
             } else {
                 console.error('❌ Error:', result.error);
             }
+            refetch()
         } catch (err) {
             console.error('❌ Network error:', err);
         }

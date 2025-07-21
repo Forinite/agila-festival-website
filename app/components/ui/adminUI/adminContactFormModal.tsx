@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {urlFor} from "@/app/utils/imageBuilder";
 import {Loading} from "@/app/components/ui/loading";
 
-const AdminContactFormModal = ({ initialData, onClose }) => {
+const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
     const [formData, setFormData] = useState({
         name: initialData?.name || '',
         title: initialData?.title || '',
@@ -68,6 +68,7 @@ const AdminContactFormModal = ({ initialData, onClose }) => {
 
             if (!res.ok) throw new Error('Failed to submit contact data');
 
+            refetch()
             alert('Admin contact saved successfully.');
             onClose();
         } catch (err) {

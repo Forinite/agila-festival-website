@@ -136,6 +136,7 @@ export const ContactSection = () => {
                             console.log(contactToEdit)
                             setContactToEdit(null)
                         }}
+                        refetch={refetch}
 
                     />
                 )}

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 
 
-const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit }) => {
+const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) => {
     const [name, setName] = useState(initialData.name || "");
     const [year, setYear] = useState(initialData.year || "");
     const [role, setRole] = useState(initialData.role || "");
@@ -65,6 +65,7 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit }) => {
 
             alert(mode === "edit" ? "Queen updated successfully" : "Queen added successfully");
             onClose();
+            refetch();
         } catch (err) {
             console.error("Error saving queen:", err);
             alert("There was an error processing the queen data.");

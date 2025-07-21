@@ -44,7 +44,8 @@ export async function POST(req: Request) {
         } = body;
 
         if (!id) {
-            return NextResponse.json({ error: 'Missing document ID' }, { status: 400 });
+            console.log('Received ID:', id); // debug log
+            return NextResponse.json({ error: 'Missing or invalid document ID' }, { status: 400 });
         }
 
         const updated = await sanityWriteClient.patch(id)

@@ -16,20 +16,19 @@ interface ScheduleData {
 
 interface Props {
     initialData: ScheduleData;
-    onSubmit: (updated: ScheduleData) => void;
+    onSubmit: (updated: ScheduleData) => Promise<void> | void;
     onClose: () => void;
     mode: string;
 }
 
-const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose, mode }) => {
-    const data = initialData? {  ...initialData } : {
+const ScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose, mode }) => {
+    const [formData, setFormData] = useState<ScheduleData>(initialData || {
         title: '',
         desc: '',
         date: '',
-        schedule: [{time: '', event: '' }]
- }
+        schedule: [{ time: '', event: '' }]
+    });
 
-    const [formData, setFormData] = useState<ScheduleData>(data);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,11 +55,20 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
         setFormData(prev => ({ ...prev, schedule: updated }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!formData.title.trim() || !formData.desc.trim() || !formData.date.trim()) return;
+
         setIsSubmitting(true);
-        onSubmit(formData);
-        setIsSubmitting(false);
+        try {
+            await onSubmit(formData);
+            // Optionally, reset formData here if mode === 'add'
+        } catch (err) {
+            console.error('Form submission error:', err);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -70,7 +78,9 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                     onSubmit={handleSubmit}
                     className="bg-white rounded-xl p-6 w-full max-w-2xl text-gray-800 shadow-xl"
                 >
-                    <h3 className="text-xl font-bold mb-6 text-center" > {mode==='edit'? 'Edit' : 'Add'} Schedule</h3>
+                    <h3 className="text-xl font-bold mb-6 text-center">
+                        {mode === 'edit' ? 'Edit' : 'Add'} Schedule
+                    </h3>
 
                     {/* Title */}
                     <div className="mb-4">
@@ -149,14 +159,14 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 mx-2 bg-gray-200 hover:bg-gray-300 rounded min-w-min inline w-full md:w-fit my-1"
+                            className="px-4 py-2 mx-2 bg-gray-200 hover:bg-gray-300 rounded min-w-min inline w-full md:w-fit my-1 disabled:cursor-not-allowed"
                             disabled={isSubmitting}
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded min-w-min inline w-full md:w-fit my-1"
+                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded min-w-min inline w-full md:w-fit my-1 cursor-pointer disabled:bg-indigo-900 disabled:cursor-not-allowed"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Saving...' : 'Save Changes'}
@@ -164,9 +174,9 @@ const EditScheduleFormModal: React.FC<Props> = ({ initialData, onSubmit, onClose
                     </div>
                 </form>
             </div>
-
         </div>
     );
 };
 
-export default EditScheduleFormModal;
+export default ScheduleFormModal;
+

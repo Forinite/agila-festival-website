@@ -6,7 +6,7 @@ import {urlFor} from "@/app/utils/imageBuilder";
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
-const EditFeedFormModal = ({ onClose, onSubmit, initialData }) => {
+const EditFeedFormModal = ({ onClose, onSubmit, initialData , showModal, refetch}) => {
     const [formData, setFormData] = useState({
         title: initialData.title || '',
         description: initialData.description || '',
@@ -29,34 +29,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData }) => {
         }));
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setIsSubmitting(true);
-    //
-    //     try {
-    //         const updatedData = {
-    //             _id: initialData.id,
-    //             title: formData.title,
-    //             description: formData.description,
-    //             category: formData.category,
-    //         };
-    //
-    //         const updateRes = await fetch('/api/create-feed/update', {
-    //             method: 'POST',
-    //             headers: { 'Content-Type': 'application/json' },
-    //             body: JSON.stringify(updatedData),
-    //         });
-    //
-    //         if (!updateRes.ok) throw new Error('Failed to update feed');
-    //
-    //         const json = await updateRes.json();
-    //         onSubmit(json.updated);
-    //     } catch (err) {
-    //         console.error('Update error:', err);
-    //     } finally {
-    //         setIsSubmitting(false);
-    //     }
-    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -80,11 +52,13 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData }) => {
 
             const json = await res.json();
             onSubmit(json.updated);
+            showModal(false);
+
+            refetch()
         } catch (err) {
             console.error(err);
         } finally {
             setIsSubmitting(false);
-
         }
     };
 

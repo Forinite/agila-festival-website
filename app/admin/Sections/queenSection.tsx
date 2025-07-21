@@ -8,7 +8,7 @@ import { useQueens } from '@/app/hooks/useQueens';
 
 
 export  const  QueenSection  = () => {
-    const { currentQueen, pastQueens, loading } = useQueens();
+    const { currentQueen, pastQueens, loading, refetch } = useQueens();
     const [queens, setQueens] = useState([]);
     const [queenToEdit, setQueenToEdit] = useState(null);
     const [queenToDelete, setQueenToDelete] = useState(null);
@@ -115,6 +115,8 @@ export  const  QueenSection  = () => {
                     initialData={queenToEdit}
                     onClose={() => setQueenToEdit(null)}
                     onSubmit={handleUpdateQueen}
+                    refetch={refetch}
+
                 />
             )}
             {isAddModalOpen && (
@@ -122,6 +124,7 @@ export  const  QueenSection  = () => {
                     mode="add"
                     onClose={() => setIsAddModalOpen(false)}
                     onSubmit={handleAddQueen}
+                    refetch={refetch}
                 />
             )}
 
