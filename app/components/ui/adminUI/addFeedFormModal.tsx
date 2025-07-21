@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import {createFeedItem, uploadImageToSanity} from "@/sanity/lib/sanityClient";
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
@@ -10,7 +9,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         title: '',
         description: '',
         category: [],
-        image: null,
+        media: null,
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,24 +28,31 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         }));
     };
 
-    const handleImageChange = (e) => {
+    const handleMediaChange = (e) => {
         const file = e.target.files[0];
-        setFormData((prev) => ({ ...prev, image: file }));
+        if (file) {
+            setFormData((prev) => ({ ...prev, media: file }));
+        }
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (isSubmitting) return;
-        if (!formData.title || !formData.description || !formData.image) return;
-        setIsSubmitting(true)
+
+        const { title, description, category, media } = formData;
+
+        if (!title || !description || !media) {
+            alert('All fields are required.');
+            return;
+        }
+
+        setIsSubmitting(true);
 
         const formPayload = new FormData();
-        formPayload.append('title', formData.title);
-        formPayload.append('description', formData.description);
-        formPayload.append('category', JSON.stringify(formData.category));
-        formPayload.append('image', formData.image);
+        formPayload.append('title', title);
+        formPayload.append('description', description);
+        formPayload.append('category', JSON.stringify(category));
+        formPayload.append('media', media); // updated name from "image"
 
         try {
             const res = await fetch('/api/create-feed', {
@@ -58,17 +64,20 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
 
             if (result.success) {
                 console.log('✅ Feed added:', result.feed);
-                onSubmit(result.feed); // optional: update local state
+                onSubmit?.(result.feed);
+                refetch?.();
                 onClose();
             } else {
                 console.error('❌ Error:', result.error);
+                alert(result.error || 'An error occurred.');
             }
-            refetch()
         } catch (err) {
             console.error('❌ Network error:', err);
+            alert('Something went wrong.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
-
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
@@ -124,13 +133,15 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                     </div>
                 </div>
 
-                {/* Image Upload */}
+                {/* Media Upload */}
                 <div className="mb-6">
-                    <label className="block text-sm font-medium mb-1">Upload Image</label>
+                    <label className="block text-sm font-medium mb-1">
+                        Upload Image or Video
+                    </label>
                     <input
                         type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
+                        accept="image/*,video/*"
+                        onChange={handleMediaChange}
                         required
                         className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                     />

@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
-import imageUrlBuilder from '@sanity/image-url';
-import {sanityClient} from "@/sanity/lib/client";
+import { sanityClient } from '@/sanity/lib/client';
 
-const builder = imageUrlBuilder(sanityClient);
-
-function urlFor(source: any) {
-    return builder.image(source);
-}
-
-export interface Feed {
-    _id: string;
+interface Feed {
+    id: string;
     title: string;
+    media: string;
+    isVideo?: boolean;
     description: string;
     category: string[];
-    image: string; // url
 }
 
 export const useFeeds = () => {
@@ -23,23 +17,33 @@ export const useFeeds = () => {
     const fetchFeeds = async () => {
         try {
             const query = `*[_type == "feedItem"] | order(_createdAt desc){
-        _id,
-        title,
-        description,
-        category,
-        image
-      }`;
+                _id,
+                title,
+                description,
+                category,
+                media {
+                    asset->{
+                        _id,
+                        url,
+                        mimeType
+                    }
+                }
+            }`;
             const data = await sanityClient.fetch(query);
 
             const formatted = data.map((item: any) => ({
-                ...item,
-                image: urlFor(item.image).url(),
+                id: item._id,
+                title: item.title,
+                description: item.description,
+                category: item.category,
+                media: item.media?.asset?.url,
+                isVideo: item.media?.asset?.mimeType?.startsWith('video'),
             }));
 
             setFeeds(formatted);
-            setLoading(false);
         } catch (err) {
             console.error('Error fetching feeds:', err);
+        } finally {
             setLoading(false);
         }
     };

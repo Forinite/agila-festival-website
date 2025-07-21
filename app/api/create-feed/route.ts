@@ -1,31 +1,30 @@
-// /app/api/create-feed/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import {sanityWriteClient, uploadImageToSanity} from "@/sanity/lib/sanityClient";
+import { sanityWriteClient, uploadImageToSanity } from '@/sanity/lib/sanityClient';
 
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
 
-        const file = formData.get('image') as File;
+        const file = formData.get('media') as File; // renamed from 'image'
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const category = JSON.parse(formData.get('category') as string); // Array
+        const category = JSON.parse(formData.get('category') as string); // Expecting array
 
-        if (!file || !title || !description) {
+        if (!file || !title || !description || !category) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
         }
 
-        // Upload image
-        const asset = await uploadImageToSanity(file);
+        // Upload file (image or video)
+        const asset = await uploadImageToSanity(file); // Handles video & image
 
-        // Create feed
+        // Create feed document
         const newFeed = await sanityWriteClient.create({
             _type: 'feedItem',
             title,
             description,
             category,
-            image: {
-                _type: 'image',
+            media: {
+                _type: 'file',
                 asset: {
                     _type: 'reference',
                     _ref: asset._id,
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true, feed: newFeed });
     } catch (err: any) {
-        console.error('Error creating feed:', err);
+        console.error('Error creating feed:', err.message);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }

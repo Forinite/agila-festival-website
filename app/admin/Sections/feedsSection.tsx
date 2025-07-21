@@ -13,7 +13,8 @@ import EditFeedFormModal from "@/app/components/ui/adminUI/editFeedFormModal";
 interface Feed {
     id: string;
     title: string;
-    image: string;
+    media: string;
+    isVideo?: boolean;
     description: string;
     category: string[];
 }
@@ -100,13 +101,24 @@ export const FeedsSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Feeds.map(feed => (
                     <div key={feed._id} className="border rounded-lg p-4 bg-white shadow-md relative">
-                        <img
-                            src={feed.image}
-                            alt={feed.title}
-                            width={300}
-                            height={200}
-                            className="rounded w-full h-[180px] object-cover mb-4"
-                        />
+
+                        {feed.isVideo ? (
+                            <video
+                                controls
+                                className="rounded w-full h-[180px] object-cover mb-4"
+                                width={300}
+                                height={200}
+                                src={feed.media}
+                            />
+                        ) : (
+                            <img
+                                src={feed.media}
+                                alt={feed.title}
+                                width={300}
+                                height={200}
+                                className="rounded w-full h-[180px] object-cover mb-4"
+                            />
+                        )}
                         <h3 className="text-lg font-semibold">{feed.title}</h3>
                         <p className="text-sm text-gray-600 mt-1 mb-2">{feed.description}</p>
                         <div className="text-sm text-blue-600">
