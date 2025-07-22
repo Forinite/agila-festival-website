@@ -34,14 +34,14 @@ const useCountdown = (endYear: number, endMonth: number, endDay: number, endHour
 
 const HERO_CONTENT = {
     title: {
-        main: 'AGILA',
+        main: 'ECHIJA',
         highlight: 'CARNIVAL'
     },
     subtitle: 'Celebrating Idoma Unity, Culture & Heritage in the Heart of Nigeria'
 };
 
 const CARNIVAL_INFO = {
-    date: 'December 23-28, 2025',
+    date: 'December 27-28, 2025',
     location: 'Otukpo, Benue State'
 };
 
@@ -69,7 +69,7 @@ const HeroInfo = () => {
 
     return (
         <div className="absolute inset-0 z-20 flex items-center justify-center px-4 text-white mt-24 md:mt-10 ">
-            <div className="max-w-3xl w-full text-center py-10 md:py-16">
+            <div className="max-w-3xl w-full text-center pt-10 md:pt-16">
 
                 {/* Title */}
                 <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-4 sm:mb-6 bg-black/[0.4] backdrop-blur-md">
@@ -107,16 +107,16 @@ const HeroInfo = () => {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center w-full">
-                    {ACTION_BUTTONS.map((button, index) => (
-                        <a href={button.link}
-                            key={index}
-                            className={`block w-full sm:w-auto px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-full border border-pink-500 bg-black/70 text-white hover:bg-pink-500 hover:text-black transition duration-300 cursor-pointer ${button.className}`}
-                        >
-                            {button.label}
-                        </a>
-                    ))}
-                </div>
+                {/*<div className="flex flex-col sm:flex-row gap-4 justify-center w-full">*/}
+                {/*    {ACTION_BUTTONS.map((button, index) => (*/}
+                {/*        <a href={button.link}*/}
+                {/*            key={index}*/}
+                {/*            className={`block w-full sm:w-auto px-6 py-3 text-sm font-bold tracking-wider uppercase rounded-full border border-pink-500 bg-black/70 text-white hover:bg-pink-500 hover:text-black transition duration-300 cursor-pointer ${button.className}`}*/}
+                {/*        >*/}
+                {/*            {button.label}*/}
+                {/*        </a>*/}
+                {/*    ))}*/}
+                {/*</div>*/}
             </div>
         </div>
     );

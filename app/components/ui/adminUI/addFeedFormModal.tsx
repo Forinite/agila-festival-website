@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
@@ -12,7 +13,17 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         media: null,
     });
 
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Clean up preview URL when component unmounts or media changes
+    useEffect(() => {
+        return () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,10 +39,17 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         }));
     };
 
-    const handleMediaChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
+    const handleFile = (file: File) => {
+        if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
             setFormData((prev) => ({ ...prev, media: file }));
+
+            const url = URL.createObjectURL(file);
+            setPreviewUrl((prevUrl) => {
+                if (prevUrl) URL.revokeObjectURL(prevUrl);
+                return url;
+            });
+        } else {
+            alert('Only image or video files are allowed.');
         }
     };
 
@@ -52,7 +70,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         formPayload.append('title', title);
         formPayload.append('description', description);
         formPayload.append('category', JSON.stringify(category));
-        formPayload.append('media', media); // updated name from "image"
+        formPayload.append('media', media);
 
         try {
             const res = await fetch('/api/create-feed', {
@@ -80,10 +98,10 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center px-4 pt-12 h-screen overflow-y-scroll">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-xl p-6 w-full max-w-lg text-gray-800 shadow-xl"
+                className="bg-white rounded-xl p-6 w-full h-fit max-w-lg text-gray-800 shadow-xl"
             >
                 <h3 className="text-xl font-bold mb-6 text-center">Add New Feed</h3>
 
@@ -134,17 +152,83 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                 </div>
 
                 {/* Media Upload */}
-                <div className="mb-6">
-                    <label className="block text-sm font-medium mb-1">
+                <div
+                    className={`mb-6 p-4 border-2 border-dashed rounded-md transition-all text-center cursor-pointer ${
+                        formData.media ? 'border-indigo-600 bg-indigo-50' : 'border-gray-300'
+                    }`}
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.add('border-indigo-500', 'bg-indigo-50');
+                    }}
+                    onDragLeave={(e) => {
+                        e.preventDefault();
+                        e.currentTarget.classList.remove('border-indigo-500', 'bg-indigo-50');
+                    }}
+                    onDrop={(e) => {
+                        e.preventDefault();
+                        const file = e.dataTransfer.files[0];
+                        handleFile(file);
+                        e.currentTarget.classList.remove('border-indigo-500', 'bg-indigo-50');
+                    }}
+                >
+                    <label className="block text-sm font-medium mb-2">
                         Upload Image or Video
                     </label>
+
                     <input
                         type="file"
                         accept="image/*,video/*"
-                        onChange={handleMediaChange}
-                        required
-                        className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                        ref={fileInputRef}
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            handleFile(file);
+                        }}
+                        hidden
                     />
+
+                    <div className="mt-4 text-sm text-gray-600">
+                        {formData.media && previewUrl ? (
+                            <>
+                                {formData.media.type.startsWith('image/') ? (
+                                    <div className="mt-2 flex justify-center">
+                                        <Image
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            width={240}
+                                            height={240}
+                                            className="rounded-md object-contain max-h-60"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="mt-2 flex justify-center">
+                                        <video
+                                            controls
+                                            src={previewUrl}
+                                            className="rounded-md max-h-60"
+                                            width="100%"
+                                        />
+                                    </div>
+                                )}
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setFormData((prev) => ({ ...prev, media: null }));
+                                        if (previewUrl) {
+                                            URL.revokeObjectURL(previewUrl);
+                                            setPreviewUrl(null);
+                                        }
+                                    }}
+                                    className="mt-3 text-sm text-red-600 hover:underline"
+                                >
+                                    Remove File
+                                </button>
+                            </>
+                        ) : (
+                            <p>Click or drag & drop media file here</p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Buttons */}

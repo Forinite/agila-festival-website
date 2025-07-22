@@ -9,7 +9,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { label: 'Home', href: '/home' },
+    { label: 'Home', href: '/' },
     { label: 'Gallery', href: '/mediapage' },
     { label: 'About Festival', href: '#about' },
     { label: 'Schedule', href: '#schedule' },
@@ -30,7 +30,7 @@ const Navbar: React.FC =  () => {
                     {/* Logo */}
                     <div className="flex-shrink-0">
                         <Link href="/" className="text-white font-bold text-xl">
-                            Agila Festival
+                            Echija Festival
                         </Link>
                     </div>
 
@@ -48,7 +48,7 @@ const Navbar: React.FC =  () => {
                             ))}
                             <Link
                                 key={"signIn"}
-                                href={'/signIn'}
+                                href={'/signin'}
                                 className="text-gray-300 hover:text-white transition-colors duration-300 text-sm font-medium"
                             >
                                 Sign In
@@ -88,7 +88,7 @@ const Navbar: React.FC =  () => {
                         ))}
                         <Link
                             key={"signIn"}
-                            href={'/signIn'}
+                            href={'/signin'}
                             className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-300"
                         >
                             Sign In

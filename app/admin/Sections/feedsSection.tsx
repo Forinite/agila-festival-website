@@ -9,6 +9,7 @@ import AddFeedFormModal from "@/app/components/ui/adminUI/addFeedFormModal";
 import {useFeeds} from "@/app/hooks/useFeeds";
 import {Loading} from "@/app/components/ui/loading";
 import EditFeedFormModal from "@/app/components/ui/adminUI/editFeedFormModal";
+import VideoPlayer from "@/app/components/ui/videoPlayer";
 
 interface Feed {
     id: string;
@@ -103,13 +104,8 @@ export const FeedsSection = () => {
                     <div key={feed._id} className="border rounded-lg p-4 bg-white shadow-md relative">
 
                         {feed.isVideo ? (
-                            <video
-                                controls
-                                className="rounded w-full h-[180px] object-cover mb-4"
-                                width={300}
-                                height={200}
-                                src={feed.media}
-                            />
+
+                            <VideoPlayer src={feed.media} className="rounded w-full h-[180px] object-cover mb-4" />
                         ) : (
                             <img
                                 src={feed.media}

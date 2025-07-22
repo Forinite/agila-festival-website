@@ -7,6 +7,7 @@ const subjectOptions = [
     { value: 'general', label: 'General Inquiry' },
     { value: 'volunteer', label: 'Volunteer Opportunity' },
     { value: 'partnership', label: 'Partnership/Sponsorship' },
+    { value: 'planning', label: 'Planning Commitee' },
     { value: 'media', label: 'Media/Press Request' },
     { value: 'pageant', label: 'Face of Idoma Pageant' },
     { value: 'other', label: 'Other' }

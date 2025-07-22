@@ -21,7 +21,7 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
     }, [imageList.length]);
 
     return (
-        <div className="relative  max-w-screen h-[100vh] overflow-hidden group">
+        <div className="relative  max-w-screen h-[100vh] overflow-hidden ">
             <div className="w-full h-full relative flex flex-col justify-center ">
                 <div className="absolute top-0 left-0 w-full h-full flex items-end justify-center">
                     {imageList.map((image: StaticImageData, index: number) => (
@@ -34,7 +34,7 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
                             className={`object-cover absolute w-full h-full ${index === currentBgImageIndex ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000`}
                         />
                     ))}
-                    <div className="mb-8 relative z-10 flex gap-3 ">
+                    <div className="mb-8 relative z-30 flex gap-3 ">
                         {imageList.map((image: StaticImageData, index: number) => (
                             <div
                                 key={`imageCir${index}`}
@@ -48,9 +48,9 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60 transition-all duration-500 ease-in-out group-hover:to-black/80" />
                 </div>
             </div>
-            <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-2xl lg:text-5xl uppercase tracking-tight font-bold text-white">
-                {title}
-            </h1>
+            {/*<h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-2xl lg:text-5xl uppercase tracking-tight font-bold text-white">*/}
+            {/*    {title}*/}
+            {/*</h1>*/}
         </div>
     );
 };

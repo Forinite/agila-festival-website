@@ -43,7 +43,7 @@ const ContactInfo = () => {
         },
         {
             icon: <Mail className="w-6 h-6 text-white" />,
-            title: 'Location',
+            title: 'Email',
             lines: [contactInfo[0]?.emails[0]? contactInfo[0]?.emails[0] : ' ______________', contactInfo[0]?.emails[1]? contactInfo[0]?.emails[1] : ' ______________',]
         },
     ]

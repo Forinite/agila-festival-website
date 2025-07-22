@@ -13,14 +13,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-        <body
-            className={`antialiased `}
-        >
-        <Navbar />
+        <html>
+            <body
+                className={`antialiased `}
+            >
+            <Navbar />
 
-        {children}
-        </body>
+            {children}
+            </body>
         </html>
+
     );
 }

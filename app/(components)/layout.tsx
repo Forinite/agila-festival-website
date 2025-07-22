@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import "../globals.css";
 import Navbar from "@/app/(components)/navbar/navbar";
@@ -13,13 +14,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-        <body
-            className={`antialiased `}
-        >
-        <Navbar />
-        {children}
-        </body>
-        </html>
+
+            <html>
+                <body>
+                     <Navbar />
+                    {children}
+                </body>
+            </html>
+
     );
 }
+

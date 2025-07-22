@@ -27,7 +27,7 @@ const involvementData = [
             "Community engagement",
             "Media and digital presence"
         ],
-        buttonText: "Partnership Packages"
+        buttonText: "Become a Partner"
     },
     {
         title: "Planning Committee",

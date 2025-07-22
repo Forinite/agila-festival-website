@@ -1,11 +1,21 @@
+'use client'
 import React from 'react'
 import Image from "next/image";
-import {adminContacts} from "@/app/constants/admincontacts";
+import {useAdminContacts} from "@/app/hooks/useAdminContacts";
+// import {adminContacts} from "@/app/constants/admincontacts";
 
 const AdminContacts = () => {
+    const { contacts, loading } = useAdminContacts();
+    if (loading) return (
+        <div className="w-full flex flex-wrap justify-center gap-8 px-4 mb-16">
+            <p>Loading Contact... </p>
+            <p>Loading Contact... </p>
+            <p>Loading Contact... </p>
+        </div>
+    )
     return (
         <div className="w-full flex flex-wrap justify-center gap-8 px-4 mb-16">
-            {adminContacts.map((contact, index) => (
+            {contacts.map((contact, index) => (
                 <div
                     key={index}
                     className="relative group w-full max-w-sm rounded-3xl bg-white/80 backdrop-blur-md border border-gray-200 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-white"

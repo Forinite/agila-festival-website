@@ -12,7 +12,7 @@ export const Feed = () => {
     }
 
     return (
-        <div className="columns-2 md:columns-3 lg:columns-6 gap-4">
+        <div className="columns-2 md:columns-3 lg:columns-5 gap-4">
             {/* Repeat this PinCard component for each pin */}
             {feeds.map((item) => (
                 <div key={`${item.title}`} className="masonry-item break-insie-avoid group cursor-pointer mb-4">

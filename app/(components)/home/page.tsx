@@ -9,7 +9,7 @@ const HomePage = () => {
             <HeroInfo />
             <Hero
                 imageList={heroImages}
-                title="Agila Festival"
+                title=""
             />
 
         </section>

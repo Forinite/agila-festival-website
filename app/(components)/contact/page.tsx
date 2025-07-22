@@ -27,7 +27,7 @@ const ContactSection = () => {
                             <ContactInfo />
                         </div>
                         <SocialLinks />
-                        <MediaResources />
+                        {/*<MediaResources />*/}
                     </div>
                 </div>
             </div>

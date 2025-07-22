@@ -12,9 +12,8 @@ import { useQueens } from '@/app/hooks/useQueens';
 const PaegentPage = () => {
     const { currentQueen, pastQueens, loading } = useQueens();
 
-    if (loading) return <p>Loading queens...</p>;
     return (
-        <section id={'pageant'} className={`mt-16`}>
+        <section id="pageant" className={`mt-16`}>
             <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-5xl font-black text-black mb-4">
                     Face of <span className="text-red-500">Idoma</span>
@@ -29,10 +28,10 @@ const PaegentPage = () => {
                     <div className="order-2 lg:order-1">
                         <div
                             className="items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm inline-block mb-4">
-                            CURRENT QUEEN 2023
+                            CURRENT QUEEN {currentQueen?.year || '2XXX'}
                         </div>
                         <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                            Adaobi Blessing Enechojo
+                            {currentQueen?.name || "Queens' Name"}
                         </h3>
                         <p className="text-gray-600 mb-6 leading-relaxed italic">
                             "As Face of Idoma 2023, I am committed to promoting our rich cultural heritage while
@@ -69,21 +68,37 @@ const PaegentPage = () => {
                     <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
                         Past Queens
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {pastQueens.map((queen, index) => (
-                            <QueenCard
-                                key={queen.year}
-                                name={queen.name}
-                                year={queen.year}
-                                role={queen.role}
-                                imageUrl={queen.imageUrl}
-                            />
-                        ))}
-                    </div>
+                    {!loading &&
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {pastQueens.map((queen, index) => (
+                                <QueenCard
+                                    key={queen.year +'-'+ index}
+                                    name={queen.name}
+                                    year={queen.year}
+                                    role={queen.role}
+                                    imageUrl={queen.imageUrl}
+                                />
+                            ))}
+                        </div>
+                    }
+                    {loading && <div className="">Fetching Past Queens...</div>}
+                    {loading &&
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {['', '', ''].map((queen, index) => (
+                                <QueenCard
+                                    key={index}
+                                    name={"Queen's name"}
+                                    year={'2XXX'}
+                                    role={'Queen role'}
+                                    imageUrl={'image.png'}
+                                />
+                            ))}
+                        </div>
+                    }
                 </div>
 
                 <div className={'mt-12'}>
-                    <PaegentApplicationSection />
+                    <PaegentApplicationSection  year={currentQueen?.year}/>
                 </div>
 
             </div>

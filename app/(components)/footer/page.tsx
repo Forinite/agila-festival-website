@@ -9,17 +9,17 @@ const BRAND_INFO = {
 };
 
 const QUICK_LINKS = [
-    'About the Festival',
-    'Cultural Feed',
-    'Event Schedule',
-    'Face of Idoma'
+    { label: 'About the Festival', href: '#about' },
+    { label: 'Cultural Feed', href: '#media' },
+    { label: 'Event Schedule', href: '#schedule' },
+    { label: 'Face of Idoma', href: '#pageant' },
 ];
 
 const INVOLVEMENT_LINKS = [
-    'Volunteer',
-    'Sponsorship',
-    'Planning Committee',
-    'Contact Us'
+    { label: 'Volunteer', href: '/contact?option=volunteer' },
+    { label: 'Sponsorship', href: '/contact?option=partnership' },
+    { label: 'Planning Committee', href: '/contact?option=planning' },
+    { label: 'Press Media', href: '/contact?option=media' },
 ];
 
 const CONTACT_INFO = {
@@ -60,11 +60,11 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold mb-4">Quick Links</h4>
                         <ul className="space-y-2 text-sm">
-                            {QUICK_LINKS.map((link) => (
-                                <li key={link}>
-                                    <button className="text-gray-300 hover:text-red-500 transition-colors text-left">
-                                        {link}
-                                    </button>
+                            {QUICK_LINKS.map(({label, href}) => (
+                                <li key={label}>
+                                    <a href={href} className="text-gray-300 hover:text-red-500 transition-colors text-left">
+                                        {label}
+                                    </a>
                                 </li>
                             ))}
                         </ul>
@@ -74,11 +74,11 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold mb-4">Get Involved</h4>
                         <ul className="space-y-2 text-sm">
-                            {INVOLVEMENT_LINKS.map((link) => (
-                                <li key={link}>
-                                    <button className="text-gray-300 hover:text-red-500 transition-colors text-left">
-                                        {link}
-                                    </button>
+                            {INVOLVEMENT_LINKS.map(({label, href}) => (
+                                <li key={label}>
+                                    <a href={href} className="text-gray-300 hover:text-red-500 transition-colors text-left">
+                                        {label}
+                                    </a>
                                 </li>
                             ))}
                         </ul>

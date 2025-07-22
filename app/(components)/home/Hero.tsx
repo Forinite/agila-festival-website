@@ -22,7 +22,7 @@ const Hero: React.FC<{
     }, [imageList.length]);
 
     return (
-        <div className="relative top-0 left-0 w-screen h-[100vh] overflow-hidden group">
+        <div className="relative top-0 left-0 w-screen h-[100vh] overflow-hidden">
             <div className="w-full h-full relative">
                 <div className="absolute top-0 left-0 w-full h-full flex items-end justify-center">
                     {imageList.map((image: StaticImageData, index: number) => (
@@ -49,9 +49,9 @@ const Hero: React.FC<{
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60 transition-all duration-500 ease-in-out group-hover:to-black/80" />
                 </div>
             </div>
-            <h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-2xl lg:text-5xl uppercase tracking-tight font-bold text-white">
-                {title}
-            </h1>
+            {/*<h1 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-2xl lg:text-5xl uppercase tracking-tight font-bold text-white">*/}
+            {/*    {title}*/}
+            {/*</h1>*/}
         </div>
     )
 };

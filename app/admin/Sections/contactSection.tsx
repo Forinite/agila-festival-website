@@ -23,11 +23,6 @@ export const ContactSection = () => {
     const [info, setInfo] = useState([]);
     const [social, setSocial] = useState([]);
 
-    // useEffect(()=> {
-    //
-    //     // console.log(contactItems.slice(1))
-    //
-    // }, [contactInfo, contactSocials])
 
     useEffect(() => {
         if (contactInfo.length && contactSocials.length) {
