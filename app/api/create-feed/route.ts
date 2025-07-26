@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityWriteClient, uploadImageToSanity } from '@/sanity/lib/sanityClient';
+import { sanityWriteClient, uploadMediaToSanity } from '@/sanity/lib/sanityClient';
 
 export async function POST(req: NextRequest) {
     try {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Upload file (image or video)
-        const asset = await uploadImageToSanity(file); // Handles video & image
+        const asset = await uploadMediaToSanity(file); // Handles video & image
 
         // Create feed document
         const newFeed = await sanityWriteClient.create({

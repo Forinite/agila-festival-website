@@ -1,5 +1,5 @@
 // /api/admin-contact/update/route.ts
-import {sanityWriteClient, uploadImageToSanity} from '@/sanity/lib/sanityClient';
+import {sanityWriteClient, uploadMediaToSanity} from '@/sanity/lib/sanityClient';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         const updatePayload: any = { name, title, phone, email };
 
         if (imageFile && imageFile.size > 0) {
-            const uploadedImage = await uploadImageToSanity(imageFile);
+            const uploadedImage = await uploadMediaToSanity(imageFile);
             updatePayload.image = { asset: { _type: 'reference', _ref: uploadedImage._id } };
         }
 

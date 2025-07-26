@@ -10,57 +10,15 @@ export const sanityWriteClient = createClient({
     useCdn: false,
 });
 
-// 2. Upload image helper
-export const uploadImageToSanity = async (file: File) => {
-    const asset = await sanityWriteClient.assets.upload('image', file, {
+// 2. Upload Media helper
+export const uploadMediaToSanity = async (file: File) => {
+    const uploadType = file.type.startsWith('video/') ? 'file' : 'image';
+
+    const asset = await sanityWriteClient.assets.upload(uploadType, file, {
         contentType: file.type,
         filename: file.name,
     });
 
-    return asset; // asset._id is used for referencing
+    return asset;
 };
 
-// 3. Create feed item (pass in the uploaded asset)
-export const createFeedItem = async (formData: {
-    title: string;
-    description: string;
-    category: string[];
-    imageAssetId: string; // we expect _id from uploadImageToSanity
-}) => {
-    return sanityWriteClient.create({
-        _type: 'feedItem',
-        title: formData.title,
-        description: formData.description,
-        category: formData.category,
-        image: {
-            _type: 'image',
-            asset: {
-                _type: 'reference',
-                _ref: formData.imageAssetId,
-            },
-        },
-
-    });
-};
-
-// Create Queen
-export const createQueen = async (data: {
-    name: string;
-    year: number;
-    role: string;
-    imageAssetId: string;
-}) => {
-    return sanityWriteClient.create({
-        _type: 'queen',
-        name: data.name,
-        year: data.year,
-        role: data.role,
-        imageUrl: {
-            _type: 'image',
-            asset: {
-                _type: 'reference',
-                _ref: data.imageAssetId,
-            },
-        },
-    });
-};

@@ -1,6 +1,6 @@
 // app/api/queen/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityWriteClient, uploadImageToSanity } from '@/sanity/lib/sanityClient';
+import { sanityWriteClient, uploadMediaToSanity } from '@/sanity/lib/sanityClient';
 import { v4 as uuid } from 'uuid';
 
 export async function POST(req: NextRequest) {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const asset = await uploadImageToSanity(file);
+        const asset = await uploadMediaToSanity(file);
 
         const result = await sanityWriteClient.create({
             _type: 'queen',
