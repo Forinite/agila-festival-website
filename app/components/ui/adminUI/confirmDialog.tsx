@@ -48,6 +48,7 @@ const ConfirmDialog = ({
                         onClick={() => {
                             setLoading(true)
                             onConfirm()
+                            setLoading(false)
                         }}
                         className="text-sm px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition cursor-pointer disabled:bg-red-900 disabled:cursor-not-allowed"
                         disabled={loading}

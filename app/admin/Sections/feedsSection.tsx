@@ -47,7 +47,7 @@ export const FeedsSection = () => {
     };
 
     const confirmRemove = async () => {
-        const id = feedToRemove?._id;
+        const id = feedToRemove?.id;
         console.log(id, feedToRemove)
         try {
             const res = await fetch('/api/create-feed/deletion', {
@@ -57,13 +57,14 @@ export const FeedsSection = () => {
             })
 
             if (!res.ok) throw new Error('Failed to delete')
-
+            refetch()
             // Optimistically update local state/UI
             setFeeds((prev) => prev.filter((item) => item._id !== id))
         } catch (err) {
             console.error('Delete failed:', err)
             alert('Could not delete feed')
         }
+
 
         setIsModalOpen(false);
         setFeedToRemove(null);

@@ -1,5 +1,5 @@
 // sanity/schemas/adminAccount.ts
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField } from 'sanity';
 
 export const adminAccount = defineType({
     name: 'adminAccount',
@@ -18,5 +18,12 @@ export const adminAccount = defineType({
             type: 'string',
             validation: Rule => Rule.required().email(),
         }),
+        defineField({
+            name: 'hashedPassword',
+            title: 'Hashed Password',
+            type: 'string',
+            validation: Rule => Rule.required(),
+            hidden: true,
+        }),
     ],
-})
+});

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSubmit: (admin: any) => void }) => {
-    const [formData, setFormData] = useState({ name: '', email: '' });
+    const [formData, setFormData] = useState({ name: '', email: '' , password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,10 +15,10 @@ const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSu
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const { name, email } = formData;
+        const { name, email, password } = formData;
 
-        if (!name || !email) {
-            setError('Both fields are required');
+        if (!name || !email || !password) {
+            setError('All fields are required');
             return;
         }
 
@@ -26,16 +26,24 @@ const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSu
         setLoading(true);
 
         try {
+
+            // Add right after fetch
+            console.log('[UI] Sending invite request...', formData);
+
             const res = await fetch('/api/admin-account/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
+            console.log('[UI] Response status:', res.status);
+
             if (!res.ok) {
                 const data = await res.json();
+                console.error('[UI] Invite failed:', data);
                 throw new Error(data?.error || 'Failed to invite admin');
             }
+
 
             const result = await res.json();
             onSubmit(result.data); // Send the new admin back to AdminSection
@@ -70,6 +78,16 @@ const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSu
                     type="email"
                     placeholder="Email Address"
                     value={formData.email}
+                    onChange={handleChange}
+                    className="w-full mb-3 p-2 border border-gray-300 rounded"
+                    required
+                    disabled={loading}
+                />
+                <input
+                    name="password"
+                    type="text"
+                    placeholder="Default Password"
+                    value={formData.password}
                     onChange={handleChange}
                     className="w-full mb-3 p-2 border border-gray-300 rounded"
                     required
