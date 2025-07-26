@@ -1,8 +1,7 @@
-'use client'
 // components/contact/ContactInfo.tsx
-
-import {contactItems} from "@/app/constants/contacts";
-import {useContactInfo} from "@/app/hooks/useContactInfo";
+import { MapPin, Phone, Mail } from 'lucide-react';
+import React from 'react';
+import {getContactInfo} from "@/app/libs/queries/getContactInfo";
 
 interface ContactItemProps {
     icon: React.ReactNode;
@@ -17,36 +16,40 @@ const ContactItem: React.FC<ContactItemProps> = ({ icon, title, lines }) => (
         </div>
         <div>
             <h4 className="font-bold text-gray-900 mb-1">{title || 'Title'}</h4>
-            {lines && lines.map((line, index) => (
+            {lines?.map((line, index) => (
                 <p key={index} className="text-gray-600">
-                    {line}
+                    {line || '______________'}
                 </p>
             ))}
         </div>
     </div>
 );
 
-import { MapPin, Phone, Mail } from 'lucide-react';
+// ✅ SERVER COMPONENT
+const ContactInfo = async () => {
+    const data = await getContactInfo();
 
-const ContactInfo = () => {
-    const { contactInfo, contactSocials, loading, refetch } = useContactInfo();
+    if (!data) {
+        return <p className="text-gray-500 text-sm">Contact info not available.</p>;
+    }
+
     const contactItems = [
         {
             icon: <MapPin className="w-6 h-6 text-white" />,
             title: 'Location',
-            lines: [contactInfo[0]?.location[0]? contactInfo[0]?.location[0] : ' ______________', contactInfo[0]?.location[1]? contactInfo[0]?.location[1] : ' ______________',]
+            lines: [data.location?.[0] || '______________', data.location?.[1] || '______________'],
         },
         {
             icon: <Phone className="w-6 h-6 text-white" />,
             title: 'Phone',
-            lines: [contactInfo[0]?.phones[0]? contactInfo[0]?.phones[0] : ' ______________', contactInfo[0]?.phones[1]? contactInfo[0]?.phones[1] : ' ______________',]
+            lines: [data.phones?.[0] || '______________', data.phones?.[1] || '______________'],
         },
         {
             icon: <Mail className="w-6 h-6 text-white" />,
             title: 'Email',
-            lines: [contactInfo[0]?.emails[0]? contactInfo[0]?.emails[0] : ' ______________', contactInfo[0]?.emails[1]? contactInfo[0]?.emails[1] : ' ______________',]
+            lines: [data.emails?.[0] || '______________', data.emails?.[1] || '______________'],
         },
-    ]
+    ];
 
     return (
         <div className="space-y-6">

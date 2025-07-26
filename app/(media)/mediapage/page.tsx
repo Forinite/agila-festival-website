@@ -1,10 +1,6 @@
 import React from 'react'
-import Image from "next/image";
-import FeedCard from "@/app/components/ui/feed";
-import {feedList} from "@/app/constants/feedInfo";
 import {Home, Phone} from "lucide-react"
-import {useFeeds} from "@/app/hooks/useFeeds";
-import {Feed} from "@/app/(media)/mediapage/feed";
+import Feed from "@/app/(media)/mediapage/feed";
 
 
 // pages/index.js

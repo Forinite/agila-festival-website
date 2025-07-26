@@ -1,16 +1,11 @@
-'use client';
+// app/(your route)/page.tsx or PaegentPage.tsx (without 'use client')
 
-import React from 'react'
-import Image from "next/image";
-// import {pastQueensData} from "@/app/constants/pastQueens";
 import QueenCard from "@/app/components/ui/queenCard";
 import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
-// import {paegentQueenImgList} from "@/app/constants";
+import {getQueens} from "@/app/libs/queries/getQueens";
 
-import { useQueens } from '@/app/hooks/useQueens';
-
-const PaegentPage = () => {
-    const { currentQueen, pastQueens, loading } = useQueens();
+const PaegentPage = async () => {
+    const { currentQueen, pastQueens } = await getQueens();
 
     return (
         <section id="pageant" className={`mt-16`}>
@@ -20,23 +15,21 @@ const PaegentPage = () => {
                 </h2>
                 <p className="md:text-lg text-sm text-gray-600 max-w-3xl mx-auto">
                     Six days of cultural celebration, traditional performances, and community festivities. December
-                    23-26, 2024
+                    23–26, 2024
                 </p>
             </div>
+
             <div className="bg-gray-50 rounded-3xl p-8 md:p-12 mb-12 commonPadding">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div className="order-2 lg:order-1">
-                        <div
-                            className="items-center border transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm inline-block mb-4">
-                            CURRENT QUEEN {currentQueen?.year || '2XXX'}
+                        <div className="inline-block mb-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm">
+                            CURRENT QUEEN {currentQueen?.year || "2XXX"}
                         </div>
                         <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                            {currentQueen?.name || "Queens' Name"}
+                            {currentQueen?.name || "Queen's Name"}
                         </h3>
-                        <p className="text-gray-600 mb-6 leading-relaxed italic">
-                            "As Face of Idoma 2023, I am committed to promoting our rich cultural heritage while
-                            empowering young women across Idoma Land. My mission is to bridge tradition with modernity,
-                            ensuring our customs remain relevant for future generations."
+                        <p className="text-gray-600 mb-6 italic leading-relaxed">
+                            "As Face of Idoma 2023, I am committed to promoting our rich cultural heritage..."
                         </p>
                         <div className="space-y-3">
                             <div>
@@ -45,11 +38,11 @@ const PaegentPage = () => {
                             </div>
                             <div>
                                 <span className="font-bold text-gray-900">Initiative:</span>
-                                <span className="text-gray-600 ml-2">" Idoma Girl Child Education Project "</span>
+                                <span className="text-gray-600 ml-2">"Idoma Girl Child Education Project"</span>
                             </div>
                             <div>
                                 <span className="font-bold text-gray-900">Tenure:</span>
-                                <span className="text-gray-600 ml-2">December 2023 - December 2024</span>
+                                <span className="text-gray-600 ml-2">December 2023 – December 2024</span>
                             </div>
                         </div>
                     </div>
@@ -68,41 +61,25 @@ const PaegentPage = () => {
                     <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
                         Past Queens
                     </h3>
-                    {!loading &&
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {pastQueens.map((queen, index) => (
-                                <QueenCard
-                                    key={queen.year +'-'+ index}
-                                    name={queen.name}
-                                    year={queen.year}
-                                    role={queen.role}
-                                    imageUrl={queen.imageUrl}
-                                />
-                            ))}
-                        </div>
-                    }
-                    {loading && <div className="">Fetching Past Queens...</div>}
-                    {loading &&
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {['', '', ''].map((queen, index) => (
-                                <QueenCard
-                                    key={index}
-                                    name={"Queen's name"}
-                                    year={'2XXX'}
-                                    role={'Queen role'}
-                                    imageUrl={'image.png'}
-                                />
-                            ))}
-                        </div>
-                    }
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {pastQueens.map((queen, index) => (
+                            <QueenCard
+                                key={queen.year + '-' + index}
+                                name={queen.name}
+                                year={queen.year}
+                                role={queen.role}
+                                imageUrl={queen.imageUrl}
+                            />
+                        ))}
+                    </div>
                 </div>
 
-                <div className={'mt-12'}>
-                    <PaegentApplicationSection  year={currentQueen?.year}/>
+                <div className="mt-12">
+                    <PaegentApplicationSection year={currentQueen?.year} />
                 </div>
-
             </div>
         </section>
-    )
-}
-export default PaegentPage
+    );
+};
+
+export default PaegentPage;

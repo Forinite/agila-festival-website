@@ -1,5 +1,5 @@
 import CategoryBtn from "@/app/components/ui/categoryBtn";
-import ClientFeedGrid from "@/app/(components)/mediafeed/MediaFeedClient";
+import FeedGrid from "@/app/(components)/mediafeed/MediaFeedClient";
 
 export default function MediaFeed() {
     return (
@@ -18,7 +18,7 @@ export default function MediaFeed() {
                 <CategoryBtn />
 
                 {/* CLIENT COMPONENT BELOW */}
-                <ClientFeedGrid />
+                <FeedGrid />
             </div>
         </section>
     );

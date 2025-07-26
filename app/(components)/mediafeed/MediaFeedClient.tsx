@@ -1,24 +1,40 @@
-'use client';
+import React from 'react';
+import FeedCard from '@/app/components/ui/feed';
+import {sanityClient} from "@/sanity/lib/client";
 
-import FeedCard from "@/app/components/ui/feed";
-import {useFeeds} from "@/app/hooks/useFeeds";
-
-const ClientFeedGrid = () => {
-    const { feeds, loading } = useFeeds();
-
-    if (loading) {
-        return <p className="text-center">Loading feeds...</p>;
+const FeedGrid = async () => {
+    const query = `*[_type == "feedItem"] | order(_createdAt desc){
+    _id,
+    title,
+    description,
+    category,
+    media {
+      asset->{
+        _id,
+        url,
+        mimeType
+      }
     }
+  }`;
+
+    const data = await sanityClient.fetch(query);
+
+    const feeds = data.map((item: any) => ({
+        id: item._id,
+        title: item.title,
+        description: item.description,
+        category: item.category,
+        media: item.media?.asset?.url,
+        isVideo: item.media?.asset?.mimeType?.startsWith('video'),
+    }));
 
     return (
         <>
             <div className="masonry-grid columns-2 sm:columns-2 md:columns-3 lg:columns-5 gap-4 space-y-4">
-                {feeds.map((item, index) => (
+                {feeds.slice(0, 10).map((item, index) => (
                     <div
                         key={`${item.title}-${index}`}
-                        className={`masonry-item break-insie-avoid group cursor-pointer mb-4 ${
-                            index > 9 ? 'hidden' : ''
-                        }`}
+                        className="masonry-item break-inside-avoid group cursor-pointer mb-4"
                     >
                         <FeedCard feedInfo={item} />
                     </div>
@@ -39,4 +55,4 @@ const ClientFeedGrid = () => {
     );
 };
 
-export default ClientFeedGrid;
+export default FeedGrid;
