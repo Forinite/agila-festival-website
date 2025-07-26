@@ -24,12 +24,16 @@ export const authOptions = {
                     { email: credentials.email }
                 );
 
+                console.log('[Auth] Fetched user from Sanity:', user);
+
                 if (!user) {
                     console.warn('[Auth] No admin found for email:', credentials.email);
                     return null;
                 }
 
                 const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
+                console.log('[Auth] Password match result:', isValid);
+
                 if (!isValid) {
                     console.warn('[Auth] Invalid password for:', credentials.email);
                     return null;
@@ -42,6 +46,8 @@ export const authOptions = {
                     name: user.name,
                     email: user.email,
                 };
+
+
             }
         }),
     ],
