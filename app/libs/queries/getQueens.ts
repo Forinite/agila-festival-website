@@ -10,6 +10,7 @@ export interface Queen {
     year: number;
     role: string;
     imageUrl: string;
+    bio?: string;
 }
 
 export const getQueens = async (): Promise<{
@@ -22,7 +23,8 @@ export const getQueens = async (): Promise<{
       name,
       year,
       role,
-      imageUrl
+      imageUrl,
+      bio
     }
   `);
 
@@ -31,6 +33,7 @@ export const getQueens = async (): Promise<{
         name: q.name,
         year: q.year,
         role: q.role,
+        bio: q.bio,
         imageUrl: builder.image(q.imageUrl).url(),
     }));
 

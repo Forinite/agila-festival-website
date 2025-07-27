@@ -31,7 +31,7 @@ export default defineType({
         defineField({
             name: 'bio',
             title: 'Biography',
-            type: 'markdown',
+            type: 'text',
         }),
     ],
 })

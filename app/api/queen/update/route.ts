@@ -9,6 +9,7 @@ export async function POST(req: Request) {
         const name = formData.get('name')?.toString();
         const year = formData.get('year')?.toString();
         const role = formData.get('role')?.toString();
+        const bio = formData.get('bio')?.toString(); // ✅ Add this line
         const imageBlob = formData.get('image') as Blob | null;
 
         if (!id || !name || !year || !role) {
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
             name,
             year: parseInt(year),
             role,
+            bio, // ✅ Add bio to patch
         };
 
         if (imageBlob && imageBlob.size > 0) {

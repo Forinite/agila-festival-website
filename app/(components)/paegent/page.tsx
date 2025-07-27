@@ -29,22 +29,9 @@ const PaegentPage = async () => {
                             {currentQueen?.name || "Queen's Name"}
                         </h3>
                         <p className="text-gray-600 mb-6 italic leading-relaxed">
-                            "As Face of Idoma 2023, I am committed to promoting our rich cultural heritage..."
+                            {currentQueen?.bio || "Queen's Bio"}
                         </p>
-                        <div className="space-y-3">
-                            <div>
-                                <span className="font-bold text-gray-900">Education:</span>
-                                <span className="text-gray-600 ml-2">Mass Communication, University of Abuja</span>
-                            </div>
-                            <div>
-                                <span className="font-bold text-gray-900">Initiative:</span>
-                                <span className="text-gray-600 ml-2">"Idoma Girl Child Education Project"</span>
-                            </div>
-                            <div>
-                                <span className="font-bold text-gray-900">Tenure:</span>
-                                <span className="text-gray-600 ml-2">December 2023 – December 2024</span>
-                            </div>
-                        </div>
+
                     </div>
                     <div className="order-1 lg:order-2">
                         <img
