@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {urlFor} from "@/app/utils/imageBuilder";
 import {Loading} from "@/app/components/ui/loading";
+import {toast} from "@/lib/toast";
 
 const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
     const [formData, setFormData] = useState({
@@ -66,14 +67,17 @@ const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
                 body: data,
             });
 
-            if (!res.ok) throw new Error('Failed to submit contact data');
+            if (!res.ok) {
+                toast.error('Failed to submit contact data')
+                throw new Error('Failed to save admin contact!');
+            }
 
             refetch()
-            alert('Admin contact saved successfully.');
+            toast.success('Admin contact saved successfully.');
             onClose();
         } catch (err) {
             console.error('Submit error:', err);
-            alert('Failed to save admin contact!');
+            toast.error('Failed to save admin contact!');
         } finally {
             setLoading(false);
         }

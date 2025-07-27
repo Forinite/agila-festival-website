@@ -3,6 +3,7 @@ import AdminScheduleCard from '@/app/components/ui/adminUI/adminScheduleCard';
 import { useSchedules } from '@/app/hooks/useSchedules';
 import ScheduleFormModal from '@/app/components/ui/adminUI/scheduleForrmModal';
 import ConfirmModal from "@/app/components/ui/adminUI/modalConfirm";
+import {toast} from "@/lib/toast";
 
 const ScheduleSection = () => {
     const [editModalOpen, setEditModalOpen] = React.useState(false);
@@ -37,9 +38,11 @@ const ScheduleSection = () => {
                 body: JSON.stringify(formData)
             });
             setAddModalOpen(false);
+            toast.success('Schedule added successfully.')
             refetch()
 
         } catch (error) {
+            toast.error('Failed to add schedule. Please try again.')
             console.error('Add Schedule Error:', error);
         }
     };
@@ -52,8 +55,11 @@ const ScheduleSection = () => {
                 body: JSON.stringify(formData)
             });
             setEditModalOpen(false);
+            toast.success('Schedule updated successfully.')
+
             refetch()
         } catch (error) {
+            toast.error('Failed to update schedule. Please try again.')
             console.error('Update Schedule Error:', error);
         }
     };
@@ -73,7 +79,7 @@ const ScheduleSection = () => {
             refetch();
         } catch (error) {
             console.error('Delete error:', error);
-            alert('Failed to delete schedule. Please try again.')
+            toast.error('Failed to delete schedule. Please try again.')
         } finally {
             setDeleteModalOpen(false);
             setActiveScheduleId('');

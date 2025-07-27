@@ -65,13 +65,6 @@ const AdminContactList = ({ onEdit, onDelete }) => {
                         >
                             <Pencil size={18} />
                         </button>
-                        <button
-                            onClick={() => onDelete(contact)}
-                            className="p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600 hover:text-red-800 transition"
-                            aria-label="Delete"
-                        >
-                            <Trash2 size={18} />
-                        </button>
                     </div>
                 </div>
             ))}
