@@ -37,7 +37,12 @@ export  const  QueenSection  = () => {
                 body: JSON.stringify({ id }),
             })
 
-            if (!res.ok) throw new Error('Failed to delete')
+            if (!res.ok){
+                toast.error('Failed to delete queen')
+                throw new Error('Failed to delete')
+            }
+
+            toast.success('Queen deleted successfully')
 
             // Optimistically update local state/UI
             // setQueens((prev) => prev.filter((item) => item._id !== id))
