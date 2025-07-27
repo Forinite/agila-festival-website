@@ -9,7 +9,7 @@ import { registerToast } from '@/lib/toast';
 interface Toast {
     id: string;
     message: string;
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'info';
 }
 
 type ToastContextType = {
@@ -21,6 +21,20 @@ const ToastContext = createContext<ToastContextType | null>(null);
 export const useToast = () => useContext(ToastContext)!;
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+
+    const getToastBg = (type: Toast['type']) => {
+        switch (type) {
+            case 'success':
+                return 'bg-green-600';
+            case 'error':
+                return 'bg-red-600';
+            case 'info':
+                return 'bg-blue-600';
+            default:
+                return 'bg-gray-700';
+        }
+    };
+
     const [toasts, setToasts] = useState<Toast[]>([]);
 
     const removeToast = (id: string) => setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -30,6 +44,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         setToasts((prev) => [...prev, { id, message, type }]);
         setTimeout(() => removeToast(id), 4000);
     }, []);
+
 
     useEffect(() => {
         registerToast({ show });
@@ -44,7 +59,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
                         className={`
           relative flex items-start gap-3 px-4 py-3 pr-3 rounded-lg shadow-md text-white text-sm max-w-xs overflow-hidden
           animate-slide-in
-          ${toast.type === 'success' ? 'bg-green-600' : 'bg-red-600'}
+          ${getToastBg(toast.type)}
         `}
                     >
                         <span>{toast.message}</span>

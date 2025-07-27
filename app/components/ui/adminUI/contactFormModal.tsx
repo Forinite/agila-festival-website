@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import {toast} from "@/lib/toast";
 
 const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
     const [isSumbiting, setIsSumbiting] = useState(false);
@@ -46,8 +47,11 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
             });
 
             if (!res.ok) {
+                toast.error('Failed to update contact info');
                 throw new Error('Failed to update');
             }
+
+            toast.success('Contact info updated successfully');
 
             const json = await res.json();
             onSubmit(json.updated);

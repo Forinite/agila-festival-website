@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { urlFor } from '@/app/utils/imageBuilder';
+import {toast} from "@/lib/toast";
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
@@ -91,10 +92,11 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
 
             onSubmit(json.updated);
             showModal(false);
+            toast.success('Feed updated successfully');
             refetch();
         } catch (err) {
             console.error('[Edit Feed Error]', err);
-            alert('Error updating feed');
+            toast.error('Error updating feed');
         } finally {
             setIsSubmitting(false);
         }

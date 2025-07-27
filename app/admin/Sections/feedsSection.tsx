@@ -10,6 +10,7 @@ import {useFeeds} from "@/app/hooks/useFeeds";
 import {Loading} from "@/app/components/ui/loading";
 import EditFeedFormModal from "@/app/components/ui/adminUI/editFeedFormModal";
 import VideoPlayer from "@/app/components/ui/videoPlayer";
+import {toast} from "@/lib/toast";
 
 interface Feed {
     id: string;
@@ -57,13 +58,17 @@ export const FeedsSection = () => {
                 body: JSON.stringify({ id }),
             })
 
-            if (!res.ok) throw new Error('Failed to delete')
+            if (!res.ok) {
+                toast.error('Failed to delete feed')
+                throw new Error('Failed to delete')
+            }
             refetch()
+            toast.success('Feed deleted successfully')
             // Optimistically update local state/UI
             setFeeds((prev) => prev.filter((item) => item._id !== id))
         } catch (err) {
+            toast.error('Could not delete feed')
             console.error('Delete failed:', err)
-            alert('Could not delete feed')
         }
 
 
@@ -74,7 +79,6 @@ export const FeedsSection = () => {
     const handleEditClick = (feed: Feed) => {
         setFeedToEdit(feed);
         setShowEditModal(true);
-        console.log(feed)
     };
     const handleEdit = () => {
         if (feedToRemove) {

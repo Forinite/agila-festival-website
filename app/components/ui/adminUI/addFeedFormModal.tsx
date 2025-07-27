@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import {toast} from "@/lib/toast";
 
 const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
@@ -49,7 +50,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                 return url;
             });
         } else {
-            alert('Only image or video files are allowed.');
+            toast.info('Only image or video files are allowed.');
         }
     };
 
@@ -60,7 +61,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         const { title, description, category, media } = formData;
 
         if (!title || !description || !media) {
-            alert('All fields are required.');
+            toast.info('All fields are required.');
             return;
         }
 
@@ -87,11 +88,11 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                 onClose();
             } else {
                 console.error('❌ Error:', result.error);
-                alert(result.error || 'An error occurred.');
+                toast.error(result.error || 'An error occurred.');
             }
         } catch (err) {
             console.error('❌ Network error:', err);
-            alert('Something went wrong.');
+            toast.error('Something went wrong.');
         } finally {
             setIsSubmitting(false);
         }
