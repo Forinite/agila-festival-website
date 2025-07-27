@@ -10,20 +10,32 @@ export interface Feed {
     category: string[];
 }
 
-export async function fetchFeeds(): Promise<Feed[]> {
-    const query = `*[_type == "feedItem"] | order(_createdAt desc){
-    _id,
-    title,
-    description,
-    category,
-    media {
-      asset->{
-        _id,
-        url,
-        mimeType
+export async function fetchFeeds(searchQuery = ''): Promise<Feed[]> {
+    const match = searchQuery.trim();
+
+    const query = `
+    *[_type == "feedItem" ${
+        match
+            ? `&& (
+            title match "${match}*" ||
+            description match "*${match}*" ||
+            category[] match "${match}*"
+          )`
+            : ''
+    }] | order(_createdAt desc){
+      _id,
+      title,
+      description,
+      category,
+      media {
+        asset->{
+          _id,
+          url,
+          mimeType
+        }
       }
     }
-  }`;
+  `;
 
     const data = await sanityClient.fetch(query);
 

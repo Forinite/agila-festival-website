@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { urlFor } from '@/app/utils/imageBuilder';
 import {toast} from "@/lib/toast";
 
-const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
+// const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
 const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch }) => {
     const [formData, setFormData] = useState({
@@ -56,17 +56,26 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
         }
     };
 
+    function extractHashtags(text: string): string[] {
+        return text
+            .split(/\s+/) // Split on whitespace
+            .filter(word => word.startsWith('#') && word.length > 1)
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
+
             const form = new FormData();
 
+            const category = extractHashtags(formData.description)
             form.append('id', initialData.id);
             form.append('title', formData.title);
             form.append('description', formData.description);
-            form.append('category', JSON.stringify(formData.category || []));
+            form.append('category', JSON.stringify(category || []));
             form.append('mediaType', formData.mediaType || 'image');
 
             // If there's an existing asset and no new file, keep the asset ID
@@ -132,26 +141,26 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                     className="w-full mb-4 border px-3 py-2 rounded-md"
                 />
 
-                {/* Categories */}
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">Categories</label>
-                    <div className="flex flex-wrap gap-2">
-                        {categories.map((cat) => (
-                            <button
-                                type="button"
-                                key={cat}
-                                className={`px-3 py-1 rounded-full border text-sm ${
-                                    formData.category.includes(cat)
-                                        ? 'bg-indigo-600 text-white border-indigo-600'
-                                        : 'bg-white text-gray-700 border-gray-300'
-                                }`}
-                                onClick={() => handleCategoryChange(cat)}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {/*/!* Categories *!/*/}
+                {/*<div className="mb-4">*/}
+                {/*    <label className="block text-sm font-medium mb-2">Categories</label>*/}
+                {/*    <div className="flex flex-wrap gap-2">*/}
+                {/*        {categories.map((cat) => (*/}
+                {/*            <button*/}
+                {/*                type="button"*/}
+                {/*                key={cat}*/}
+                {/*                className={`px-3 py-1 rounded-full border text-sm ${*/}
+                {/*                    formData.category.includes(cat)*/}
+                {/*                        ? 'bg-indigo-600 text-white border-indigo-600'*/}
+                {/*                        : 'bg-white text-gray-700 border-gray-300'*/}
+                {/*                }`}*/}
+                {/*                onClick={() => handleCategoryChange(cat)}*/}
+                {/*            >*/}
+                {/*                {cat}*/}
+                {/*            </button>*/}
+                {/*        ))}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Media Upload */}
                 <div className="mb-4">

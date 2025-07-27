@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import {toast} from "@/lib/toast";
 
-const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
+// const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
 
 const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
     const [formData, setFormData] = useState({
@@ -54,12 +54,19 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         }
     };
 
+    function extractHashtags(text: string): string[] {
+        return text
+            .split(/\s+/) // Split on whitespace
+            .filter(word => word.startsWith('#') && word.length > 1)
+
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
 
-        const { title, description, category, media } = formData;
-
+        const { title, description, media } = formData;
+            const category = extractHashtags(description)
         if (!title || !description || !media) {
             toast.info('All fields are required.');
             return;
@@ -131,26 +138,26 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                     />
                 </div>
 
-                {/* Categories */}
-                <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">Categories</label>
-                    <div className="flex flex-wrap gap-2">
-                        {categories.map((cat) => (
-                            <button
-                                type="button"
-                                key={cat}
-                                className={`px-3 py-1 rounded-full border text-sm ${
-                                    formData.category.includes(cat)
-                                        ? 'bg-indigo-600 text-white border-indigo-600'
-                                        : 'bg-white text-gray-700 border-gray-300'
-                                }`}
-                                onClick={() => handleCategoryChange(cat)}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {/*/!* Categories *!/*/}
+                {/*<div className="mb-4">*/}
+                {/*    <label className="block text-sm font-medium mb-2">Categories</label>*/}
+                {/*    <div className="flex flex-wrap gap-2">*/}
+                {/*        {categories.map((cat) => (*/}
+                {/*            <button*/}
+                {/*                type="button"*/}
+                {/*                key={cat}*/}
+                {/*                className={`px-3 py-1 rounded-full border text-sm ${*/}
+                {/*                    formData.category.includes(cat)*/}
+                {/*                        ? 'bg-indigo-600 text-white border-indigo-600'*/}
+                {/*                        : 'bg-white text-gray-700 border-gray-300'*/}
+                {/*                }`}*/}
+                {/*                onClick={() => handleCategoryChange(cat)}*/}
+                {/*            >*/}
+                {/*                {cat}*/}
+                {/*            </button>*/}
+                {/*        ))}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Media Upload */}
                 <div

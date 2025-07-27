@@ -20,7 +20,7 @@ const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
                             key={`${feedInfo.title}-${category}`}
                             className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-red-500 text-white"
                         >
-                                    #{category}
+                                    {category}
                                   </span>
                     ))}
                 </div>
@@ -38,7 +38,6 @@ const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
                         height={600}
                         className="w-full h-auto group-hover:scale-105 transition-transform duration-300"
                     />
-                    <h3 className="font-bold  mb-1 w-fit mx-auto text-center">{feedInfo.title}</h3>
 
 
                     <div
@@ -52,7 +51,7 @@ const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
                                         key={`${feedInfo.title}-${category}`}
                                         className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-red-500 text-white"
                                     >
-                                    #{category}
+                                    {category}
                                   </span>
                                 ))}
                             </div>

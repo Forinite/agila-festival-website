@@ -107,8 +107,8 @@ export const FeedsSection = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Feeds.map(feed => (
-                    <div key={feed._id} className="border rounded-lg p-4 bg-white shadow-md relative">
+                {Feeds.map((feed, index) => (
+                    <div key={feed._id + `${index}`} className="border rounded-lg p-4 bg-white shadow-md relative">
 
                         {feed.isVideo ? (
 
@@ -128,7 +128,7 @@ export const FeedsSection = () => {
                         <p className="text-sm text-gray-600 mt-1 mb-2">{feed.description}</p>
                         <div className="text-sm text-blue-600">
                             { feed.category.map((item, index) =>(
-                                <p key={index}>#{item}</p>
+                                <p key={index}>{item}</p>
                             )) }
                         </div>
                         <button
