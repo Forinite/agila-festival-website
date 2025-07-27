@@ -6,6 +6,7 @@ interface Queen {
     name: string;
     year: string;
     role: string;
+    bio: any;
     imageUrl: string;
 }
 

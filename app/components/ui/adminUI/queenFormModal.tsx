@@ -11,6 +11,8 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
         initialData.imageUrl || null
     );
     const [loading, setLoading] = useState(false);
+    const [bio, setBio] = useState(initialData.bio || "");
+
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -35,6 +37,8 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
             data.append("name", name);
             data.append("year", year);
             data.append("role", role);
+            data.append("bio", bio);
+
 
             if (mode === 'edit') {
                 console.log('edit mode');
@@ -44,8 +48,7 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
 
             console.log(initialData._id);
 
-
-            // Only append image if it's available (e.g., in add mode)
+            // Only append image if user selected a new one
             if (imageFile) {
                 data.append("image", imageFile);
             }
@@ -108,18 +111,23 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
                     />
+                    <textarea
+                        placeholder="Biography (Markdown supported)"
+                        className="w-full border p-2 rounded min-h-[120px]"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                    />
 
-                    {mode !== "edit" && (
-                        <>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="w-full"
-                            />
 
-                        </>
-                    )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full"
+                    />
+                    <p className="text-xs text-gray-500 italic">
+                        {mode === 'edit' ? 'Leave empty to keep current image' : 'Upload an image'}
+                    </p>
 
                     {previewUrl && (
                         <div className="w-full h-40 rounded overflow-hidden">

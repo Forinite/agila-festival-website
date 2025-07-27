@@ -20,8 +20,8 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormState((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setFormState((prev) => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {
@@ -41,7 +41,7 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
         try {
             const res = await fetch('/api/contact-info/update', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(updatedData),
             });
 
@@ -58,14 +58,16 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
 
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 w-screen h-screen overflow-y-scroll flex justify-center items-center px-4">
+        <div className="fixed inset-0 z-50 bg-black/50 w-screen h-screen overflow-y-auto flex items-start justify-center px-4 py-8">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white text-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md"
+                className="bg-white text-gray-800 rounded-xl shadow-lg p-5 sm:p-6 w-full max-w-md"
             >
-                <h3 className="text-2xl font-semibold mb-6 text-center">Edit Contact Info</h3>
+                <h3 className="text-xl sm:text-2xl font-semibold mb-6 text-center">
+                    Edit Contact Info
+                </h3>
 
-                <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
                     {[
                         { label: 'Location 1', name: 'location1' },
                         { label: 'Location 2', name: 'location2' },
@@ -78,8 +80,11 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
                         { label: 'Facebook', name: 'facebook' },
                         { label: 'Youtube', name: 'youtube' },
                     ].map(({ label, name }) => (
-                        <div key={name} className="flex flex-col ">
-                            <label htmlFor={name} className="text-sm font-medium mb-1">
+                        <div key={name} className="flex flex-col">
+                            <label
+                                htmlFor={name}
+                                className="text-xs sm:text-sm font-medium mb-1"
+                            >
                                 {label}
                             </label>
                             <input
@@ -89,7 +94,7 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
                                 value={formState[name] || ''}
                                 onChange={handleChange}
                                 placeholder={`Enter ${label}`}
-                                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                     ))}
@@ -99,21 +104,22 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-md transition"
+                        className="px-4 py-2 text-sm sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-md transition"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md transition"
+                        className="px-4 py-2 text-sm sm:text-base bg-blue-600 text-white hover:bg-blue-700 rounded-md transition"
                         disabled={isSumbiting}
                     >
-                        {isSumbiting? 'Saving...' : 'Save'}
+                        {isSumbiting ? 'Saving...' : 'Save'}
                     </button>
                 </div>
             </form>
         </div>
     );
-};
 
+
+}
 export default ContactFormModal;

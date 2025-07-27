@@ -1,4 +1,3 @@
-
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
@@ -28,6 +27,11 @@ export default defineType({
             options: {
                 hotspot: true,
             },
+        }),
+        defineField({
+            name: 'bio',
+            title: 'Biography',
+            type: 'markdown',
         }),
     ],
 })

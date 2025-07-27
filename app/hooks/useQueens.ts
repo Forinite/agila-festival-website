@@ -24,7 +24,8 @@ export const useQueens = () => {
                     name,
                     year,
                     role,
-                    imageUrl
+                    imageUrl,
+                    bio
                 }`);
 
                 const formatted = data.map((q: any) => ({
@@ -32,6 +33,7 @@ export const useQueens = () => {
                     name: q.name,
                     year: q.year,
                     role: q.role,
+                    bio: q.bio,
                     imageUrl: builder.image(q.imageUrl).url(),
                 }));
 

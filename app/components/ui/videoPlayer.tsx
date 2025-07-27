@@ -25,6 +25,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => 
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [showCenterIcon, setShowCenterIcon] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     // Load video metadata
     useEffect(() => {
@@ -79,8 +80,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => 
 
         if (document.fullscreenElement) {
             document.exitFullscreen();
+            setIsFullscreen(false);
+
         } else {
             container.requestFullscreen();
+            setIsFullscreen(true);
         }
     };
 
@@ -89,7 +93,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => 
             ref={containerRef}
             className={clsx(
                 'relative w-full bg-black rounded-lg overflow-hidden group',
-                className
+                 `${isFullscreen? '' : className}`
             )}
             onClick={togglePlay}
         >

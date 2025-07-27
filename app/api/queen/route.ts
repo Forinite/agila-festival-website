@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
         const name = formData.get('name') as string;
         const year = parseInt(formData.get('year') as string);
         const role = formData.get('role') as string;
+        const bio = formData.get('bio') as string;
         const file = formData.get('image') as File;
 
         if (!name || !year || !role || !file) {
@@ -23,6 +24,7 @@ export async function POST(req: NextRequest) {
             name,
             year,
             role,
+            bio, // ✅ new
             imageUrl: {
                 _type: 'image',
                 asset: { _type: 'reference', _ref: asset._id },

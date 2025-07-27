@@ -18,6 +18,7 @@ interface Feed {
     isVideo?: boolean;
     description: string;
     category: string[];
+    mediaAssetId: string;
 }
 
 export const FeedsSection = () => {
@@ -73,6 +74,7 @@ export const FeedsSection = () => {
     const handleEditClick = (feed: Feed) => {
         setFeedToEdit(feed);
         setShowEditModal(true);
+        console.log(feed)
     };
     const handleEdit = () => {
         if (feedToRemove) {
@@ -106,7 +108,9 @@ export const FeedsSection = () => {
 
                         {feed.isVideo ? (
 
-                            <VideoPlayer src={feed.media} className="rounded w-full h-[180px] object-cover mb-4" />
+                            <div className="">
+                                <VideoPlayer src={feed.media} className="rounded h-[180px] object-cover mb-4" />
+                            </div>
                         ) : (
                             <img
                                 src={feed.media}
@@ -168,12 +172,15 @@ export const FeedsSection = () => {
                         setFeedToEdit(null);
                     }}
                     initialData={{
-                        id: feedToEdit?._id,
+                        id: feedToEdit?.id,
                         title: feedToEdit?.title,
                         description: feedToEdit?.description,
                         category: feedToEdit?.category,
-                        image: feedToEdit?.image,
+                        media: feedToEdit?.media,
+                        isVideo: feedToEdit?.isVideo,
+                        mediaAssetId: feedToEdit?.mediaAssetId
                     }}
+
                     showModal={setShowEditModal}
                     refetch={refetch}
 

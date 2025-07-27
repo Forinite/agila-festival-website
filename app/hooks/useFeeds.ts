@@ -39,6 +39,7 @@ export const useFeeds = () => {
                 category: item.category,
                 media: item.media?.asset?.url,
                 isVideo: item.media?.asset?.mimeType?.startsWith('video'),
+                mediaAssetId: item.media?.asset?._id,
             }));
 
             setFeeds(formatted);

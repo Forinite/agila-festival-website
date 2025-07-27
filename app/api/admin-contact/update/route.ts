@@ -1,4 +1,3 @@
-// /api/admin-contact/update/route.ts
 import {sanityWriteClient, uploadMediaToSanity} from '@/sanity/lib/sanityClient';
 import { NextResponse } from 'next/server';
 
