@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {toast} from "@/lib/toast";
 
 
 
@@ -64,14 +65,13 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
             if (!res.ok) throw new Error("API error");
 
             const result = await res.json();
-            console.log("Queen saved:", result.data);
 
-            alert(mode === "edit" ? "Queen updated successfully" : "Queen added successfully");
+            toast.success(mode === "edit" ? "Queen updated successfully" : "Queen added successfully");
             onClose();
             refetch();
         } catch (err) {
             console.error("Error saving queen:", err);
-            alert("There was an error processing the queen data.");
+            toast.error("There was an error processing the queen data.");
         } finally {
             setLoading(false);
         }

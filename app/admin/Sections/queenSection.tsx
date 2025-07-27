@@ -4,6 +4,7 @@ import QueenCard from "@/app/components/ui/adminUI/queenCard";
 import QueenFormModal from "@/app/components/ui/adminUI/queenFormModal";
 import ConfirmDialog from "@/app/components/ui/adminUI/confirmDialog"; // Assuming you've split them already
 import { useQueens } from '@/app/hooks/useQueens';
+import {toast} from "@/lib/toast";
 
 
 
@@ -42,7 +43,7 @@ export  const  QueenSection  = () => {
             // setQueens((prev) => prev.filter((item) => item._id !== id))
         } catch (err) {
             console.error('Delete failed:', err)
-            alert('Could not delete queen')
+            toast.error('Could not delete queen')
         }
         setQueenToDelete(null);
         setConfirmOpen(false);
