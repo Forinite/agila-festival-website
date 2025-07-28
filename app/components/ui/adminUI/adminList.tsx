@@ -7,7 +7,7 @@ const AdminList = ({ admins, onDelete }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {admins.map((admin) => (
                 <div
-                    key={admin.id}
+                    key={admin.email}
                     className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between shadow-md hover:shadow-lg transition-all"
                 >
                     {/* Info */}
