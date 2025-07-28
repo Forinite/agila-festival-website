@@ -7,9 +7,9 @@ import {ToastProvider} from "@/app/toastProvider";
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
         <AuthSessionProvider>
-            <ToastProvider >
+            {/*<ToastProvider >*/}
                 {children}
-            </ToastProvider>
+            {/*</ToastProvider>*/}
         </AuthSessionProvider>
     );
 }

@@ -2,7 +2,8 @@
 
 import {FormEvent, useRef, useState} from 'react';
 import FormSelect from "@/app/components/ui/formSelect";
-import emailjs from '@emailjs/browser'
+import {toast} from "@/lib/toast";
+// import emailjs from '@emailjs/browser'
 
 const subjectOptions = [
     { value: 'general', label: 'General Inquiry' },
@@ -15,35 +16,41 @@ const subjectOptions = [
 ];
 
 const ContactForm = () => {
-    // const handleSubmit = (e: FormEvent) => {
-    //     e.preventDefault();
-    //     // Add form submission logic here
-    // };
-
-    //const [name, setName] = useState("")
 
 
     const form = useRef<HTMLFormElement>(null)
+    const [loading, setLoading] = useState(false);
 
-    const sendEmail = (e: React.FormEvent) => {
+    const sendEmail = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true);
 
-        if (!form.current) return;
+        const formData = new FormData(form.current!)
+        const data = Object.fromEntries(formData.entries())
 
-        emailjs
-            .sendForm('contact_service', 'contact_form', form.current, 'Zx7N6xMTVXaVFWLXP' )
-            .then(
-                () => {
-                    console.log('SUCCESS!')
-                    alert('Message sent!')
-                    form.current?.reset()
-                },
-                (error) => {
-                    console.log('FAILED...', error)
-                    alert('Message failed to send')
-                }
-            )
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            })
+
+            const result = await res.json()
+
+            if (result.success) {
+                toast.success('Message sent!')
+                form.current?.reset()
+            } else {
+                toast.error('Message failed to send')
+            }
+        } catch (err) {
+            console.error(err)
+            toast.error('Something went wrong')
+        } finally {
+        setLoading(false);
     }
+    }
+
 
     return (
         <section className="bg-gray-50 rounded-2xl p-8">
@@ -113,7 +120,17 @@ const ContactForm = () => {
                     type="submit"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-10 w-full bg-red-500 text-white px-8 py-4 rounded-lg font-bold hover:bg-red-600 cursor-pointer"
                 >
-                    Send Message
+                    {loading ? (
+                        <>
+                            <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z" />
+                            </svg>
+                            Sending...
+                        </>
+                    ) : (
+                        'Send Message'
+                    )}
                 </button>
             </form>
         </section>

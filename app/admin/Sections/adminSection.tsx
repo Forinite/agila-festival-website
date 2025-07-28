@@ -4,6 +4,7 @@ import InviteAdminFormModal from '@/app/components/ui/adminUI/inviteAdminFormMod
 import AdminList from '@/app/components/ui/adminUI/adminList';
 import { useAdminAccounts } from '@/app/hooks/useAdminAccounts';
 import {Loading} from "@/app/components/ui/loading";
+import {toast} from "@/lib/toast";
 
 export const AdminSection = () => {
     const { admins, loading, setAdmins } = useAdminAccounts();
@@ -19,11 +20,17 @@ export const AdminSection = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAdmin),
             });
-            if (!res.ok) throw new Error('Failed to add admin');
+            if (!res.ok) {
+                toast.error('Failed to add admin')
+                throw new Error('Failed to add admin');
+            }
             const result = await res.json();
             setAdmins((prev) => [result.data, ...prev]);
+            toast.success('Admin added successfully, Please Refresh')
         } catch (err) {
             console.error('Invite error:', err);
+            toast.error('Failed to invite admin')
+
         }
         setShowInviteModal(false);
     };
@@ -35,9 +42,14 @@ export const AdminSection = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ _id: adminToRemove._id }),
             });
-            if (!res.ok) throw new Error('Failed to delete admin');
+            if (!res.ok) {
+                toast.error('Failed to delete admin')
+                throw new Error('Failed to delete admin');
+            }
             setAdmins((prev) => prev.filter((admin) => admin._id !== adminToRemove._id));
+            toast.success('Admin deleted successfully')
         } catch (err) {
+            toast.error('Failed to delete admin')
             console.error('Delete error:', err);
         }
         setConfirmOpen(false);

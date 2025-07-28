@@ -2,6 +2,8 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import Navbar from "@/app/(components)/navbar/navbar";
+import {ToastProvider} from "@/app/toastProvider";
+import React from "react";
 
 export const metadata: Metadata = {
     title: "Agila Festival Website",
@@ -17,8 +19,11 @@ export default function RootLayout({
 
             <html>
                 <body>
-                     <Navbar />
-                    {children}
+                <Navbar />
+                     <ToastProvider >
+
+                         {children}
+                     </ToastProvider>
                 </body>
             </html>
 
