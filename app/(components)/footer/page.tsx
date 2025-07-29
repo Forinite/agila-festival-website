@@ -12,7 +12,7 @@ const QUICK_LINKS = [
     { label: 'About the Festival', href: '#about' },
     { label: 'Cultural Feed', href: '#media' },
     { label: 'Event Schedule', href: '#schedule' },
-    { label: 'Face of Idoma', href: '#pageant' },
+    // { label: 'Face of Idoma', href: '#pageant' },
 ];
 
 const INVOLVEMENT_LINKS = [

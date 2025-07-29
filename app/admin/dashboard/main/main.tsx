@@ -12,7 +12,7 @@ import ScheduleSection from "@/app/admin/Sections/scheduleSection";
 
 const navItems = [
     { label: 'Feeds', icon: <Film size={18} />, section: 'feeds' },
-    { label: 'Queen Info', icon: <Users size={18} />, section: 'queen' },
+    // { label: 'Queen Info', icon: <Users size={18} />, section: 'queen' },
     { label: 'Contact Info', icon: <Mail size={18} />, section: 'contact' },
     { label: 'Admin Management', icon: <Settings size={18} />, section: 'admins' },
     { label: 'Event Schedule', icon: <Book size={18} />, section: 'schedule' },

@@ -22,7 +22,16 @@ const SocialLink = ({ href, icon, bgColor }: SocialLinkProps) => (
 
 // ✅ SERVER COMPONENT
 const SocialLinks = async () => {
-    const contactInfo = await getContactInfo();
+
+    // const contactInfo = await getContactInfo();
+    let contactInfo = null;
+
+
+    try {
+        contactInfo = await getContactInfo();
+    } catch (error) {
+        console.error('Failed to fetch contact info:', error);
+    }
 
     if (!contactInfo) {
         return <p className="text-sm text-gray-500">No social links found.</p>;

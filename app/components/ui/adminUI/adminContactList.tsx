@@ -5,7 +5,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useAdminContacts } from '@/app/hooks/useAdminContacts';
 
 const AdminContactList = ({ onEdit, onDelete }) => {
-    const { contacts, loading } = useAdminContacts();
+    const { contacts, loading, refetch } = useAdminContacts();
     if (loading) return <p className="text-white">Loading contact info...</p>;
 
     if (!contacts.length) {

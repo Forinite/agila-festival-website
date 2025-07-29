@@ -15,18 +15,9 @@ export const AdminSection = () => {
 
     const handleInvite = async (newAdmin) => {
         try {
-            const res = await fetch('/api/admin-account/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newAdmin),
-            });
-            if (!res.ok) {
-                toast.error('Failed to add admin')
-                throw new Error('Failed to add admin');
-            }
-            const result = await res.json();
-            setAdmins((prev) => [result.data, ...prev]);
-            toast.success('Admin added successfully, Please Refresh')
+
+            setAdmins((prev) => [newAdmin, ...prev]);
+            toast.success('Admin added successfully. Please refresh.');
         } catch (err) {
             console.error('Invite error:', err);
             toast.error('Failed to invite admin')

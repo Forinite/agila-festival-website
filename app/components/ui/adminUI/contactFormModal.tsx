@@ -1,9 +1,11 @@
 'use client'
 import React, { useState } from 'react';
 import {toast} from "@/lib/toast";
+import {useAdminContacts} from "@/app/hooks/useAdminContacts";
 
 const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
     const [isSumbiting, setIsSumbiting] = useState(false);
+    const { contacts, loading, refetch } = useAdminContacts();
     const [formState, setFormState] = useState(() => {
         return {
             location1: initialData?.info?.[0]?.lines?.[0] || '',
@@ -53,8 +55,10 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
 
             toast.success('Contact info updated successfully');
 
+
             const json = await res.json();
             onSubmit(json.updated);
+            refetch()
         } catch (err) {
             console.error(err);
         }

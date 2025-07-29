@@ -8,7 +8,7 @@ const AdminList = ({ admins, onDelete }) => {
             {admins.map((admin) => (
                 <div
                     key={admin.email}
-                    className="bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between shadow-md hover:shadow-lg transition-all"
+                    className=" relative bg-white border border-gray-300 rounded-xl p-5 flex items-start justify-between shadow-md hover:shadow-lg transition-all"
                 >
                     {/* Info */}
                     <div className="flex-1 pr-4">
@@ -19,7 +19,7 @@ const AdminList = ({ admins, onDelete }) => {
                     {/* Delete Button */}
                     <button
                         onClick={() => onDelete(admin)}
-                        className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-800 transition"
+                        className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-800 transition absolute top-2 right-4"
                         aria-label={`Remove ${admin.name}`}
                     >
                         <Trash2 size={18} />

@@ -74,6 +74,7 @@ const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
 
             refetch()
             toast.success('Admin contact saved successfully.');
+            toast.info('Please refresh the page to see the changes.')
             onClose();
         } catch (err) {
             console.error('Submit error:', err);

@@ -27,7 +27,16 @@ const ContactItem: React.FC<ContactItemProps> = ({ icon, title, lines }) => (
 
 // ✅ SERVER COMPONENT
 const ContactInfo = async () => {
-    const data = await getContactInfo();
+    // const data = await getContactInfo();
+
+    let data = null;
+
+
+    try {
+        data = await getContactInfo();
+    } catch (error) {
+        console.error('Failed to fetch contact info:', error);
+    }
 
     if (!data) {
         return <p className="text-gray-500 text-sm">Contact info not available.</p>;

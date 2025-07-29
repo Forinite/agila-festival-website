@@ -9,6 +9,7 @@ import AdminContactFormModal from '@/app/components/ui/adminUI/AdminContactFormM
 import {useContactInfo} from "@/app/hooks/useContactInfo";
 import {Loading} from "@/app/components/ui/loading";
 import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+import {toast} from "@/lib/toast";
 
 
 export const ContactSection = () => {
@@ -62,6 +63,7 @@ export const ContactSection = () => {
         setInfo(updated.info);
         setSocial(updated.social);
         setEditing(false);
+        refetch()
     };
 
     const handleAdminEdit = (contact) => {
@@ -77,6 +79,7 @@ export const ContactSection = () => {
         // Add deletion logic here
         setConfirmOpen(false);
         setContactToDelete(null);
+        refetch()
     };
 
     if (loading){

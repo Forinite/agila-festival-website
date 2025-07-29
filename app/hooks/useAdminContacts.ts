@@ -23,7 +23,6 @@ export const useAdminContacts = () => {
     const [contacts, setContacts] = useState<AdminContact[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
         const fetchContacts = async () => {
             const data = await sanityClient.fetch(
                 `*[_type == "adminContact"] | order(_createdAt desc){
@@ -40,8 +39,11 @@ export const useAdminContacts = () => {
             setLoading(false);
         };
 
-        fetchContacts();
-    }, []);
+        useEffect(() => {
+            fetchContacts();
+        }, []);
 
-    return { contacts, loading };
+
+
+    return { contacts, loading, refetch: fetchContacts };
 };

@@ -34,7 +34,7 @@ const useCountdown = (endYear: number, endMonth: number, endDay: number, endHour
 
 const HERO_CONTENT = {
     title: {
-        main: 'ECHIJA',
+        main: 'ECH’IJA',
         highlight: 'CARNIVAL'
     },
     subtitle: 'Celebrating Idoma Unity, Culture & Heritage in the Heart of Nigeria'

@@ -40,7 +40,7 @@ const ScheduleList = async () => {
 
     return (
         <div className="commonPadding gap-8 flex flex-col">
-            {schedules.map((item, index) => (
+            {schedules?.map((item, index) => (
                 <ScheduleCard
                     key={item.title + `${index}`}
                     title={item.title}

@@ -23,7 +23,7 @@ export default async function Home()
         <MediaFeed  />;
         <AboutPage />;
         <SchedulePage />
-        <PaegentPage />
+        {/*<PaegentPage />*/}
         <InvolvementSection />
         <ContactSection />
         <Footer />

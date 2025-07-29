@@ -2,13 +2,22 @@
 import React from 'react';
 import Image from 'next/image';
 import {getAdminContacts} from "@/app/libs/queries/getAdminContacts";
+import {getContactInfo} from "@/app/libs/queries/getContactInfo";
 
 const AdminContacts = async () => {
-    const contacts = await getAdminContacts();
+    // const contacts = await getAdminContacts();
 
+    let contacts = null;
+
+
+    try {
+        contacts = await getAdminContacts();
+    } catch (error) {
+        console.error('Failed to fetch contact info:', error);
+    }
     return (
         <div className="w-full flex flex-wrap justify-center gap-8 px-4 mb-16">
-            {contacts.map((contact) => (
+            {contacts?.map((contact) => (
                 <div
                     key={contact._id}
                     className="relative group w-full max-w-sm rounded-3xl bg-white/80 backdrop-blur-md border border-gray-200 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 hover:bg-white"

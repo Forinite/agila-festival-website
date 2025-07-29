@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
     images: {
         domains: ['cdn.sanity.io'],
     },
+    experimental: {
+        serverActions: true,
+    },
+    matcher: ['/studio/:path*'],
 };
 
 export default nextConfig;
