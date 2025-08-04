@@ -48,7 +48,7 @@ const FeedGrid = async () => {
                             href="/mediapage"
                             className="bg-red-500 text-white px-8 py-3 rounded-full font-bold hover:bg-red-600 transition-colors cursor-pointer"
                         >
-                            Load More Moments
+                            See All
                         </a>
                     </div>
                 )}

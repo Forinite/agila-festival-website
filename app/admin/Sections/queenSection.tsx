@@ -22,7 +22,7 @@ export  const  QueenSection  = () => {
         }
     }, [loading]);
 
-    if (loading) return <p>Loading queens...</p>;
+    if (loading) return <p>Loading Leaders...</p>;
 
 
     const handleDelete = async () => {
@@ -38,11 +38,11 @@ export  const  QueenSection  = () => {
             })
 
             if (!res.ok){
-                toast.error('Failed to delete queen')
+                toast.error('Failed to delete Leader')
                 throw new Error('Failed to delete')
             }
 
-            toast.success('Queen deleted successfully')
+            toast.success('Leader deleted successfully')
 
             // Optimistically update local state/UI
             // setQueens((prev) => prev.filter((item) => item._id !== id))
@@ -55,7 +55,7 @@ export  const  QueenSection  = () => {
     };
 
     const handleUpdateQueen = (updatedQueen) => {
-        return null
+        refetch()
     };
 
     const handleAddQueen = (newQueen) => {
@@ -71,7 +71,7 @@ export  const  QueenSection  = () => {
                     onClick={() => setIsAddModalOpen(true)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition"
                 >
-                    + Add <span className="hidden md:inline">New Queen</span>
+                    + Add <span className="hidden md:inline">New Leader</span>
                 </button>
             </div>
 

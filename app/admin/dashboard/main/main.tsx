@@ -12,7 +12,7 @@ import ScheduleSection from "@/app/admin/Sections/scheduleSection";
 
 const navItems = [
     { label: 'Feeds', icon: <Film size={18} />, section: 'feeds' },
-    // { label: 'Queen Info', icon: <Users size={18} />, section: 'queen' },
+    { label: 'Leader Info', icon: <Users size={18} />, section: 'leader' },
     { label: 'Contact Info', icon: <Mail size={18} />, section: 'contact' },
     { label: 'Admin Management', icon: <Settings size={18} />, section: 'admins' },
     { label: 'Event Schedule', icon: <Book size={18} />, section: 'schedule' },
@@ -71,7 +71,7 @@ export default function AdminLayout() {
                 {/* Content */}
                 <main className="flex-1 overflow-y-auto p-6 md:pb-6">
                     {activeSection === 'feeds' && <FeedsSection />}
-                    {activeSection === 'queen' && <QueenSection />}
+                    {activeSection === 'leader' && <QueenSection />}
                     {activeSection === 'contact' && <ContactSection />}
                     {activeSection === 'admins' && <AdminSection />}
                     {activeSection === 'schedule' && <ScheduleSection />}

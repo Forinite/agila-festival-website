@@ -1,21 +1,30 @@
-// app/(your route)/page.tsx or PaegentPage.tsx (without 'use client')
-
 import QueenCard from "@/app/components/ui/queenCard";
 import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
-import {getQueens} from "@/app/libs/queries/getQueens";
+import { getQueens } from "@/app/libs/queries/getQueens";
+import React from "react";
+import {NoImage} from "@/app/constants";
 
 const PaegentPage = async () => {
-    const { currentQueen, pastQueens } = await getQueens();
+    let currentQueen = null;
+    let pastQueens: any[] = [];
+
+    try {
+        const queensData = await getQueens();
+        currentQueen = queensData.currentQueen || null;
+        pastQueens = queensData.pastQueens || [];
+    } catch (error) {
+        console.error("Failed to fetch queens:", error);
+    }
 
     return (
         <section id="pageant" className={`mt-16`}>
             <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-5xl font-black text-black mb-4">
-                    Face of <span className="text-red-500">Idoma</span>
+                    Past <span className="text-red-500">Leadership</span>
                 </h2>
                 <p className="md:text-lg text-sm text-gray-600 max-w-3xl mx-auto">
-                    Six days of cultural celebration, traditional performances, and community festivities. December
-                    23–26, 2024
+                    Two days of cultural celebration, traditional performances, and community festivities. December
+                    27–28, 2024
                 </p>
             </div>
 
@@ -23,20 +32,16 @@ const PaegentPage = async () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     <div className="order-2 lg:order-1">
                         <div className="inline-block mb-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm">
-                            CURRENT QUEEN {currentQueen?.year || "2XXX"}
+                            CURRENT LEADER {currentQueen?.year || "2XXX"} - Till Date
                         </div>
                         <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                            {currentQueen?.name || "Queen's Name"}
+                            {currentQueen?.name || "Leader's Name"}
                         </h3>
-                        <p className="text-gray-600 mb-6 italic leading-relaxed">
-                            {currentQueen?.bio || "Queen's Bio"}
-                        </p>
-
                     </div>
                     <div className="order-1 lg:order-2">
                         <img
-                            src={currentQueen?.imageUrl}
-                            alt="Face of Idoma 2023 winner"
+                            src={currentQueen?.imageUrl ?? NoImage}
+                            alt={`Chairman ${currentQueen?.year ?? "unknown"} - till date`}
                             width={800}
                             height={600}
                             className="rounded-2xl shadow-xl w-full h-auto"
@@ -46,19 +51,23 @@ const PaegentPage = async () => {
 
                 <div className="mt-24">
                     <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">
-                        Past Queens
+                        Past Leaders
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {pastQueens.map((queen, index) => (
-                            <QueenCard
-                                key={queen.year + '-' + index}
-                                name={queen.name}
-                                year={queen.year}
-                                role={queen.role}
-                                imageUrl={queen.imageUrl}
-                            />
-                        ))}
-                    </div>
+                    {pastQueens.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {pastQueens.map((queen, index) => (
+                                <QueenCard
+                                    key={queen.year + '-' + index}
+                                    name={queen.name}
+                                    year={queen.year}
+                                    role={queen.role}
+                                    imageUrl={queen.imageUrl}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-red-500 text-center">Information not available.</p>
+                    )}
                 </div>
 
                 <div className="mt-12">

@@ -15,7 +15,7 @@ export default function MediaFeed() {
                 </div>
 
                 {/* Category buttons */}
-                <CategoryBtn />
+                {/*<CategoryBtn />*/}
 
                 {/* SERVER COMPONENT BELOW */}
                 <FeedGrid />

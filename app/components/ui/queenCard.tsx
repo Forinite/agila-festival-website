@@ -2,7 +2,7 @@
 
 interface QueenCardProps {
     name: string;
-    year: string;
+    year: number;
     role: string;
     imageUrl: string;
 }
@@ -12,14 +12,14 @@ const QueenCard: React.FC<QueenCardProps> = ({ name, year, role, imageUrl }) => 
         <div className="text-center group hover:shadow-xl hover:scale-105 transition-all duration-500">
             <img
                 src={imageUrl}
-                alt={`Face of Idoma ${year}`}
-                width={400}
-                height={320}
-                className="rounded-xl shadow-lg w-full h-80 object-cover group-hover:shadow-xl transition-shadow"
+                alt={`Leader ${year}`}
+                className="rounded-[12px] shadow-lg w-[120px] aspect-square object-cover group-hover:shadow-xl transition-shadow mx-auto"
             />
-            <h4 className="font-bold text-lg text-gray-900 mt-4">{name}</h4>
-            <p className="text-red-500 font-medium">Face of Idoma {year}</p>
-            <p className="text-gray-600 text-sm mt-2">{role}</p>
+            <div className="w-full p-4 group shadow hover:shadow-2xl ">
+                <h4 className="font-bold text-lg text-gray-900 mt-4 bg-white mx-auto w-fit px-2 py-1 shadow hover:shadow-2xl shadow-b-0">{name}</h4>
+                <p className="text-red-500 font-medium  bg-white mx-auto w-fit px-2 py-1 shadow hover:shadow-2xl">Reign {year} - {year + 1}</p>
+            </div>
+            {/*<p className="text-gray-600 text-sm mt-2">{role}</p>*/}
         </div>
     );
 };

@@ -34,6 +34,11 @@ const AdminContacts = async () => {
                                     className="w-full h-full object-cover rounded-full"
                                 />
                             )}
+                            {!contact.imageUrl && (
+                                <div className={'flex h-full items-center justify-center text-gray-500 text-sm '}>
+                                    No Image
+                                </div>
+                            )}
                         </div>
                     </div>
 

@@ -34,8 +34,7 @@ export const useQueens = () => {
                     year: q.year,
                     role: q.role,
                     bio: q.bio,
-                    imageUrl: builder.image(q.imageUrl).url(),
-                }));
+                    imageUrl: q.imageUrl ? builder.image(q.imageUrl).url() : null,                }));
 
                 setQueens(formatted);
             } catch (err) {

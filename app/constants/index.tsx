@@ -14,6 +14,7 @@ import paegentQueenImg1 from  '../Assets/PaegentImages/queen_2021.jpg'
 import paegentQueenImg2 from  '../Assets/PaegentImages/queen_2022.jpg'
 import paegentQueenImg3 from  '../Assets/PaegentImages/queen_2023.jpg'
 
+import noImage from '../Assets/NOIMAGE.png'
 
 export const HomeHeaderImg = HomeHeaderImage;
 export const originBgImg = originBgImage;
@@ -21,3 +22,4 @@ export const heroImages = [echija1, echija2, echija3, echija4,  echija5, echija6
 
 export const paegentQueenImgList = [paegentQueenImg1, paegentQueenImg2, paegentQueenImg3];
 
+export const NoImage = noImage;

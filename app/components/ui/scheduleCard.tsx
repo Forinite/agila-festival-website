@@ -26,7 +26,8 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({ date, title, description, s
                                 key={index}
                                 className="inline-flex items-center border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-secondary/80 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
                             >
-                                {`${item.time} - ${item.event}`}
+                                <span className="mr-2 text-red-500 font-semibold">{item.time}-</span>
+                                {`${item.event}`}
                             </div>
                         ))}
                     </div>

@@ -61,6 +61,8 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
             refetch()
         } catch (err) {
             console.error(err);
+        } finally {
+            setIsSumbiting(false);
         }
     };
 

@@ -66,12 +66,12 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
 
             const result = await res.json();
 
-            toast.success(mode === "edit" ? "Queen updated successfully" : "Queen added successfully");
+            toast.success(mode === "edit" ? "Leader updated successfully" : "Leader added successfully");
             onClose();
-            refetch();
+            onSubmit();
         } catch (err) {
-            console.error("Error saving queen:", err);
-            toast.error("There was an error processing the queen data.");
+            console.error("Error saving leader:", err);
+            toast.error("There was an error processing the leader data.");
         } finally {
             setLoading(false);
         }
@@ -86,7 +86,7 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
                 className="bg-white rounded-md shadow-md p-6 w-[90%] max-w-md text-black"
             >
                 <h2 className="text-xl font-semibold mb-4">
-                    {mode === "edit" ? "Edit Queen" : "Add New Queen"}
+                    {mode === "edit" ? "Edit Leader" : "Add New Leader"}
                 </h2>
 
                 <div className="space-y-4">
@@ -98,25 +98,25 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
                         onChange={(e) => setName(e.target.value)}
                     />
                     <input
-                        type="text"
+                        type="number"
                         placeholder="Year"
                         className="w-full border p-2 rounded"
                         value={year}
                         onChange={(e) => setYear(e.target.value)}
                     />
-                    <input
-                        type="text"
-                        placeholder="Role"
-                        className="w-full border p-2 rounded"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    />
-                    <textarea
-                        placeholder="Biography (Markdown supported)"
-                        className="w-full border p-2 rounded min-h-[120px]"
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                    />
+                    {/*<input*/}
+                    {/*    type="text"*/}
+                    {/*    placeholder="Role"*/}
+                    {/*    className="w-full border p-2 rounded"*/}
+                    {/*    value={role}*/}
+                    {/*    onChange={(e) => setRole(e.target.value)}*/}
+                    {/*/>*/}
+                    {/*<textarea*/}
+                    {/*    placeholder="Biography (Markdown supported)"*/}
+                    {/*    className="w-full border p-2 rounded min-h-[120px]"*/}
+                    {/*    value={bio}*/}
+                    {/*    onChange={(e) => setBio(e.target.value)}*/}
+                    {/*/>*/}
 
 
                     <input

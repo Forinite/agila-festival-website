@@ -34,7 +34,7 @@ export const getQueens = async (): Promise<{
         year: q.year,
         role: q.role,
         bio: q.bio,
-        imageUrl: builder.image(q.imageUrl).url(),
+        imageUrl: q.imageUrl? builder.image(q.imageUrl).url() : null,
     }));
 
     const currentQueen = queens[0] || null;

@@ -17,7 +17,7 @@ const AdminContactList = ({ onEdit, onDelete }) => {
             {contacts.map((contact) => (
                 <div
                     key={contact._id}
-                    className="bg-white border border-gray-300 rounded-xl p-5 flex items-start gap-4 shadow-lg hover:shadow-xl transition-all relative"
+                    className="overflow-hidden border border-gray-300 rounded-xl p-5 flex items-start gap-4 shadow-lg hover:shadow-xl transition-all relative"
                 >
                     {/* Avatar */}
                     <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-300 shadow shrink-0">
@@ -37,10 +37,10 @@ const AdminContactList = ({ onEdit, onDelete }) => {
                     </div>
 
                     {/* Info */}
-                    <div className="flex-1">
+                    <div className="w-fit">
                         <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
                         <p className="text-sm text-gray-600 italic">{contact.title}</p>
-                        <div className="text-sm text-gray-700 mt-2 leading-relaxed">
+                        <div className="text-sm text-gray-700 mt-2 leading-relaxed ">
                             <p>
                                 <span className="font-medium">📞</span>{' '}
                                 <a href={`tel:${contact.phone}`} className="text-blue-600 hover:underline">
