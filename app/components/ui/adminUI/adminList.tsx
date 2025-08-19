@@ -17,13 +17,14 @@ const AdminList = ({ admins, onDelete }) => {
                     </div>
 
                     {/* Delete Button */}
-                    <button
+                    { admin.email != 'echijaculturalfestival2812ot@gmail.com' && <button
                         onClick={() => onDelete(admin)}
                         className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-800 transition absolute top-2 right-4"
                         aria-label={`Remove ${admin.name}`}
                     >
                         <Trash2 size={18} />
                     </button>
+                    }
                 </div>
             ))}
         </div>

@@ -11,17 +11,18 @@ export async function sendInviteEmail({ email, name, password }: { email: string
     });
 
     const mailOptions = {
-        from: `"Agila Carnival" <${process.env.EMAIL_SENDER}>`,
+        from: `"Ech'ija Carnival" <${process.env.EMAIL_SENDER}> on behalf of echijaculturalfestival2812ot@gmail.com`,
         to: email,
-        subject: 'Your Agila Carnival Admin Account',
+        subject: "Your Ech'ija Carnival Admin Account",
         html: `
       <h2>Hi ${name},</h2>
-      <p>You’ve been added as an admin to the Agila Carnival dashboard.</p>
+      <p>You’ve been added as an admin to the Ech'ija Carnival dashboard.</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Password:</strong> ${password}</p>
-      <p>You can now log in at <a href=" http://192.168.31.121:3000/signin">https://your-site.com/signin</a>.</p>
+      <p>You can now log in at <a href="www.echijaculturalfestival.com">www.echijaculturalfestival.com</a>.</p>
       <br>
-      <p>Best,<br>Agila Carnival Team</p>
+      <p>Best,<br>Ech'ija Carnival Team</p>
+      <p>echijaculturalfestival2812ot@gmail.com</p>
     `,
     };
 
