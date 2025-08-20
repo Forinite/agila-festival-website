@@ -1,17 +1,18 @@
-// app/(media)/mediapage/page.tsx
 import React from 'react';
 import { Home, Phone } from 'lucide-react';
 import { fetchFeeds } from '@/app/libs/queries/fetchFeeds';
 import FeedCard from '@/app/components/ui/feed';
-import Link from "next/link";
+import Link from 'next/link';
+import { type NextPage } from 'next';
 
 interface MediaPageProps {
-    searchParams?: { q?: string };
+    searchParams?: { q?: string } | Promise<{ q?: string }>;
 }
 
-export default async function MediaPage({ searchParams }: MediaPageProps) {
-    const query = searchParams?.q || '';
-    const feeds = await fetchFeeds(query); // 👈 pass query
+const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
+    const resolvedSearchParams = await searchParams; // Resolve the Promise
+    const query = resolvedSearchParams?.q || '';
+    const feeds = await fetchFeeds(query); // Pass query to fetch feeds
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen w-screen bg-white overflow-hidden absolute z-50">
@@ -86,14 +87,6 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
             </div>
         </div>
     );
-}
+};
 
-
-// Sample PinCard component
-// export function PinCard({ src, alt, href }) {
-//     return (
-//         <a href={href} className="block mb-4 rounded-md overflow-hidden shadow-sm hover:shadow">
-//             <Image src={src} alt={alt} className="w-full h-auto object-cover" />
-//         </a>
-//     );
-// }
+export default MediaPage;

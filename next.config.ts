@@ -8,8 +8,6 @@ const nextConfig = {
             enabled: true,
         },
     },
-    eslint: {
-        ignoreDuringBuilds: true, // Temporary workaround
-    },
 };
+
 export default nextConfig;
