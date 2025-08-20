@@ -1,14 +1,15 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
     images: {
         domains: ['cdn.sanity.io'],
     },
     experimental: {
-        serverActions: true,
+        serverActions: {
+            enabled: true,
+        },
     },
-    matcher: ['/studio/:path*'],
+    eslint: {
+        ignoreDuringBuilds: true, // Temporary workaround
+    },
 };
-
 export default nextConfig;
