@@ -20,7 +20,7 @@ export  const  QueenSection  = () => {
         if (!loading && pastQueens.length > 0) {
             setQueens(pastQueens);
         }
-    }, [loading]);
+    }, [loading, pastQueens]);
 
     if (loading) return <p>Loading Leaders...</p>;
 
@@ -54,7 +54,7 @@ export  const  QueenSection  = () => {
         setConfirmOpen(false);
     };
 
-    const handleUpdateQueen = (updatedQueen) => {
+    const handleUpdateQueen = () => {
         refetch()
     };
 

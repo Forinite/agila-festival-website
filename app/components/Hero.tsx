@@ -8,7 +8,7 @@ interface HeroProps {
     title: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
+const Hero: React.FC<HeroProps> = ({ imageList}) => {
     const [currentBgImageIndex, setCurrentBgIndex] = useState(0);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ const Hero: React.FC<HeroProps> = ({ imageList, title }) => {
                         />
                     ))}
                     <div className="mb-8 relative z-30 flex gap-3 ">
-                        {imageList.map((image: StaticImageData, index: number) => (
+                        {imageList.map((_image: StaticImageData, index: number) => (
                             <div
                                 key={`imageCir${index}`}
                                 className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentBgImageIndex ? 'bg-white scale-125' : 'bg-white/50'} cursor-pointer hover:scale-110`}

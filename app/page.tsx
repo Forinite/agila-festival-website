@@ -6,7 +6,6 @@ import PaegentPage from "@/app/(components)/paegent/page";
 import ContactSection from "@/app/(components)/contact/page";
 import Footer from "@/app/(components)/footer/page";
 import InvolvementSection from "@/app/(components)/involvement/page";
-import {feedList} from "@/app/constants/feedInfo";
 
 
 export default async function Home()

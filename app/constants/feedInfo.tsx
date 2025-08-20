@@ -1,4 +1,3 @@
-import fillerImage from "../Assets/FeedImages/fillerImage.png"
 import fillerImage2 from "../Assets/FeedImages/fillerImage2.png"
 import fillerImage3 from "../Assets/FeedImages/fillerImage3.png"
 import fillerImage4 from "../Assets/FeedImages/fillerImage4.png"
@@ -13,9 +12,6 @@ import fillerImage12 from "../Assets/FeedImages/fillerImage12.jpg"
 import fillerImage13 from "../Assets/FeedImages/fillerImage13.jpg"
 import fillerImage14 from "../Assets/FeedImages/fillerImage14.jpg"
 import fillerImage15 from "../Assets/FeedImages/fillerImage15.jpg"
-import fillerVideo1 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
-import fillerVideo2 from "https://www.youtube.com/watch?v=e0TKgqeAm6Y&list=PPSV"
-
 
 // feedInfo.tsx
 export const feedFilterBtnList = ['Masquerade', 'Dance', 'Music', 'FaceOfIdoma']

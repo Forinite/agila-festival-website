@@ -35,15 +35,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleCategoryChange = (cat) => {
-        setFormData((prev) => ({
-            ...prev,
-            category: prev.category.includes(cat)
-                ? prev.category.filter((c) => c !== cat)
-                : [...prev.category, cat],
-        }));
-    };
-
     const handleMediaChange = (e) => {
         const file = e.target.files?.[0];
         if (file) {

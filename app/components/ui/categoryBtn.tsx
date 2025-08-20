@@ -14,7 +14,7 @@ const CategoryBtn = () => {
                 className={`px-4 py-2 rounded-full font-medium text-sm transition-colors bg-red-500 text-white  hover:text-gray-100 cursor-pointer hover:bg-red-600 border`}
                 type="submit"
             />
-            {feedFilterBtnList.map((item, index) => (
+            {feedFilterBtnList.map((item) => (
                 <input
                     name={item}
                     defaultValue={'#'+item}

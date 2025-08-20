@@ -1,6 +1,5 @@
 import ContactForm from "@/app/components/ui/contactForm";
 import ContactInfo from "@/app/components/ui/contactInfo";
-import MediaResources from "@/app/components/ui/mediaResources";
 import SocialLinks from "@/app/components/ui/socialLinks";
 import AdminContacts from "@/app/components/ui/adminContacts";
 

@@ -17,9 +17,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                        onCancel,
                                                        isOpen
                                                    }) => {
+    const [clicked, setClicked] = useState(false);
+
     if (!isOpen) return null;
 
-    const [clicked, setClicked] = useState(false);
 
     return (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">

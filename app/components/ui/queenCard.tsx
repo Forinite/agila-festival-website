@@ -7,7 +7,7 @@ interface QueenCardProps {
     imageUrl: string;
 }
 
-const QueenCard: React.FC<QueenCardProps> = ({ name, year, role, imageUrl }) => {
+const QueenCard: React.FC<QueenCardProps> = ({ name, year, imageUrl }) => {
     return (
         <div className="text-center group hover:shadow-xl hover:scale-105 transition-all duration-500">
             <img

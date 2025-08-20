@@ -1,12 +1,13 @@
 import QueenCard from "@/app/components/ui/queenCard";
 import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
-import { getQueens } from "@/app/libs/queries/getQueens";
+import { getQueens, Queen } from "@/app/libs/queries/getQueens";
 import React from "react";
 import {NoImage} from "@/app/constants";
+import Image from "next/image";
 
 const PaegentPage = async () => {
     let currentQueen = null;
-    let pastQueens: any[] = [];
+    let pastQueens: Queen[] = [];
 
     try {
         const queensData = await getQueens();
@@ -39,7 +40,7 @@ const PaegentPage = async () => {
                         </h3>
                     </div>
                     <div className="order-1 lg:order-2">
-                        <img
+                        <Image
                             src={currentQueen?.imageUrl ?? NoImage}
                             alt={`Chairman ${currentQueen?.year ?? "unknown"} - till date`}
                             width={800}

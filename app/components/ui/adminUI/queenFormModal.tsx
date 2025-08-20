@@ -64,7 +64,6 @@ const QueenFormModal = ({ mode, initialData = {}, onClose, onSubmit, refetch }) 
 
             if (!res.ok) throw new Error("API error");
 
-            const result = await res.json();
 
             toast.success(mode === "edit" ? "Leader updated successfully" : "Leader added successfully");
             onClose();

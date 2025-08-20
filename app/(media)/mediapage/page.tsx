@@ -3,6 +3,7 @@ import React from 'react';
 import { Home, Phone } from 'lucide-react';
 import { fetchFeeds } from '@/app/libs/queries/fetchFeeds';
 import FeedCard from '@/app/components/ui/feed';
+import Link from "next/link";
 
 interface MediaPageProps {
     searchParams?: { q?: string };
@@ -16,12 +17,12 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
         <div className="flex flex-col md:flex-row min-h-screen w-screen bg-white overflow-hidden absolute z-50">
             {/* Sidebar Navigation */}
             <nav className="flex md:flex-col items-center justify-between md:justify-start w-full md:w-20 h-16 md:h-screen border-b md:border-b-0 md:border-r p-2 md:pt-20 bg-white">
-                <a href="/" className="p-3 hover:bg-gray-100 rounded-full">
+                <Link href="/" className="p-3 hover:bg-gray-100 rounded-full">
                     <Home className="w-5 h-5" />
-                </a>
-                <a href="/contact" className="p-3 hover:bg-gray-100 rounded-full">
+                </Link>
+                <Link href="/contact" className="p-3 hover:bg-gray-100 rounded-full">
                     <Phone className="w-5 h-5" />
-                </a>
+                </Link>
             </nav>
 
             {/* Main Content */}

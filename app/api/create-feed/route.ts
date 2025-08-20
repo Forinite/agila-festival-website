@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
         const file = formData.get('media') as File; // renamed from 'image'
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
-        const category = JSON.parse(formData.get('category') as string); // Expecting array
+        const category = JSON.parse(formData.get('category') as string);
 
         if (!file || !title || !description || !category) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
         // Upload file (image or video)
         const asset = await uploadMediaToSanity(file); // Handles video & image
 
-        // Create feed document
         const newFeed = await sanityWriteClient.create({
             _type: 'feedItem',
             title,
@@ -33,8 +32,8 @@ export async function POST(req: NextRequest) {
         });
 
         return NextResponse.json({ success: true, feed: newFeed });
-    } catch (err: any) {
-        console.error('Error creating feed:', err.message);
+    } catch (err) {
+        console.error('Error creating feed:', err);
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }

@@ -1,13 +1,18 @@
 // app/(public)/components/AdminContacts.tsx
 import React from 'react';
 import Image from 'next/image';
-import {getAdminContacts} from "@/app/libs/queries/getAdminContacts";
-import {getContactInfo} from "@/app/libs/queries/getContactInfo";
+import {AdminContact, getAdminContacts} from "@/app/libs/queries/getAdminContacts";
 
 const AdminContacts = async () => {
     // const contacts = await getAdminContacts();
 
-    let contacts = null;
+    let contacts:  AdminContact[] = [{
+        _id: '',
+        name: '',
+        title: '',
+        phone: '',
+        email: '',
+        imageUrl: ''}];
 
 
     try {

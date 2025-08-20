@@ -1,4 +1,3 @@
-import CategoryBtn from "@/app/components/ui/categoryBtn";
 import FeedGrid from "@/app/(components)/mediafeed/MediaFeedClient";
 
 export default function MediaFeed() {

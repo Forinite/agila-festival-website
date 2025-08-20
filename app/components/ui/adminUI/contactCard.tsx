@@ -1,7 +1,6 @@
 import { Pencil } from 'lucide-react';
-import {Icon} from "@sanity/icons";
 
-interface ContactItem {
+export interface ContactItem {
     icon: React.ReactNode;
     title: string;
     lines: string[];

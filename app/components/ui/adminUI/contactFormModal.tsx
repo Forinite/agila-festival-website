@@ -3,9 +3,15 @@ import React, { useState } from 'react';
 import {toast} from "@/lib/toast";
 import {useAdminContacts} from "@/app/hooks/useAdminContacts";
 
-const ContactFormModal = ({ initialData, onClose, onSubmit }) => {
+interface InitialDataProps  {
+    id: string,
+    info: {lines: string[]}[],
+    social: [{ href: string }],
+
+}
+const ContactFormModal = ({ initialData, onClose, onSubmit }: {initialData: InitialDataProps}) => {
     const [isSumbiting, setIsSumbiting] = useState(false);
-    const { contacts, loading, refetch } = useAdminContacts();
+    const { refetch } = useAdminContacts();
     const [formState, setFormState] = useState(() => {
         return {
             location1: initialData?.info?.[0]?.lines?.[0] || '',

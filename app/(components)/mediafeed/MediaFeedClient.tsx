@@ -2,6 +2,15 @@ import React from 'react';
 import FeedCard from '@/app/components/ui/feed';
 import { sanityClient } from '@/sanity/lib/client';
 
+interface FeedType {
+    id: string,
+    title: string,
+    description: string,
+    category: string[],
+    media: string,
+    isVideo: boolean,
+}
+
 const FeedGrid = async () => {
     try {
         const query = `*[_type == "feedItem"] | order(_createdAt desc){
@@ -18,9 +27,21 @@ const FeedGrid = async () => {
             }
         }`;
 
-        const data = await sanityClient.fetch(query);
+        const data= await sanityClient.fetch(query);
 
-        const feeds = data.map((item: any) => ({
+        type FeedItem = {
+            _id: string;
+            title: string;
+            description: string;
+            category: string;
+            media?: {
+                asset?: {
+                    url?: string;
+                    mimeType?: string;
+                };
+            };
+        };
+        const feeds  = data.map((item: FeedItem) => ({
             id: item._id,
             title: item.title,
             description: item.description,
@@ -32,7 +53,7 @@ const FeedGrid = async () => {
         return (
             <>
                 <div className="masonry-grid columns-2 sm:columns-2 md:columns-3 lg:columns-5 gap-4 space-y-4">
-                    {feeds.slice(0, 10).map((item, index) => (
+                    {feeds.slice(0, 10).map((item: FeedType, index: number) => (
                         <div
                             key={`${item.title}-${index}`}
                             className="masonry-item break-inside-avoid group cursor-pointer mb-4"
@@ -59,7 +80,7 @@ const FeedGrid = async () => {
 
         return (
             <div className="text-center py-12 text-gray-600">
-                <p>We couldn't load the media moments right now. Please try again later.</p>
+                <p>We couldn&apos;t load the media moments right now. Please try again later.</p>
             </div>
         );
     }

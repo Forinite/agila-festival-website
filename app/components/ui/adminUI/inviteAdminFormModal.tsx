@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import {toast} from "@/lib/toast";
 
 const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSubmit: (admin: any) => void }) => {
     const [formData, setFormData] = useState({ name: '', email: '' , password: '' });
@@ -29,6 +30,7 @@ const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSu
 
             // Add right after fetch
             console.log('[UI] Sending invite request...', formData);
+            toast.info('[UI] Sending invite request...');
 
             const res = await fetch('/api/admin-account/add', {
                 method: 'POST',
@@ -48,7 +50,7 @@ const InviteAdminFormModal = ({ onClose, onSubmit }: { onClose: () => void, onSu
             const result = await res.json();
             onSubmit(result.data); // Send the new admin back to AdminSection
             onClose(); // Close only on success
-        } catch (err: any) {
+        } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);

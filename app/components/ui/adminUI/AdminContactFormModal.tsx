@@ -1,7 +1,6 @@
 'use client';
 import React, {useEffect, useState} from 'react';
 import {urlFor} from "@/app/utils/imageBuilder";
-import {Loading} from "@/app/components/ui/loading";
 import {toast} from "@/lib/toast";
 
 const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
@@ -111,6 +110,7 @@ const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
                             name={name}
                             value={formData[name]}
                             onChange={handleChange}
+                            placeholder={label}
                             required
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
                         />

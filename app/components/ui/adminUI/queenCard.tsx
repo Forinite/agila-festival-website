@@ -4,9 +4,9 @@ import {NoImage} from "@/app/constants";
 
 interface Queen {
     name: string;
-    year: string;
+    year: number;
     role: string;
-    bio: any;
+    bio?: string;
     imageUrl?: string | null;
 }
 
@@ -15,6 +15,7 @@ interface QueenCardProps {
     isCurrent?: boolean;
     onEdit?: (queen: Queen) => void;
     onDelete?: () => void;
+    bio?: string;
 }
 
 const QueenCard = ({ queen, isCurrent = false, onEdit, onDelete }: QueenCardProps) => {
@@ -35,7 +36,7 @@ const QueenCard = ({ queen, isCurrent = false, onEdit, onDelete }: QueenCardProp
             <div className="space-y-1">
                 <h2 className="text-lg font-bold">{queen.name}</h2>
                 <p className="text-sm text-gray-500">
-                    Reign: {queen.year} - {isCurrent ? 'till date' : parseInt(queen.year) + 1}
+                    Reign: {queen.year} - {isCurrent ? 'till date' : parseInt(queen.year.toString()) + 1}
                 </p>
                 {/* <p className="text-sm mt-2">{queen.role}</p> */}
             </div>

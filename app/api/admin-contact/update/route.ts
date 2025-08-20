@@ -15,7 +15,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
         }
 
-        const updatePayload: any = { name, title, phone, email };
+        const updatePayload:  { name: string, title: string, phone: string, email: string, image?:{ asset: { _type: string; _ref: string; };  } } = { name, title, phone, email };
 
         if (imageFile && imageFile.size > 0) {
             const uploadedImage = await uploadMediaToSanity(imageFile);

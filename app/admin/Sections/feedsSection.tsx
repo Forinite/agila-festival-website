@@ -2,7 +2,6 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import Image from 'next/image';
 import {Trash, Pencil} from "lucide-react"
 import ConfirmModal from "@/app/components/ui/adminUI/modalConfirm";
 import AddFeedFormModal from "@/app/components/ui/adminUI/addFeedFormModal";
@@ -23,7 +22,6 @@ interface Feed {
 }
 
 export const FeedsSection = () => {
-    const [activeFeeds, setActiveFeeds] = useState<Feed[]>([]);
     const [Feeds, setFeeds] = useState<Feed[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -79,13 +77,6 @@ export const FeedsSection = () => {
     const handleEditClick = (feed: Feed) => {
         setFeedToEdit(feed);
         setShowEditModal(true);
-    };
-    const handleEdit = () => {
-        if (feedToRemove) {
-            setActiveFeeds(prev => prev.filter(f => f.id !== feedToRemove.id));
-        }
-        setShowEditModal(false);
-        setFeedToEdit(null);
     };
 
     const handleAddFeed = () => {
@@ -162,8 +153,8 @@ export const FeedsSection = () => {
             {showAddModal && (
                 <AddFeedFormModal
                     onClose={() => setShowAddModal(false)}
-                    onSubmit={(newFeed) => {
-                        setActiveFeeds((prev) => [...prev, newFeed]);
+                    onSubmit={() => {
+
                     }}
                     refetch={refetch}
                 />
@@ -171,8 +162,7 @@ export const FeedsSection = () => {
             {showEditModal && (
                 <EditFeedFormModal
                     onClose={() => setShowEditModal(false)}
-                    onSubmit={(newFeed) => {
-                        setActiveFeeds((prev) => [...prev, newFeed]);
+                    onSubmit={() => {
                         setFeedToEdit(null);
                     }}
                     initialData={{

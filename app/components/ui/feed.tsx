@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import {FeedType} from "@/app/(components)/mediafeed/page";
+import React from 'react';
 import VideoPlayer from "@/app/components/ui/videoPlayer";
 
 
-const FeedCard: React.FC<{ feedInfo }> = ({ feedInfo }) => {
+interface FeedType {
+    id: string,
+    title: string,
+    description: string,
+    category: string[],
+    media: string,
+    isVideo: boolean,
+}
+
+
+const FeedCard = ({ feedInfo } :{feedInfo: FeedType}) => {
     console.log(feedInfo.media)
+
     if (feedInfo.isVideo ){
         return (
 

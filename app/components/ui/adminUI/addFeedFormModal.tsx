@@ -31,14 +31,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleCategoryChange = (cat) => {
-        setFormData((prev) => ({
-            ...prev,
-            category: prev.category.includes(cat)
-                ? prev.category.filter((c) => c !== cat)
-                : [...prev.category, cat],
-        }));
-    };
 
     const handleFile = (file: File) => {
         if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {

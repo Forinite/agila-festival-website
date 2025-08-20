@@ -15,8 +15,14 @@ export async function POST(req: Request) {
         if (!id || !name || !year || !role) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
-
-        const patch: Record<string, any> = {
+//{ name:string, year:number, role:string,  bio:string|undefined }
+        const patch: Record<string, string|number|undefined|{
+            _type: string;
+            asset: {
+                _type: string;
+                _ref: string;
+            };
+        }> = {
             name,
             year: parseInt(year),
             role,
@@ -37,7 +43,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ message: 'Queen updated', data: result });
 
-    } catch (err: any) {
+    } catch (err) {
         console.error('Queen update error:', err);
         return NextResponse.json({ error: 'Failed to update queen' }, { status: 500 });
     }

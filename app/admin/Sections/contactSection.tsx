@@ -5,11 +5,10 @@ import ContactFormModal from '@/app/components/ui/adminUI/contactFormModal';
 import AdminContactList from '@/app/components/ui/adminUI/AdminContactList';
 import ConfirmDialog from '@/app/components/ui/adminUI/confirmDialog';
 import AdminContactFormModal from '@/app/components/ui/adminUI/AdminContactFormModal';
-// import { contactItems, socialLinks } from "@/app/constants/contacts";
 import {useContactInfo} from "@/app/hooks/useContactInfo";
 import {Loading} from "@/app/components/ui/loading";
 import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
-import {toast} from "@/lib/toast";
+
 
 
 export const ContactSection = () => {
@@ -23,6 +22,8 @@ export const ContactSection = () => {
     const { contactInfo, contactSocials, loading, refetch } = useContactInfo();
     const [info, setInfo] = useState([]);
     const [social, setSocial] = useState([]);
+
+
 
 
     useEffect(() => {
@@ -70,10 +71,7 @@ export const ContactSection = () => {
         setContactToEdit(contact);
     };
 
-    const handleAdminDelete = (contact) => {
-        setContactToDelete(contact);
-        setConfirmOpen(true);
-    };
+
 
     const handleConfirmDelete = () => {
         // Add deletion logic here
@@ -113,7 +111,6 @@ export const ContactSection = () => {
                 <h2 className="text-2xl font-bold mb-4">Admin Contacts</h2>
                 <AdminContactList
                     onEdit={handleAdminEdit}
-                    onDelete={handleAdminDelete}
                 />
 
                 <ConfirmDialog
