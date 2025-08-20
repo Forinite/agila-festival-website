@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { type NextPage } from 'next';
 
 interface MediaPageProps {
-    searchParams?: { q?: string } | Promise<{ q?: string }>;
+    searchParams: Promise<{ q?: string }> | undefined; // Simplified type
 }
 
 const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
@@ -58,11 +58,11 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
                         </button>
                     </form>
 
-                    <a href="/signin" className="ml-4">
+                    <Link href="/signin" className="ml-4">
                         <div className="w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center">
                             <span className="text-white font-bold">S</span>
                         </div>
-                    </a>
+                    </Link>
                 </header>
 
                 {/* Main Feed Content */}
