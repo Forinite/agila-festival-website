@@ -2,7 +2,6 @@ import QueenCard from "@/app/components/ui/queenCard";
 import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
 import { getQueens, Queen } from "@/app/libs/queries/getQueens";
 import React from "react";
-import {NoImage} from "@/app/constants";
 import Image from "next/image";
 
 const PaegentPage = async () => {
@@ -41,7 +40,7 @@ const PaegentPage = async () => {
                     </div>
                     <div className="order-1 lg:order-2">
                         <Image
-                            src={currentQueen?.imageUrl ?? NoImage}
+                            src={currentQueen?.imageUrl ?? '/NOIMAGE.png'}
                             alt={`Chairman ${currentQueen?.year ?? "unknown"} - till date`}
                             width={800}
                             height={600}
@@ -62,7 +61,7 @@ const PaegentPage = async () => {
                                     name={queen.name}
                                     year={queen.year}
                                     role={queen.role}
-                                    imageUrl={queen.imageUrl}
+                                    imageUrl={queen.imageUrl ?? '/NOIMAGE.png'}
                                 />
                             ))}
                         </div>
