@@ -4,6 +4,7 @@ import { fetchFeeds } from '@/app/libs/queries/fetchFeeds';
 import FeedCard from '@/app/components/ui/feed';
 import Link from 'next/link';
 import { type NextPage } from 'next';
+import Image from "next/image";
 
 interface MediaPageProps {
     searchParams: Promise<{ q?: string }> | undefined; // Simplified type
@@ -18,6 +19,9 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
         <div className="flex flex-col md:flex-row min-h-screen w-screen bg-white overflow-hidden absolute z-50">
             {/* Sidebar Navigation */}
             <nav className="flex md:flex-col items-center justify-between md:justify-start w-full md:w-20 h-16 md:h-screen border-b md:border-b-0 md:border-r p-2 md:pt-20 bg-white">
+                <Link href="/" className="p-3 hover:bg-gray-100 rounded-full">
+                    <Image width={40} height={40} src={'/favicon.ico'} alt={'logo'} />
+                </Link>
                 <Link href="/" className="p-3 hover:bg-gray-100 rounded-full">
                     <Home className="w-5 h-5" />
                 </Link>
@@ -76,9 +80,9 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
                         <strong className="text-gray-800">{query || 'All Media'}</strong>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4">
                         {feeds.map((item) => (
-                            <div key={item.id} className="group cursor-pointer">
+                            <div key={item.id} className="mb-4 break-inside-avoid group cursor-pointer">
                                 <FeedCard feedInfo={item} />
                             </div>
                         ))}
