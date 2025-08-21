@@ -1,80 +1,77 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { urlFor } from '@/app/utils/imageBuilder';
-import {toast} from "@/lib/toast";
+import Image from 'next/image';
+import { toast } from '@/lib/toast';
+import { Feed } from '@/app/types/feed';
 
-// const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
+interface EditFeedFormModalProps {
+    initialData: Feed;
+    onClose: () => void;
+    onSubmit: (feed: Feed) => void;
+    showModal: (value: boolean) => void;
+    refetch: () => void;
+}
 
-const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch }) => {
-    const [formData, setFormData] = useState({
+const EditFeedFormModal = ({ initialData, onClose, onSubmit, showModal, refetch }: EditFeedFormModalProps) => {
+    type FormDataKeys = 'title' | 'description' | 'category';
+    const [formData, setFormData] = useState<{
+        [key: string]: string | string[] | null;
+        title: string;
+        description: string;
+        category: string[];
+    }>({
         title: initialData.title || '',
         description: initialData.description || '',
         category: initialData.category || [],
-        mediaType: initialData.mediaType || 'image',
-        mediaAssetId: initialData.mediaAssetId || null,
     });
 
     const [newFile, setNewFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(initialData.media || null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Setup existing media preview
     useEffect(() => {
-        if (!newFile && initialData.media) {
-            try {
-                const url = urlFor(initialData.media).url();
-                setPreviewUrl(url);
-            } catch (err) {
-                console.warn('Could not generate preview from existing media:', err);
-            }
-        }
-    }, [initialData, newFile]);
+        return () => {
+            if (previewUrl && newFile) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl, newFile]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name as FormDataKeys]: value }));
     };
 
-    const handleMediaChange = (e) => {
+    const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setNewFile(file);
-            setFormData((prev) => ({
-                ...prev,
-                mediaType: file.type.startsWith('video/') ? 'video' : 'image',
-            }));
-            setPreviewUrl(URL.createObjectURL(file));
+            const url = URL.createObjectURL(file);
+            setPreviewUrl(url);
         }
     };
 
-    function extractHashtags(text: string): string[] {
+    const extractHashtags = (text: string): string[] => {
         return text
-            .split(/\s+/) // Split on whitespace
-            .filter(word => word.startsWith('#') && word.length > 1)
+            .split(/\s+/)
+            .filter((word) => word.startsWith('#') && word.length > 1);
+    };
 
-    }
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
 
         try {
-
             const form = new FormData();
-
-            const category = extractHashtags(formData.description)
+            const category = extractHashtags(formData.description);
             form.append('id', initialData.id);
             form.append('title', formData.title);
             form.append('description', formData.description);
             form.append('category', JSON.stringify(category || []));
-            form.append('mediaType', formData.mediaType || 'image');
+            form.append('isVideo', JSON.stringify(!!(newFile && newFile.type.startsWith('video/')) || initialData.isVideo || false));
 
-            // If there's an existing asset and no new file, keep the asset ID
-            if (!newFile && (initialData.mediaAssetId || initialData.image?._id || initialData.video?._id)) {
-                form.append('existingAssetId', initialData.mediaAssetId || initialData.image?._id || initialData.video?._id);
+            if (!newFile && initialData.mediaAssetId) {
+                form.append('existingAssetId', initialData.mediaAssetId);
             }
 
-            // If new file is selected, append it
             if (newFile) {
                 form.append('file', newFile);
             }
@@ -84,16 +81,18 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                 body: form,
             });
 
-            const json = await res.json();
+            const json: { success: boolean; updated?: Feed; error?: string } = await res.json();
 
             if (!res.ok) {
                 throw new Error(json.error || 'Failed to update feed');
             }
 
-            onSubmit(json.updated);
-            showModal(false);
-            toast.success('Feed updated successfully');
-            refetch();
+            if (json.updated) {
+                onSubmit(json.updated);
+                showModal(false);
+                toast.success('Feed updated successfully');
+                refetch();
+            }
         } catch (err) {
             console.error('[Edit Feed Error]', err);
             toast.error('Error updating feed');
@@ -101,7 +100,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
             setIsSubmitting(false);
         }
     };
-
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
@@ -111,7 +109,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
             >
                 <h3 className="text-xl font-bold mb-6 text-center">Edit Feed</h3>
 
-                {/* Title */}
                 <input
                     name="title"
                     value={formData.title}
@@ -121,7 +118,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                     className="w-full mb-4 border px-3 py-2 rounded-md"
                 />
 
-                {/* Description */}
                 <textarea
                     name="description"
                     value={formData.description}
@@ -132,28 +128,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                     className="w-full mb-4 border px-3 py-2 rounded-md"
                 />
 
-                {/*/!* Categories *!/*/}
-                {/*<div className="mb-4">*/}
-                {/*    <label className="block text-sm font-medium mb-2">Categories</label>*/}
-                {/*    <div className="flex flex-wrap gap-2">*/}
-                {/*        {categories.map((cat) => (*/}
-                {/*            <button*/}
-                {/*                type="button"*/}
-                {/*                key={cat}*/}
-                {/*                className={`px-3 py-1 rounded-full border text-sm ${*/}
-                {/*                    formData.category.includes(cat)*/}
-                {/*                        ? 'bg-indigo-600 text-white border-indigo-600'*/}
-                {/*                        : 'bg-white text-gray-700 border-gray-300'*/}
-                {/*                }`}*/}
-                {/*                onClick={() => handleCategoryChange(cat)}*/}
-                {/*            >*/}
-                {/*                {cat}*/}
-                {/*            </button>*/}
-                {/*        ))}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
-                {/* Media Upload */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Replace Media (optional)</label>
                     <input
@@ -164,12 +138,17 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                     />
                 </div>
 
-                {/* Preview */}
                 {previewUrl && (
                     <div className="mb-4">
                         <label className="block text-sm font-medium mb-1">Preview</label>
-                        {formData.mediaType === 'image' ? (
-                            <img src={previewUrl} alt="Preview" className="w-full h-48 object-cover rounded" />
+                        {newFile?.type.startsWith('image/') || (!newFile && !initialData.isVideo) ? (
+                            <Image
+                                src={previewUrl}
+                                alt="Preview"
+                                width={300}
+                                height={200}
+                                className="w-full h-48 object-cover rounded"
+                            />
                         ) : (
                             <video
                                 src={previewUrl}
@@ -180,7 +159,6 @@ const EditFeedFormModal = ({ onClose, onSubmit, initialData, showModal, refetch 
                     </div>
                 )}
 
-                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"

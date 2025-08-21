@@ -1,13 +1,24 @@
 'use client';
-
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import {toast} from "@/lib/toast";
+import { toast } from '@/lib/toast';
+import { Feed } from '@/app/types/feed';
 
-// const categories = ['Dance', 'Pageant', 'Masquerade', 'Parade', 'March'];
+interface AddFeedFormModalProps {
+    onClose: () => void;
+    onSubmit: (feed: Feed) => void;
+    refetch: () => void;
+}
 
-const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
-    const [formData, setFormData] = useState({
+const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps) => {
+    type FormDataKeys = 'title' | 'description' | 'category';
+    const [formData, setFormData] = useState<{
+        [key: string]: string | string[] | File | null;
+        title: string;
+        description: string;
+        category: string[];
+        media: File | null;
+    }>({
         title: '',
         description: '',
         category: [],
@@ -19,23 +30,20 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Clean up preview URL when component unmounts or media changes
     useEffect(() => {
         return () => {
             if (previewUrl) URL.revokeObjectURL(previewUrl);
         };
     }, [previewUrl]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name as FormDataKeys]: value }));
     };
 
-
-    const handleFile = (file: File) => {
+    const handleFile = (file: File | undefined) => {
         if (file && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
             setFormData((prev) => ({ ...prev, media: file }));
-
             const url = URL.createObjectURL(file);
             setPreviewUrl((prevUrl) => {
                 if (prevUrl) URL.revokeObjectURL(prevUrl);
@@ -46,19 +54,18 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
         }
     };
 
-    function extractHashtags(text: string): string[] {
+    const extractHashtags = (text: string): string[] => {
         return text
-            .split(/\s+/) // Split on whitespace
-            .filter(word => word.startsWith('#') && word.length > 1)
+            .split(/\s+/)
+            .filter((word) => word.startsWith('#') && word.length > 1);
+    };
 
-    }
-
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
 
         const { title, description, media } = formData;
-            const category = extractHashtags(description)
+        const category = extractHashtags(description);
         if (!title || !description || !media) {
             toast.info('All fields are required.');
             return;
@@ -78,12 +85,12 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                 body: formPayload,
             });
 
-            const result = await res.json();
+            const result: { success: boolean; feed?: Feed; error?: string } = await res.json();
 
-            if (result.success) {
+            if (result.success && result.feed) {
                 console.log('✅ Feed added:', result.feed);
-                onSubmit?.(result.feed);
-                refetch?.();
+                onSubmit(result.feed);
+                refetch();
                 onClose();
             } else {
                 console.error('❌ Error:', result.error);
@@ -105,7 +112,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
             >
                 <h3 className="text-xl font-bold mb-6 text-center">Add New Feed</h3>
 
-                {/* Title */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Title</label>
                     <input
@@ -117,7 +123,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                     />
                 </div>
 
-                {/* Description */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Description</label>
                     <textarea
@@ -130,28 +135,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                     />
                 </div>
 
-                {/*/!* Categories *!/*/}
-                {/*<div className="mb-4">*/}
-                {/*    <label className="block text-sm font-medium mb-2">Categories</label>*/}
-                {/*    <div className="flex flex-wrap gap-2">*/}
-                {/*        {categories.map((cat) => (*/}
-                {/*            <button*/}
-                {/*                type="button"*/}
-                {/*                key={cat}*/}
-                {/*                className={`px-3 py-1 rounded-full border text-sm ${*/}
-                {/*                    formData.category.includes(cat)*/}
-                {/*                        ? 'bg-indigo-600 text-white border-indigo-600'*/}
-                {/*                        : 'bg-white text-gray-700 border-gray-300'*/}
-                {/*                }`}*/}
-                {/*                onClick={() => handleCategoryChange(cat)}*/}
-                {/*            >*/}
-                {/*                {cat}*/}
-                {/*            </button>*/}
-                {/*        ))}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
-                {/* Media Upload */}
                 <div
                     className={`mb-6 p-4 border-2 border-dashed rounded-md transition-all text-center cursor-pointer ${
                         formData.media ? 'border-indigo-600 bg-indigo-50' : 'border-gray-300'
@@ -172,10 +155,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                         e.currentTarget.classList.remove('border-indigo-500', 'bg-indigo-50');
                     }}
                 >
-                    <label className="block text-sm font-medium mb-2">
-                        Upload Image or Video
-                    </label>
-
+                    <label className="block text-sm font-medium mb-2">Upload Image or Video</label>
                     <input
                         type="file"
                         accept="image/*,video/*"
@@ -186,7 +166,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                         }}
                         hidden
                     />
-
                     <div className="mt-4 text-sm text-gray-600">
                         {formData.media && previewUrl ? (
                             <>
@@ -210,7 +189,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                                         />
                                     </div>
                                 )}
-
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -231,7 +209,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }) => {
                     </div>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"

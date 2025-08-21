@@ -1,5 +1,7 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { sanityClient } from '@/sanity/lib/client';
+import { Feed } from '@/app/types/feed';
 
 // Interface for the raw Sanity data
 interface RawFeed {
@@ -14,17 +16,6 @@ interface RawFeed {
             mimeType: string;
         };
     };
-}
-
-// Interface for the transformed Feed data
-interface Feed {
-    id: string;
-    title: string;
-    media: string;
-    isVideo?: boolean;
-    description: string;
-    category: string[];
-    mediaAssetId?: string; // Added to match the map function
 }
 
 export const useFeeds = () => {
