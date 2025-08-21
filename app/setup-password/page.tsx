@@ -31,9 +31,13 @@ export default function SetupPasswordPage() {
 
             setSuccess(true);
             setTimeout(() => router.push('/auth/signin'), 2000);
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
+        }finally {
             setLoading(false);
         }
     };

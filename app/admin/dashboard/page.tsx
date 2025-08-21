@@ -11,6 +11,7 @@ export default async function AdminPage() {
         return redirect("/signin");
     }
 
+
     // Check if user exists in adminAccount schema
     const isSanityAdmin = await sanityWriteClient.fetch(
         `count(*[_type == "adminAccount" && email == $email]) > 0`,
