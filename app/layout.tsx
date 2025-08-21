@@ -5,8 +5,8 @@ import {ToastProvider} from "@/app/toastProvider";
 import React from "react";
 
 export const metadata: Metadata = {
-    title: "Festival Website",
-    description: "Festival Website",
+    title: "Ech'ija Cultural Festival Website",
+    description: "Ech'ija Cultural Festival Festival Website",
 };
 
 export default function RootLayout({

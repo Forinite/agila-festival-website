@@ -1,57 +1,94 @@
-'use client'
+'use client';
 import React, { useState } from 'react';
-import {toast} from "@/lib/toast";
-import {useAdminContacts} from "@/app/hooks/useAdminContacts";
+import { toast } from '@/lib/toast';
+import { useAdminContacts } from '@/app/hooks/useAdminContacts';
 
-interface InitialDataProps  {
-    id: string,
-    info: {lines: string[]}[],
-    social: [{ href: string }],
-
+interface ContactInfo {
+    icon: null;
+    title: string;
+    lines: string[];
 }
-const ContactFormModal = ({ initialData, onClose, onSubmit }: {initialData: InitialDataProps}) => {
-    const [isSumbiting, setIsSumbiting] = useState(false);
-    const { refetch } = useAdminContacts();
-    const [formState, setFormState] = useState(() => {
-        return {
-            location1: initialData?.info?.[0]?.lines?.[0] || '',
-            location2: initialData?.info?.[0]?.lines?.[1] || '',
-            email1: initialData?.info?.[1]?.lines?.[0] || '',
-            email2: initialData?.info?.[1]?.lines?.[1] || '',
-            phone1: initialData?.info?.[2]?.lines?.[0] || '',
-            phone2: initialData?.info?.[2]?.lines?.[1] || '',
-            instagram: initialData?.social?.find(s => s.href?.includes('instagram'))?.href || '',
-            twitter: initialData?.social?.find(s => s.href?.includes('twitter'))?.href || '',
-            facebook: initialData?.social?.find(s => s.href?.includes('facebook'))?.href || '',
-            youtube: initialData?.social?.find(s => s.href?.includes('youtube'))?.href || '',
 
-        };
+interface SocialLink {
+    href: string;
+}
+
+interface InitialDataProps {
+    id?: string;
+    info: ContactInfo[];
+    social: SocialLink[];
+}
+
+interface ContactFormModalProps {
+    initialData: InitialDataProps;
+    onClose: () => void;
+    onSubmit: (data: InitialDataProps) => void;
+}
+
+const ContactFormModal = ({ initialData, onClose, onSubmit }: ContactFormModalProps) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { refetch } = useAdminContacts();
+    const [formState, setFormState] = useState<{
+        location1: string;
+        location2: string;
+        email1: string;
+        email2: string;
+        phone1: string;
+        phone2: string;
+        instagram: string;
+        twitter: string;
+        facebook: string;
+        youtube: string;
+    }>({
+        location1: initialData?.info?.[0]?.lines?.[0] || '',
+        location2: initialData?.info?.[0]?.lines?.[1] || '',
+        email1: initialData?.info?.[1]?.lines?.[0] || '',
+        email2: initialData?.info?.[1]?.lines?.[1] || '',
+        phone1: initialData?.info?.[2]?.lines?.[0] || '',
+        phone2: initialData?.info?.[2]?.lines?.[1] || '',
+        instagram: initialData?.social?.find((s) => s.href?.includes('instagram'))?.href || '',
+        twitter: initialData?.social?.find((s) => s.href?.includes('twitter'))?.href || '',
+        facebook: initialData?.social?.find((s) => s.href?.includes('facebook'))?.href || '',
+        youtube: initialData?.social?.find((s) => s.href?.includes('youtube'))?.href || '',
     });
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-        setFormState((prev) => ({...prev, [name]: value}));
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormState((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSumbiting(true);
-        const updatedData = {
-            id: initialData?.id, // You need to pass the `_id` of the document in `initialData`
-            location: [formState.location1, formState.location2].filter(Boolean), // optional: derive from formState
-            emails: [formState.email1, formState.email2].filter(Boolean),
-            phones: [formState.phone1, formState.phone2].filter(Boolean),
-            instagram: formState.instagram,
-            twitter: formState.twitter,
-            facebook: formState.facebook,
-            youtube: formState.youtube,
+        setIsSubmitting(true);
+        const updatedData: InitialDataProps = {
+            id: initialData?.id,
+            info: [
+                { icon: null, title: 'Location', lines: [formState.location1, formState.location2].filter(Boolean) },
+                { icon: null, title: 'Email', lines: [formState.email1, formState.email2].filter(Boolean) },
+                { icon: null, title: 'Phone', lines: [formState.phone1, formState.phone2].filter(Boolean) },
+            ],
+            social: [
+                { href: formState.facebook },
+                { href: formState.instagram },
+                { href: formState.youtube },
+                { href: formState.twitter },
+            ],
         };
 
         try {
             const res = await fetch('/api/contact-info/update', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(updatedData),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: updatedData.id,
+                    location: updatedData.info.find((i) => i.title === 'Location')?.lines || [],
+                    emails: updatedData.info.find((i) => i.title === 'Email')?.lines || [],
+                    phones: updatedData.info.find((i) => i.title === 'Phone')?.lines || [],
+                    facebook: updatedData.social.find((s) => s.href.includes('facebook'))?.href || '',
+                    instagram: updatedData.social.find((s) => s.href.includes('instagram'))?.href || '',
+                    youtube: updatedData.social.find((s) => s.href.includes('youtube'))?.href || '',
+                    twitter: updatedData.social.find((s) => s.href.includes('twitter'))?.href || '',
+                }),
             });
 
             if (!res.ok) {
@@ -60,18 +97,16 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }: {initialData: Init
             }
 
             toast.success('Contact info updated successfully');
-
-
             const json = await res.json();
-            onSubmit(json.updated);
-            refetch()
+            onSubmit(updatedData);
+            refetch();
         } catch (err) {
             console.error(err);
+            toast.error('Failed to update contact info');
         } finally {
-            setIsSumbiting(false);
+            setIsSubmitting(false);
         }
     };
-
 
     return (
         <div className="fixed inset-0 z-50 bg-black/50 w-screen h-screen overflow-y-auto flex items-start justify-center px-4 py-8">
@@ -127,15 +162,14 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }: {initialData: Init
                     <button
                         type="submit"
                         className="px-4 py-2 text-sm sm:text-base bg-blue-600 text-white hover:bg-blue-700 rounded-md transition"
-                        disabled={isSumbiting}
+                        disabled={isSubmitting}
                     >
-                        {isSumbiting ? 'Saving...' : 'Save'}
+                        {isSubmitting ? 'Saving...' : 'Save'}
                     </button>
                 </div>
             </form>
         </div>
     );
+};
 
-
-}
 export default ContactFormModal;
