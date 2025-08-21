@@ -9,6 +9,7 @@ export interface Feed {
     category: string[];
 }
 
+
 interface RawFeed {
     _id: string;
     title: string;

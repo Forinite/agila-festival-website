@@ -8,7 +8,7 @@ interface FeedType {
     description: string,
     category: string[],
     media: string,
-    isVideo: boolean,
+    isVideo?: boolean,
 }
 
 
