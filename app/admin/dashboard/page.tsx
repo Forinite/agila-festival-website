@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import AdminLayout from "@/app/admin/dashboard/main/main";
 import { sanityWriteClient } from "@/sanity/lib/sanityClient";
+import {authOptions} from "@/lib/auth";
 
 export default async function AdminPage() {
     const session = await getServerSession(authOptions);
