@@ -97,7 +97,7 @@ const ContactFormModal = ({ initialData, onClose, onSubmit }: ContactFormModalPr
             }
 
             toast.success('Contact info updated successfully');
-            const json = await res.json();
+            // const json = await res.json();
             onSubmit(updatedData);
             refetch();
         } catch (err) {
