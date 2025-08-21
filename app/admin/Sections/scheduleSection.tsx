@@ -1,20 +1,23 @@
-import React from 'react';
+// app/admin/Sections/ScheduleSection.tsx
+'use client';
+import React, { useState } from 'react';
 import AdminScheduleCard from '@/app/components/ui/adminUI/adminScheduleCard';
 import { useSchedules } from '@/app/hooks/useSchedules';
 import ScheduleFormModal from '@/app/components/ui/adminUI/scheduleForrmModal';
-import ConfirmModal from "@/app/components/ui/adminUI/modalConfirm";
-import {toast} from "@/lib/toast";
+import ConfirmModal from '@/app/components/ui/adminUI/modalConfirm';
+import { toast } from '@/lib/toast';
+import { Schedule } from '@/app/types/schedule';
 
 const ScheduleSection = () => {
-    const [editModalOpen, setEditModalOpen] = React.useState(false);
-    const [addModalOpen, setAddModalOpen] = React.useState(false);
-    const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
-    const [activeSchedule, setActiveSchedule] = React.useState(null);
-    const [activeScheduleId, setActiveScheduleId] = React.useState('');
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [addModalOpen, setAddModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [activeSchedule, setActiveSchedule] = useState<Schedule | null>(null);
+    const [activeScheduleId, setActiveScheduleId] = useState<string>('');
 
     const { schedules, loading, error, refetch } = useSchedules();
 
-    const handleEditClick = (schedule) => {
+    const handleEditClick = (schedule: Schedule) => {
         setActiveSchedule(schedule);
         setEditModalOpen(true);
     };
@@ -23,69 +26,89 @@ const ScheduleSection = () => {
         setAddModalOpen(true);
     };
 
-    const clearFormData = {
+    const clearFormData: Schedule = {
+        _id: '',
         title: '',
         desc: '',
         date: '',
-        schedule: [{ time: '', event: '' }]
+        schedule: [{ time: '', event: '' }],
     };
 
-    const handleAddSchedule = async (formData) => {
+    const handleAddSchedule = async (formData: Schedule) => {
         try {
-            await fetch('/api/schedule/add', {
+            const response = await fetch('/api/schedule/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
             });
-            setAddModalOpen(false);
-            toast.success('Schedule added successfully.')
-            refetch()
 
+            const result: { success: boolean; schedule?: Schedule; error?: string } = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to add schedule');
+            }
+
+            setAddModalOpen(false);
+            toast.success('Schedule added successfully.');
+            refetch();
         } catch (error) {
-            toast.error('Failed to add schedule. Please try again.')
+            toast.error('Failed to add schedule. Please try again.');
             console.error('Add Schedule Error:', error);
         }
     };
 
-    const handleUpdateSchedule = async (formData) => {
+    const handleUpdateSchedule = async (formData: Schedule) => {
         try {
-            await fetch('/api/schedule/update', {
+            const response = await fetch('/api/schedule/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
             });
-            setEditModalOpen(false);
-            toast.success('Schedule updated successfully.')
 
-            refetch()
+            const result: { success: boolean; schedule?: Schedule; error?: string } = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to update schedule');
+            }
+
+            setEditModalOpen(false);
+            toast.success('Schedule updated successfully.');
+            refetch();
         } catch (error) {
-            toast.error('Failed to update schedule. Please try again.')
+            toast.error('Failed to update schedule. Please try again.');
             console.error('Update Schedule Error:', error);
         }
     };
 
-    const handleDelete = async (_id: string) => {
-        setActiveScheduleId(_id)
-        setDeleteModalOpen(true)
-
+    const handleDelete = (id: string) => {
+        setActiveScheduleId(id);
+        setDeleteModalOpen(true);
     };
+
     const handleConfirmDelete = async () => {
         try {
-            await fetch('/api/schedule/delete', {
+            const response = await fetch('/api/schedule/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ _id: activeScheduleId }),
             });
+
+            const result: { success: boolean; error?: string } = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to delete schedule');
+            }
+
+            toast.success('Schedule deleted successfully.');
             refetch();
         } catch (error) {
             console.error('Delete error:', error);
-            toast.error('Failed to delete schedule. Please try again.')
+            toast.error('Failed to delete schedule. Please try again.');
         } finally {
             setDeleteModalOpen(false);
             setActiveScheduleId('');
         }
     };
-
 
     if (loading) return <p>Loading schedules...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
@@ -103,10 +126,9 @@ const ScheduleSection = () => {
             </div>
 
             <div className="grid lg:grid-cols-3 gap-6">
-                { schedules.map((item, index) => (
+                {schedules.map((item: Schedule) => (
                     <AdminScheduleCard
-                        key={index}
-                        item={item}
+                        key={item._id}
                         schedule={item.schedule}
                         description={item.desc}
                         title={item.title}
@@ -114,12 +136,18 @@ const ScheduleSection = () => {
                         onEdit={() => handleEditClick(item)}
                         onDelete={() => handleDelete(item._id)}
                     />
-                )) }
-
+                ))}
             </div>
-             <ConfirmModal title={'Delete This Schedule?'} onConfirm={handleConfirmDelete} onCancel={() => {
-                 setDeleteModalOpen(false);
-             }} isOpen={deleteModalOpen} />
+
+            <ConfirmModal
+                title="Delete This Schedule?"
+                onConfirm={handleConfirmDelete}
+                onCancel={() => {
+                    setDeleteModalOpen(false);
+                    setActiveScheduleId('');
+                }}
+                isOpen={deleteModalOpen}
+            />
 
             {editModalOpen && (
                 <ScheduleFormModal
@@ -143,4 +171,3 @@ const ScheduleSection = () => {
 };
 
 export default ScheduleSection;
-
