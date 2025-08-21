@@ -1,32 +1,30 @@
-import React from "react";
-import Image from "next/image";
-import {NoImage} from "@/app/constants";
-
-interface Queen {
-    name: string;
-    year: number;
-    role: string;
-    bio?: string;
-    imageUrl?: string | null;
-}
+// app/components/ui/adminUI/queenCard.tsx
+import React from 'react';
+import Image from 'next/image';
+import { NoImage } from '@/app/constants';
+import { Queen } from '@/app/types/queen';
 
 interface QueenCardProps {
     queen: Queen;
     isCurrent?: boolean;
     onEdit?: (queen: Queen) => void;
     onDelete?: () => void;
-    bio?: string;
+    bio?: string; // Note: This prop seems unused; consider removing if not needed
 }
 
 const QueenCard = ({ queen, isCurrent = false, onEdit, onDelete }: QueenCardProps) => {
-    const imageSrc = queen.imageUrl ?? NoImage; // fallback image
+    const imageSrc = queen.imageUrl ?? NoImage; // Fallback image
 
     return (
-        <div className={`border p-4 rounded-lg bg-white text-black shadow-md ${isCurrent ? 'border-indigo-500 max-w-[500px] mx-auto' : 'border-gray-300'}`}>
+        <div
+            className={`border p-4 rounded-lg bg-white text-black shadow-md ${
+                isCurrent ? 'border-indigo-500 max-w-[500px] mx-auto' : 'border-gray-300'
+            }`}
+        >
             <div className={`relative w-full ${isCurrent ? 'md:h-80 h-56' : 'md:h-56 h-40'} rounded overflow-hidden mb-4`}>
                 <Image
                     src={imageSrc}
-                    alt={`${queen.name || "Leader"}'s photo`}
+                    alt={`${queen.name || 'Leader'}'s photo`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -36,9 +34,9 @@ const QueenCard = ({ queen, isCurrent = false, onEdit, onDelete }: QueenCardProp
             <div className="space-y-1">
                 <h2 className="text-lg font-bold">{queen.name}</h2>
                 <p className="text-sm text-gray-500">
-                    Reign: {queen.year} - {isCurrent ? 'till date' : parseInt(queen.year.toString()) + 1}
+                    Reign: {queen.year} - {isCurrent ? 'till date' : queen.year + 1}
                 </p>
-                {/* <p className="text-sm mt-2">{queen.role}</p> */}
+                {queen.role && <p className="text-sm mt-2">{queen.role}</p>}
             </div>
 
             <div className="flex justify-end gap-2 pt-2">

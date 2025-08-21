@@ -1,28 +1,20 @@
+// app/hooks/useQueens.ts
 'use client';
-
 import { useEffect, useState } from 'react';
 import { sanityClient } from '@/sanity/lib/client';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { Queen } from '@/app/types/queen';
 
 const builder = imageUrlBuilder(sanityClient);
 
-// Interface for the raw Sanity data
 interface RawQueen {
     _id: string;
     name: string;
     year: number;
-    role: string;
-    imageUrl?: SanityImageSource; // imageUrl is a Sanity image asset
+    role?: string; // Align with optional role
+    imageUrl?: SanityImageSource;
     bio?: string;
-}
-
-// Interface for the transformed Queen data
-export interface Queen {
-    name: string;
-    year: number;
-    role: string;
-    imageUrl: string | null; // Transformed to a string URL or null
 }
 
 export const useQueens = () => {
@@ -41,15 +33,17 @@ export const useQueens = () => {
       }`);
 
             const formatted: Queen[] = data.map((q: RawQueen) => ({
+                _id: q._id,
                 name: q.name,
                 year: q.year,
-                role: q.role,
+                role: q.role || 'Queen', // Fallback for missing role
                 imageUrl: q.imageUrl ? builder.image(q.imageUrl).url() : null,
+                bio: q.bio,
             }));
 
             setQueens(formatted);
         } catch (err) {
-            console.error("Failed to fetch queens:", err);
+            console.error('Failed to fetch queens:', err);
         } finally {
             setLoading(false);
         }
