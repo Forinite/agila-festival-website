@@ -10,7 +10,7 @@ const InfoCard: React.FC<InfoCardProps> = ({ title, description }) => (
     </div>
 );
 
-const PageantApplicationSection = ({year}) => {
+const PageantApplicationSection = ({year} :{year:number}) => {
     const infoCards = [
         {
             title: "Eligibility",
