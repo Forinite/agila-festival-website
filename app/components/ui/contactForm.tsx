@@ -1,19 +1,9 @@
 'use client'
 
-import {FormEvent, useRef, useState} from 'react';
+import { Suspense, useRef, useState} from 'react';
 import FormSelect from "@/app/components/ui/formSelect";
 import {toast} from "@/lib/toast";
-// import emailjs from '@emailjs/browser'
 
-const subjectOptions = [
-    { value: 'general', label: 'General Inquiry' },
-    { value: 'volunteer', label: 'Volunteer Opportunity' },
-    { value: 'partnership', label: 'Partnership/Sponsorship' },
-    { value: 'planning', label: 'Planning Commitee' },
-    { value: 'media', label: 'Media/Press Request' },
-    { value: 'pageant', label: 'Face of Idoma Pageant' },
-    { value: 'other', label: 'Other' }
-];
 
 const ContactForm = () => {
 
@@ -101,7 +91,9 @@ const ContactForm = () => {
                     <label className="text-sm font-medium leading-none" htmlFor="subject">
                         Subject
                     </label>
-                    <FormSelect />
+                    <Suspense fallback={<div>Loading form...</div>}>
+                        <FormSelect />
+                    </Suspense>
                 </div>
                 <div>
                     <label className="text-sm font-medium leading-none" htmlFor="message">
