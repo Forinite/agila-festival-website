@@ -1,29 +1,29 @@
 
-import { MapPin, Phone, Mail } from 'lucide-react';
+// import { MapPin, Phone, Mail } from 'lucide-react';
 
 // //contact.tsx
 // export const contactInfo = {
 //     ...contactItems,
 //     ...socialLinks
 // }
-
-export const contactItems = [
-    {
-        icon: <MapPin className="w-6 h-6 text-white" />,
-        title: "Location",
-        lines: ["Otukpo Local Government Area", "Benue State, Nigeria"]
-    },
-    {
-        icon: <Phone className="w-6 h-6 text-white" />,
-        title: "Phone",
-        lines: ["+234 803 090 7080", "+234 806 049 8668"]
-    },
-    {
-        icon: <Mail className="w-6 h-6 text-white" />,
-        title: "Email",
-        lines: ["echijaculturalfestival2812ot@gmail.com"]
-    }
-];
+//
+// export const contactItems = [
+//     {
+//         icon: <MapPin className="w-6 h-6 text-white" />,
+//         title: "Location",
+//         lines: ["Otukpo Local Government Area", "Benue State, Nigeria"]
+//     },
+//     {
+//         icon: <Phone className="w-6 h-6 text-white" />,
+//         title: "Phone",
+//         lines: ["+234 803 090 7080", "+234 806 049 8668"]
+//     },
+//     {
+//         icon: <Mail className="w-6 h-6 text-white" />,
+//         title: "Email",
+//         lines: ["echijaculturalfestival2812ot@gmail.com"]
+//     }
+// ];
 
 // Social Links
 // import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
