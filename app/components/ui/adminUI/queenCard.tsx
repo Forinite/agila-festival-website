@@ -36,7 +36,7 @@ const QueenCard = ({ queen, isCurrent = false, onEdit, onDelete }: QueenCardProp
                 <p className="text-sm text-gray-500">
                     Reign: {queen.year} - {isCurrent ? 'till date' : queen.year + 1}
                 </p>
-                {queen.role && <p className="text-sm mt-2">{queen.role}</p>}
+                {/*{queen.role && <p className="text-sm mt-2">{queen.role}</p>}*/}
             </div>
 
             <div className="flex justify-end gap-2 pt-2">

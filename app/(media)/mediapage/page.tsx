@@ -1,19 +1,20 @@
+// app/(media)/mediapage/page.tsx
 import React from 'react';
 import { Home, Phone } from 'lucide-react';
 import { fetchFeeds } from '@/app/libs/queries/fetchFeeds';
-import FeedCard from '@/app/components/ui/feed';
+import FeedCardWrapper from '@/app/components/ui/feedCardWrapper';
 import Link from 'next/link';
 import { type NextPage } from 'next';
-import Image from "next/image";
+import Image from 'next/image';
 
 interface MediaPageProps {
-    searchParams: Promise<{ q?: string }> | undefined; // Simplified type
+    searchParams: Promise<{ q?: string }> | undefined;
 }
 
 const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
-    const resolvedSearchParams = await searchParams; // Resolve the Promise
+    const resolvedSearchParams = await searchParams;
     const query = resolvedSearchParams?.q || '';
-    const feeds = await fetchFeeds(query); // Pass query to fetch feeds
+    const feeds = await fetchFeeds(query);
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen w-screen bg-white overflow-hidden absolute z-50">
@@ -30,7 +31,7 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
                 </Link>
             </nav>
 
-            {/* Main Content / Commit aid */}
+            {/* Main Content */}
             <div className="flex-1 flex flex-col">
                 {/* Header with Search */}
                 <header className="flex items-center justify-between px-4 h-16 md:h-20 shadow bg-white">
@@ -82,9 +83,7 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
 
                     <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4">
                         {feeds.map((item) => (
-                            <div key={item.id} className="mb-4 break-inside-avoid group cursor-pointer">
-                                <FeedCard feedInfo={item} />
-                            </div>
+                            <FeedCardWrapper key={item.id} feed={item} />
                         ))}
                     </div>
                 </main>

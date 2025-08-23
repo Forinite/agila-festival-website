@@ -23,10 +23,15 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+
     useEffect(() => {
+        setRole('0')
+        setBio('0')
         return () => {
             if (previewUrl && imageFile) URL.revokeObjectURL(previewUrl);
         };
+
+
     }, [previewUrl, imageFile]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,99 +91,98 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
     };
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center px-4 pt-12 h-screen overflow-y-scroll">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-xl p-6 w-full max-w-md text-gray-800 shadow-xl"
+                className="bg-white rounded-2xl p-6 w-full max-w-md max-h-[90vh] overflow-hidden shadow-xl flex flex-col"
             >
-                <h2 className="text-xl font-semibold mb-4">
+                <h2 className="text-xl font-medium text-gray-900 mb-4">
                     {mode === 'edit' ? 'Edit Leader' : 'Add New Leader'}
                 </h2>
-
-                <div className="space-y-4">
+                <div className="flex-1 overflow-y-auto space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1">Name</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                         <input
                             type="text"
                             placeholder="Name"
-                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Year</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
                         <input
                             type="number"
                             placeholder="Year"
-                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
                             required
                         />
                     </div>
+                    {/*<div>*/}
+                    {/*    <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>*/}
+                    {/*    <input*/}
+                    {/*        type="text"*/}
+                    {/*        placeholder="Role"*/}
+                    {/*        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+                    {/*        value={role}*/}
+                    {/*        onChange={(e) => setRole(e.target.value)}*/}
+                    {/*        required*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    {/*<div>*/}
+                    {/*    <label className="block text-sm font-medium text-gray-700 mb-1">Biography</label>*/}
+                    {/*    <textarea*/}
+                    {/*        placeholder="Biography (Markdown supported)"*/}
+                    {/*        className="w-full border border-gray-300 p-2 rounded-lg min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
+                    {/*        value={bio}*/}
+                    {/*        onChange={(e) => setBio(e.target.value)}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
                     <div>
-                        <label className="block text-sm font-medium mb-1">Role</label>
-                        <input
-                            type="text"
-                            placeholder="Role"
-                            className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required // Add required to match API validation
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Biography</label>
-                        <textarea
-                            placeholder="Biography (Markdown supported)"
-                            className="w-full border p-2 rounded min-h-[120px] focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                            value={bio}
-                            onChange={(e) => setBio(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Image</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handleImageChange}
-                            className="w-full"
+                            className="w-full text-gray-600"
                             ref={fileInputRef}
                         />
-                        <p className="text-xs text-gray-500 italic">
+                        <p className="text-xs text-gray-500 italic mt-1">
                             {mode === 'edit' ? 'Leave empty to keep current image' : 'Upload an image'}
                         </p>
                         {previewUrl && (
-                            <div className="w-full h-40 rounded overflow-hidden mt-2">
+                            <div className="mt-2 w-full h-32 rounded-lg overflow-hidden">
                                 <Image
                                     src={previewUrl}
                                     alt="Preview"
                                     width={400}
                                     height={400}
-                                    className="object-cover w-full h-full rounded"
+                                    className="w-full h-full object-cover"
                                 />
                             </div>
                         )}
                     </div>
-                    <div className="flex justify-end gap-3 mt-6">
-                        <button
-                            type="button"
-                            className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-                            onClick={onClose}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                            disabled={loading}
-                        >
-                            {loading ? 'Submitting...' : 'Submit'}
-                        </button>
-                    </div>
+                </div>
+                <div className="flex justify-end gap-3 mt-6">
+                    <button
+                        type="button"
+                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                        onClick={onClose}
+                        disabled={loading}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        disabled={loading}
+                    >
+                        {loading ? 'Submitting...' : 'Submit'}
+                    </button>
                 </div>
             </form>
         </div>
