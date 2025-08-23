@@ -72,7 +72,7 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
                 {/* Main Feed Content */}
                 <main className="flex-1 overflow-auto p-4">
                     <h1 className="text-xl md:text-2xl font-semibold mb-2 md:mb-4">
-                        Agila Festival Media Page
+                        Ech&apos;ija Festival Media Page
                     </h1>
 
                     <div className="mb-4 text-sm md:text-base">
