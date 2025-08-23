@@ -16,40 +16,40 @@ export const contactItems = [
     {
         icon: <Phone className="w-6 h-6 text-white" />,
         title: "Phone",
-        lines: ["+234 803 XXX XXXX", "+234 806 XXX XXXX"]
+        lines: ["+234 803 090 7080", "+234 806 049 8668"]
     },
     {
         icon: <Mail className="w-6 h-6 text-white" />,
         title: "Email",
-        lines: ["info@agilacarnival.com", "media@agilacarnival.com"]
+        lines: ["echijaculturalfestival2812ot@gmail.com"]
     }
 ];
 
 // Social Links
-import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
-
-export const socialLinks = [
-    {
-        href: "facebook@agila",
-        icon: <Facebook className="w-6 h-6 text-white" />,
-        bgColor: "bg-blue-600"
-    },
-    {
-        href: "instagram@agila",
-        icon: <Instagram className="w-6 h-6 text-white" />,
-        bgColor: "bg-pink-600"
-    },
-    {
-        href: "youtube@agila",
-        icon: <Youtube className="w-6 h-6 text-white" />,
-        bgColor: "bg-red-600"
-    },
-    {
-        href: "twitter@agila",
-        icon: <Twitter className="w-6 h-6 text-white" />,
-        bgColor: "bg-blue-400"
-    }
-];
+// import { Facebook, Instagram, Youtube, Twitter } from 'lucide-react';
+//
+// export const socialLinks = [
+//     {
+//         href: "facebook@agila",
+//         icon: <Facebook className="w-6 h-6 text-white" />,
+//         bgColor: "bg-blue-600"
+//     },
+//     {
+//         href: "instagram@agila",
+//         icon: <Instagram className="w-6 h-6 text-white" />,
+//         bgColor: "bg-pink-600"
+//     },
+//     {
+//         href: "youtube@agila",
+//         icon: <Youtube className="w-6 h-6 text-white" />,
+//         bgColor: "bg-red-600"
+//     },
+//     {
+//         href: "twitter@agila",
+//         icon: <Twitter className="w-6 h-6 text-white" />,
+//         bgColor: "bg-blue-400"
+//     }
+// ];
 
 // Media Resources
 export const resources = [

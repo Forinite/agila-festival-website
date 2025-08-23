@@ -2,7 +2,7 @@ import React from 'react';
 
 const BRAND_INFO = {
     name: {
-        first: 'AGILA',
+        first: "ECH'IJA",
         second: 'CARNIVAL'
     },
     description: 'Celebrating Idoma unity, culture, and heritage through the most colorful grassroots carnival in Nigeria.'
@@ -28,8 +28,8 @@ const CONTACT_INFO = {
         state: 'Benue State',
         country: 'Nigeria'
     },
-    email: 'info@agilacarnival.com',
-    phone: '+234 803 XXX XXXX'
+    email: 'echijaculturalfestival2812ot@gmail.com',
+    phone: '+234 803 0'
 };
 
 const LEGAL_LINKS = [
@@ -101,7 +101,7 @@ const Footer = () => {
                 {/* Footer Bottom */}
                 <div className="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
                     <p className="text-gray-300 text-sm">
-                        © {currentYear} Agila Carnival Initiative. All rights reserved.
+                        © {currentYear} Ech&apos;ija Carnival Initiative. All rights reserved.
                     </p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         {LEGAL_LINKS.map((link) => (
