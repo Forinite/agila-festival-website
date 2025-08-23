@@ -18,7 +18,14 @@ export const QueenSection = () => {
 
     useEffect(() => {
         if (!loading && pastQueens.length > 0) {
-            setQueens(pastQueens);
+            // Only update queens if pastQueens has changed
+            setQueens((prevQueens) => {
+                // Perform a deep comparison to avoid unnecessary updates
+                if (JSON.stringify(prevQueens) !== JSON.stringify(pastQueens)) {
+                    return pastQueens;
+                }
+                return prevQueens;
+            });
         }
     }, [loading, pastQueens]);
 

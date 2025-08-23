@@ -6,8 +6,8 @@ import {ToastProvider} from "@/app/toastProvider";
 import React from "react";
 
 export const metadata: Metadata = {
-    title: "Agila Festival Website",
-    description: "Agila Festival Website",
+    title: "Ech'ija Festival Website",
+    description: "Ech'ija Festival Website",
 };
 
 export default function RootLayout({
@@ -17,15 +17,15 @@ export default function RootLayout({
 }>) {
     return (
 
-            <html>
-                <body>
+            <>
+                <>
                 <Navbar />
                      <ToastProvider >
 
                          {children}
                      </ToastProvider>
-                </body>
-            </html>
+                </>
+            </>
 
     );
 }

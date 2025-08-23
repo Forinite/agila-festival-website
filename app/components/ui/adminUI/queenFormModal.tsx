@@ -7,9 +7,9 @@ import { Queen } from '@/app/types/queen';
 
 interface QueenFormModalProps {
     mode: 'add' | 'edit';
-    initialData?: Queen; // Use Queen type, optional for 'add' mode
+    initialData?: Queen;
     onClose: () => void;
-    onSubmit: (queen: Queen) => void; // Expect a Queen object
+    onSubmit: (queen: Queen) => void;
     refetch: () => void;
 }
 
@@ -44,8 +44,8 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
         if (loading) return;
 
         // Validate required fields
-        if (!name || !year) {
-            toast.info('Name and year are required.');
+        if (!name || !year || !role) {
+            toast.info('Name, year, and role are required.');
             return;
         }
 
@@ -54,10 +54,10 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
             const data = new FormData();
             data.append('name', name);
             data.append('year', year);
-            data.append('role', role); // Role is optional in Queen
+            data.append('role', role);
             data.append('bio', bio);
             if (imageFile) data.append('image', imageFile);
-            if (mode === 'edit' && initialData?._id) data.append('id', initialData._id);
+            if (mode === 'edit' && initialData?._id) data.append('_id', initialData._id); // Fix: Use '_id' instead of 'id'
 
             const endpoint = mode === 'edit' ? '/api/queen/update' : '/api/queen';
             const res = await fetch(endpoint, {
@@ -65,12 +65,12 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
                 body: data,
             });
 
-            const result: { success: boolean; queen?: Queen; error?: string } = await res.json();
+            const result = await res.json();
 
             if (!res.ok) throw new Error(result.error || 'API error');
 
-            if (result.success && result.queen) {
-                onSubmit(result.queen); // Pass the new/updated queen
+            if (result.data) {
+                onSubmit(result.data); // Use result.data instead of result.queen
                 refetch();
                 onClose();
                 toast.success(mode === 'edit' ? 'Leader updated successfully' : 'Leader added successfully');
@@ -126,6 +126,7 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
                             className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
+                            required // Add required to match API validation
                         />
                     </div>
                     <div>

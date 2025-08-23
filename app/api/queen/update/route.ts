@@ -1,3 +1,4 @@
+// /app/api/queen/update/route.ts
 import { NextResponse } from 'next/server';
 import { sanityWriteClient, uploadMediaToSanity } from '@/sanity/lib/sanityClient';
 
@@ -8,15 +9,15 @@ export async function POST(req: Request) {
         const id = formData.get('_id')?.toString();
         const name = formData.get('name')?.toString();
         const year = formData.get('year')?.toString();
-        const role = formData.get('role')?.toString();
-        const bio = formData.get('bio')?.toString(); // ✅ Add this line
+        const role = formData.get('role')?.toString(); // Role is optional
+        const bio = formData.get('bio')?.toString();
         const imageBlob = formData.get('image') as Blob | null;
 
-        if (!id || !name || !year || !role) {
+        if (!id || !name || !year) { // Remove role from required fields
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
-//{ name:string, year:number, role:string,  bio:string|undefined }
-        const patch: Record<string, string|number|undefined|{
+
+        const patch: Record<string, string | number | undefined | {
             _type: string;
             asset: {
                 _type: string;
@@ -25,8 +26,8 @@ export async function POST(req: Request) {
         }> = {
             name,
             year: parseInt(year),
-            role,
-            bio, // ✅ Add bio to patch
+            role, // Include role, even if undefined
+            bio,
         };
 
         if (imageBlob && imageBlob.size > 0) {
@@ -42,7 +43,6 @@ export async function POST(req: Request) {
         const result = await sanityWriteClient.patch(id).set(patch).commit();
 
         return NextResponse.json({ message: 'Queen updated', data: result });
-
     } catch (err) {
         console.error('Queen update error:', err);
         return NextResponse.json({ error: 'Failed to update queen' }, { status: 500 });
