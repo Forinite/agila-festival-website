@@ -1,5 +1,4 @@
 import QueenCard from "@/app/components/ui/queenCard";
-import PaegentApplicationSection from "@/app/components/PaegentApplicationSection";
 import { getQueens, Queen } from "@/app/libs/queries/getQueens";
 import React from "react";
 import Image from "next/image";
@@ -70,9 +69,6 @@ const PaegentPage = async () => {
                     )}
                 </div>
 
-                <div className="mt-12">
-                    <PaegentApplicationSection year={currentQueen?.year} />
-                </div>
             </div>
         </section>
     );
