@@ -1,4 +1,3 @@
-// app/components/ui/adminUI/queenFormModal.tsx
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
@@ -20,25 +19,51 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
     const [bio, setBio] = useState(initialData?.bio || '');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.imageUrl || null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [fileName, setFileName] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-
     useEffect(() => {
-        setRole('0')
-        setBio('0')
+        setRole('0');
+        setBio('0');
         return () => {
             if (previewUrl && imageFile) URL.revokeObjectURL(previewUrl);
         };
-
-
     }, [previewUrl, imageFile]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && file.type.startsWith('image/')) {
             setImageFile(file);
+            setFileName(file.name);
             setPreviewUrl(URL.createObjectURL(file));
+        } else {
+            toast.info('Only image files are allowed.');
+        }
+    };
+
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = () => {
+        setIsDragging(false);
+    };
+
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        setIsDragging(false);
+        const file = event.dataTransfer.files?.[0];
+        if (file && file.type.startsWith('image/') && fileInputRef.current) {
+            setImageFile(file);
+            setFileName(file.name);
+            setPreviewUrl(URL.createObjectURL(file));
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInputRef.current.files = dataTransfer.files;
+            handleImageChange({ target: fileInputRef.current } as React.ChangeEvent<HTMLInputElement>);
         } else {
             toast.info('Only image files are allowed.');
         }
@@ -48,7 +73,6 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
         e.preventDefault();
         if (loading) return;
 
-        // Validate required fields
         if (!name || !year || !role) {
             toast.info('Name, year, and role are required.');
             return;
@@ -62,7 +86,7 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
             data.append('role', role);
             data.append('bio', bio);
             if (imageFile) data.append('image', imageFile);
-            if (mode === 'edit' && initialData?._id) data.append('_id', initialData._id); // Fix: Use '_id' instead of 'id'
+            if (mode === 'edit' && initialData?._id) data.append('_id', initialData._id);
 
             const endpoint = mode === 'edit' ? '/api/queen/update' : '/api/queen';
             const res = await fetch(endpoint, {
@@ -75,7 +99,7 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
             if (!res.ok) throw new Error(result.error || 'API error');
 
             if (result.data) {
-                onSubmit(result.data); // Use result.data instead of result.queen
+                onSubmit(result.data);
                 refetch();
                 onClose();
                 toast.success(mode === 'edit' ? 'Leader updated successfully' : 'Leader added successfully');
@@ -101,61 +125,100 @@ const QueenFormModal = ({ mode, initialData, onClose, onSubmit, refetch }: Queen
                 </h2>
                 <div className="flex-1 overflow-y-auto space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <label className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md">
+                            Name
+                        </label>
                         <input
                             type="text"
                             placeholder="Name"
-                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 hover:border-purple-600  p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                        <label className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md">
+                            Year
+                        </label>
                         <input
                             type="number"
                             placeholder="Year"
-                            className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 hover:border-purple-600 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
                             required
                         />
                     </div>
-                    {/*<div>*/}
-                    {/*    <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>*/}
-                    {/*    <input*/}
-                    {/*        type="text"*/}
-                    {/*        placeholder="Role"*/}
-                    {/*        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
-                    {/*        value={role}*/}
-                    {/*        onChange={(e) => setRole(e.target.value)}*/}
-                    {/*        required*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                    {/*<div>*/}
-                    {/*    <label className="block text-sm font-medium text-gray-700 mb-1">Biography</label>*/}
-                    {/*    <textarea*/}
-                    {/*        placeholder="Biography (Markdown supported)"*/}
-                    {/*        className="w-full border border-gray-300 p-2 rounded-lg min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"*/}
-                    {/*        value={bio}*/}
-                    {/*        onChange={(e) => setBio(e.target.value)}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
+                    {/* Commented fields remain unchanged */}
+                    {/* <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <input
+              type="text"
+              placeholder="Role"
+              className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Biography</label>
+            <textarea
+              placeholder="Biography (Markdown supported)"
+              className="w-full border border-gray-300 p-2 rounded-lg min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
+          </div> */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="w-full text-gray-600"
-                            ref={fileInputRef}
-                        />
-                        <p className="text-xs text-gray-500 italic mt-1">
-                            {mode === 'edit' ? 'Leave empty to keep current image' : 'Upload an image'}
-                        </p>
+                        <label
+                            htmlFor="image-upload"
+                            className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md"
+                        >
+                            Image
+                        </label>
+                        <div
+                            className={`relative border-2 border-dashed border-gray-300 hover:border-purple-600  rounded-lg p-4 text-center transition-all duration-300 ${
+                                isDragging ? 'bg-gray-100 border-blue-600' : 'bg-white hover:bg-gray-50'
+                            } shadow-sm hover:shadow-md focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-opacity-50`}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                        >
+                            <input
+                                type="file"
+                                accept="image/*"
+                                id="image-upload"
+                                onChange={handleImageChange}
+                                ref={fileInputRef}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                aria-describedby="image-upload-desc"
+                            />
+                            <div className="flex flex-col items-center gap-2">
+                                <svg
+                                    className="w-6 h-6 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M7 16V8m0 0l-4 4m4-4l4 4m6-8h-6m-3 12v-6m-3 3h6"
+                                    />
+                                </svg>
+                                <p className="text-sm md:text-base text-gray-600">
+                                    {fileName || (mode === 'edit' && !imageFile) ? fileName || 'Current image' : 'Drag and drop an image or click to select'}
+                                </p>
+                                <p id="image-upload-desc" className="text-xs text-gray-500 italic">
+                                    {mode === 'edit' ? 'Leave empty to keep current image' : 'Upload an image (JPG, PNG)'}
+                                </p>
+                            </div>
+                        </div>
                         {previewUrl && (
-                            <div className="mt-2 w-full h-32 rounded-lg overflow-hidden">
+                            <div className="mt-3 w-full h-32 rounded-lg overflow-hidden shadow-sm">
                                 <Image
                                     src={previewUrl}
                                     alt="Preview"
