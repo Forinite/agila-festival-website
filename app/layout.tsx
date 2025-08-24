@@ -114,9 +114,9 @@ export default function RootLayout({
         <body className="antialiased">
         <ToastProvider>
             <Navbar />
-            <div className="text-center text-green-500 rounded-md  px-8 py-2 border border-green-600 w-fit h-fit fixed z-9999 top-20 left-20 bg-black/[0.4]  ">
-                Currently In Development.
-            </div>
+            {/*<div className="text-center text-green-500 rounded-md  px-8 py-2 border border-green-600 w-fit h-fit fixed z-9999 top-20 left-20 bg-black/[0.4]  ">*/}
+            {/*    Currently In Development.*/}
+            {/*</div>*/}
             {children}
         </ToastProvider>
         </body>
