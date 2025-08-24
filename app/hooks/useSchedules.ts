@@ -13,7 +13,7 @@ export const useSchedules = () => {
         setLoading(true);
         try {
             const data = await sanityClient.fetch<Schedule[]>(
-                `*[_type == "schedule"] | order(date asc) {
+                `*[_type == "scheduleEvent"] | order(date asc) {
           _id, title, desc, date, schedule
         }`
             );

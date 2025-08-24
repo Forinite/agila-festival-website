@@ -1,4 +1,3 @@
-// app/components/ui/adminUI/scheduleForrmModal.tsx
 'use client';
 import React, { useState } from 'react';
 import { toast } from '@/lib/toast';
@@ -25,7 +24,19 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === 'date') {
+            // Normalize input to uppercase and trim spaces
+            const normalizedValue = value.toUpperCase().trim();
+            // Validate MMM DD format (e.g., DEC 27)
+            const dateRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(0?[1-9]|[12][0-9]|3[01])$/;
+            if (normalizedValue && !dateRegex.test(normalizedValue)) {
+                toast.info('Date must be in MMM DD format (e.g., DEC 27).');
+                return;
+            }
+            setFormData((prev) => ({ ...prev, [name]: normalizedValue }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleScheduleChange = (index: number, field: keyof ScheduleEvent, value: string) => {
@@ -42,9 +53,13 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
     };
 
     const removeScheduleItem = (index: number) => {
-        const updated = [...formData.schedule];
-        updated.splice(index, 1);
-        setFormData((prev) => ({ ...prev, schedule: updated }));
+        if (formData.schedule.length > 1) {
+            const updated = [...formData.schedule];
+            updated.splice(index, 1);
+            setFormData((prev) => ({ ...prev, schedule: updated }));
+        } else {
+            toast.info('At least one schedule item is required.');
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +67,19 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
 
         if (!formData.title.trim() || !formData.date.trim()) {
             toast.info('Title and date are required.');
+            return;
+        }
+
+        // Re-validate date format on submit
+        const dateRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(0?[1-9]|[12][0-9]|3[01])$/;
+        if (!dateRegex.test(formData.date)) {
+            toast.info('Date must be in MMM DD format (e.g., DEC 27).');
+            return;
+        }
+
+        const validSchedule = formData.schedule.every((item) => item.time.trim() && item.event.trim());
+        if (!validSchedule) {
+            toast.info('All schedule items must have a time and event description.');
             return;
         }
 
@@ -76,108 +104,139 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
     };
 
     return (
-        <div className="fixed top-0 inset-0 bg-black/40 backdrop-blur-sm z-50 px-4 h-screen overflow-y-scroll">
-            <div className="flex justify-center items-center">
-                <form
-                    onSubmit={handleSubmit}
-                    className="bg-white rounded-xl p-6 w-full max-w-2xl text-gray-800 shadow-xl"
-                >
-                    <h3 className="text-xl font-bold mb-6 text-center">
-                        {mode === 'edit' ? 'Edit' : 'Add'} Schedule
-                    </h3>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-xl p-6 w-full max-w-md text-gray-800 shadow-xl"
+            >
+                <h3 className="text-xl md:text-2xl font-bold mb-6 text-center">
+                    {mode === 'edit' ? 'Edit Schedule' : 'Add Schedule'}
+                </h3>
 
+                <div className="space-y-4">
                     {/* Title */}
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Title</label>
+                    <div>
+                        <label
+                            htmlFor="title"
+                            className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md"
+                        >
+                            Title
+                        </label>
                         <input
+                            id="title"
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
                             required
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs"
+                            placeholder="Schedule Title"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
                         />
                     </div>
 
                     {/* Description */}
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Description</label>
+                    <div>
+                        <label
+                            htmlFor="desc"
+                            className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md"
+                        >
+                            Description
+                        </label>
                         <textarea
+                            id="desc"
                             name="desc"
                             value={formData.desc}
                             onChange={handleChange}
-                            rows={3}
-                            className="w-full md:min-h-auto min-h-40 border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs"
+                            rows={4}
+                            placeholder="Event Description"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base min-h-[100px] focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
                         />
                     </div>
 
                     {/* Date */}
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">Date</label>
+                    <div>
+                        <label
+                            htmlFor="date"
+                            className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md"
+                        >
+                            Date
+                        </label>
                         <input
-                            type="date" // Use type="date" for consistency with previous versions
+                            id="date"
+                            type="text"
                             name="date"
                             value={formData.date}
                             onChange={handleChange}
                             required
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs"
+                            placeholder="MMM DD (e.g., DEC 27)"
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
+                            aria-describedby="date-help"
                         />
+                        <p id="date-help" className="text-xs text-gray-500 italic mt-1">
+                            Enter date as month abbreviation and day (e.g., DEC 27).
+                        </p>
                     </div>
 
                     {/* Schedule Items */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium mb-2">Schedule</label>
+                    <div>
+                        <label className="block text-sm md:text-base font-semibold text-gray-700 mb-2 bg-gray-50/50 px-3 py-1 rounded-md">
+                            Schedule
+                        </label>
                         {formData.schedule.map((item, index) => (
-                            <div key={index} className="md:flex items-center gap-4 mb-3">
+                            <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
                                 <input
-                                    placeholder="Time"
+                                    placeholder="Time (e.g., 10:00 AM)"
                                     value={item.time}
                                     onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
-                                    className="md:flex-1 border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs md:mr-0 mr-4 md:mt-3 mb-3 max-w-full"
+                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
+                                    aria-label={`Event time ${index + 1}`}
                                 />
                                 <input
-                                    placeholder="Event"
+                                    placeholder="Event Description"
                                     value={item.event}
                                     onChange={(e) => handleScheduleChange(index, 'event', e.target.value)}
-                                    className="md:flex-[2] border border-gray-300 rounded-md px-3 py-2 md:text-base text-xs max-w-full"
+                                    className="flex-[2] border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
+                                    aria-label={`Event description ${index + 1}`}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => removeScheduleItem(index)}
-                                    className="text-red-500 hover:text-red-700 md:text-sm text-xs md:inline block"
+                                    className="text-red-500 hover:text-red-700 text-sm md:text-base font-medium"
+                                    disabled={formData.schedule.length === 1}
+                                    aria-label={`Remove schedule item ${index + 1}`}
                                 >
-                                    <span className="inline">Remove</span>
+                                    Remove
                                 </button>
                             </div>
                         ))}
                         <button
                             type="button"
                             onClick={addScheduleItem}
-                            className="mt-2 md:px-4 px-2 py-1 border rounded md:text-sm text-[10px] text-indigo-600 border-indigo-400 hover:bg-indigo-50"
+                            className="mt-2 px-4 py-2 border border-indigo-400 text-indigo-600 rounded-md hover:bg-indigo-50 text-sm md:text-base transition-colors"
                         >
                             + Add Schedule Item
                         </button>
                     </div>
+                </div>
 
-                    {/* Actions */}
-                    <div className="flex justify-end gap-4 md:text-base text-[10px]">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 mx-2 bg-gray-200 hover:bg-gray-300 rounded min-w-min inline w-full md:w-fit my-1 disabled:cursor-not-allowed"
-                            disabled={isSubmitting}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded min-w-min inline w-full md:w-fit my-1 cursor-pointer disabled:bg-indigo-900 disabled:cursor-not-allowed"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? 'Saving...' : 'Save Changes'}
-                        </button>
-                    </div>
-                </form>
-            </div>
+                {/* Actions */}
+                <div className="flex justify-end gap-4 mt-6">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm md:text-base transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-md text-sm md:text-base transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? 'Saving...' : 'Save Changes'}
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

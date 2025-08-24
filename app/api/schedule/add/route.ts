@@ -1,3 +1,4 @@
+//app/api/schedule/add/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import {sanityWriteClient} from "@/sanity/lib/sanityClient";
 
