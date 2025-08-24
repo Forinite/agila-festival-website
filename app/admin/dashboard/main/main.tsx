@@ -67,9 +67,6 @@ export default function AdminLayout() {
 
 
                 {/* Top Header */}
-
-                {/*Home Icon*/}
-
                 <header className="h-16 bg-white border-b px-6 flex items-center justify-between sticky top-0 z-30">
                    <div className={'flex h-full w-full items-center gap-4'}>
                        <Link href={'/'}>
