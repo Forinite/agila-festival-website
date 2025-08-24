@@ -31,7 +31,7 @@ export const metadata: Metadata = {
             "Join us Dec 27-28 in Otukpo for cultural parades, traditional games, food, music, and a grand carnival procession.",
         images: [
             {
-                url: "/og-image.jpg",
+                url: "/og-image.png",
                 width: 1200,
                 height: 630,
                 alt: "Echija Cultural Festival",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
         title: "Echija Cultural Festival",
         description:
             "Join us Dec 27-28 in Otukpo for the Echija Cultural Festival — games, cuisine, parades & grand cultural showcases.",
-        images: ["/og-image.jpg"],
+        images: ["/og-image.png"],
     },
     robots: {
         index: true,
@@ -72,7 +72,7 @@ export default function RootLayout({
                             "@type": "Festival",
                             name: "Echija Cultural Festival",
                             url: "https://echijaculturalfestival.com",
-                            image: "https://echijaculturalfestival.com/og-image.jpg",
+                            image: "https://echijaculturalfestival.com/og-image.png",
                             description:
                                 "A vibrant cultural festival celebrating Idoma heritage with parades, games, cuisine, and artistic showcases.",
                             startDate: "2025-12-27T18:00:00+01:00",
