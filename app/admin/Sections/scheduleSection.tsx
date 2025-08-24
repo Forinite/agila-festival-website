@@ -1,4 +1,3 @@
-// app/admin/Sections/ScheduleSection.tsx
 'use client';
 import React, { useState } from 'react';
 import AdminScheduleCard from '@/app/components/ui/adminUI/adminScheduleCard';
@@ -42,18 +41,18 @@ const ScheduleSection = () => {
                 body: JSON.stringify(formData),
             });
 
-            const result: { success: boolean; schedule?: Schedule; error?: string } = await response.json();
+            const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Failed to add schedule');
+            if (!response.ok) {
+                throw new Error(result.error || `Failed to add schedule: Server responded with status ${response.status}`);
             }
 
             setAddModalOpen(false);
-            toast.success('Schedule added successfully.');
+            // toast.success moved to ScheduleFormModal to avoid duplicate messages
             refetch();
         } catch (error) {
-            toast.error('Failed to add schedule. Please try again.');
             console.error('Add Schedule Error:', error);
+            throw error; // Re-throw to let ScheduleFormModal handle the toast
         }
     };
 
@@ -65,18 +64,18 @@ const ScheduleSection = () => {
                 body: JSON.stringify(formData),
             });
 
-            const result: { success: boolean; schedule?: Schedule; error?: string } = await response.json();
+            const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Failed to update schedule');
+            if (!response.ok) {
+                throw new Error(result.error || `Failed to update schedule: Server responded with status ${response.status}`);
             }
 
             setEditModalOpen(false);
-            toast.success('Schedule updated successfully.');
+            // toast.success moved to ScheduleFormModal
             refetch();
         } catch (error) {
-            toast.error('Failed to update schedule. Please try again.');
             console.error('Update Schedule Error:', error);
+            throw error; // Re-throw to let ScheduleFormModal handle the toast
         }
     };
 
@@ -93,10 +92,10 @@ const ScheduleSection = () => {
                 body: JSON.stringify({ _id: activeScheduleId }),
             });
 
-            const result: { success: boolean; error?: string } = await response.json();
+            const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Failed to delete schedule');
+            if (!response.ok) {
+                throw new Error(result.error || `Failed to delete schedule: Server responded with status ${response.status}`);
             }
 
             toast.success('Schedule deleted successfully.');

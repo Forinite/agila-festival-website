@@ -26,14 +26,14 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
         const { name, value } = e.target;
         if (name === 'date') {
             // Normalize input to uppercase and trim spaces
-            const normalizedValue = value.toUpperCase().trim();
-            // Validate MMM DD format (e.g., DEC 27)
-            const dateRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(0?[1-9]|[12][0-9]|3[01])$/;
-            if (normalizedValue && !dateRegex.test(normalizedValue)) {
-                toast.info('Date must be in MMM DD format (e.g., DEC 27).');
-                return;
-            }
-            setFormData((prev) => ({ ...prev, [name]: normalizedValue }));
+            // const normalizedValue = value.toUpperCase().trim();
+            // // Validate MMM DD format (e.g., DEC 27)
+            // const dateRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(0?[1-9]|[12][0-9]|3[01])$/;
+            // if (normalizedValue && !dateRegex.test(normalizedValue)) {
+            //     toast.info('Date must be in MMM DD format (e.g., DEC 27).');
+            //     return;
+            // }
+            setFormData((prev) => ({ ...prev, [name]: value }));
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
@@ -72,14 +72,14 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
 
         // Re-validate date format on submit
         const dateRegex = /^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s+(0?[1-9]|[12][0-9]|3[01])$/;
-        if (!dateRegex.test(formData.date)) {
+        if (!dateRegex.test(formData.date.toUpperCase().trim())) {
             toast.info('Date must be in MMM DD format (e.g., DEC 27).');
             return;
         }
 
-        const validSchedule = formData.schedule.every((item) => item.time.trim() && item.event.trim());
+        const validSchedule = formData.schedule.every((item) =>  item.event.trim());
         if (!validSchedule) {
-            toast.info('All schedule items must have a time and event description.');
+            toast.info('All schedule items must have an event description.');
             return;
         }
 
@@ -107,7 +107,7 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-xl p-6 w-full max-w-md text-gray-800 shadow-xl"
+                className="bg-white rounded-xl p-6 w-full max-h-screen overflow-y-scroll max-w-lg text-gray-800 shadow-xl"
             >
                 <h3 className="text-xl md:text-2xl font-bold mb-6 text-center">
                     {mode === 'edit' ? 'Edit Schedule' : 'Add Schedule'}
@@ -182,25 +182,28 @@ const ScheduleFormModal: React.FC<ScheduleFormModalProps> = ({ initialData, onSu
                             Schedule
                         </label>
                         {formData.schedule.map((item, index) => (
-                            <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
+                            <div
+                                key={index}
+                                className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-3 w-full"
+                            >
                                 <input
                                     placeholder="Time (e.g., 10:00 AM)"
                                     value={item.time}
                                     onChange={(e) => handleScheduleChange(index, 'time', e.target.value)}
-                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
+                                    className="flex-1 min-w-0 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
                                     aria-label={`Event time ${index + 1}`}
                                 />
                                 <input
                                     placeholder="Event Description"
                                     value={item.event}
                                     onChange={(e) => handleScheduleChange(index, 'event', e.target.value)}
-                                    className="flex-[2] border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
+                                    className="flex-[2] min-w-0 border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 hover:border-indigo-600 transition-colors"
                                     aria-label={`Event description ${index + 1}`}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => removeScheduleItem(index)}
-                                    className="text-red-500 hover:text-red-700 text-sm md:text-base font-medium"
+                                    className="text-red-500 hover:text-red-700 text-sm font-medium px-3 py-1.5 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
                                     disabled={formData.schedule.length === 1}
                                     aria-label={`Remove schedule item ${index + 1}`}
                                 >

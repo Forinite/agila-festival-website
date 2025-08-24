@@ -50,6 +50,8 @@ const Navbar: React.FC =  () => {
                                 key={"signIn"}
                                 href={'/signin'}
                                 className="text-gray-300 hover:text-white transition-colors duration-300 text-sm font-medium"
+                                onClick={() => setIsMenuOpen(false)}
+
                             >
                                 Sign In
                             </Link>
@@ -90,6 +92,7 @@ const Navbar: React.FC =  () => {
                             key={"signIn"}
                             href={'/signin'}
                             className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-300"
+                            onClick={() => setIsMenuOpen(false)}
                         >
                             Sign In
                         </Link>
