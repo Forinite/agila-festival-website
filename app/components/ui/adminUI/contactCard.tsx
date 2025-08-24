@@ -62,7 +62,7 @@ const ContactCard = ({ info = [], social = [], onEdit }: ContactCardProps) => {
 
             {social.length > 0 && (
                 <div className="mt-6 flex gap-3 flex-col justify-center">
-                    {social.map(({ href }, i) => {
+                    {social.map(({ href }) => {
                         const { icon, bgColor } = getSocialIconAndColor(href);
                         return (
                             <li key={href} className="flex items-center gap-4 border-b border-gray-100 pb-3">
