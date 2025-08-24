@@ -131,13 +131,13 @@ const HeroInfo = () => {
                         <div className="flex justify-center gap-4 sm:gap-6 md:gap-10 flex-wrap text-center">
                             {COUNTDOWN_UNITS.map((unit, index) => (
                                 <div key={index} className="group min-w-[60px]">
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-black block mb-2 bg-white/10 rounded-xl py-3 px-4 sm:px-5 backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300 shadow-inner">
-                    {unit.getValue(timeLeft)}
-                  </span>
+                                  <span className="text-2xl sm:text-2xl md:text-3xl font-black block mb-2 bg-white/10 rounded-xl py-3 px-4 sm:px-5 backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300 shadow-inner">
+                                    {unit.getValue(timeLeft)}
+                                  </span>
                                     <span className="text-xs uppercase tracking-wide font-medium text-white/70">
-                    {unit.label}
-                  </span>
-                                </div>
+                                    {unit.label}
+                                    </span>
+                 </div>
                             ))}
                         </div>
                     ) : (
