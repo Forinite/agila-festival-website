@@ -9,6 +9,8 @@ import { QueenSection } from '@/app/admin/Sections/queenSection';
 import { ContactSection } from '@/app/admin/Sections/contactSection';
 import { AdminSection } from '@/app/admin/Sections/adminSection';
 import ScheduleSection from "@/app/admin/Sections/scheduleSection";
+import Link from "next/link";
+import Image from "next/image";
 
 const navItems = [
     { label: 'Feeds', icon: <Film size={18} />, section: 'feeds' },
@@ -62,10 +64,21 @@ export default function AdminLayout() {
 
             {/* Main Area */}
             <div className="flex-1 flex flex-col w-full overflow-hidden pt-0 md:pt-0 pb-16 md:pb-0">
+
+
                 {/* Top Header */}
+
+                {/*Home Icon*/}
+
                 <header className="h-16 bg-white border-b px-6 flex items-center justify-between sticky top-0 z-30">
-                    <h2 className="text-lg font-semibold capitalize">{activeSection.replace('-', ' ')}</h2>
-                    <div className="text-sm text-gray-500">Admin Panel</div>
+                   <div className={'flex h-full w-full items-center gap-4'}>
+                       <Link href={'/'}>
+                           <Image  src={'/favicon.ico'} alt={'Home Icon'} width={40} height={40} />
+                       </Link>
+                       <h2 className="text-lg font-semibold capitalize">{activeSection.replace('-', ' ')}</h2>
+
+                   </div>
+                     <div className="text-sm text-gray-500">Admin Panel</div>
                 </header>
 
                 {/* Content */}
