@@ -36,7 +36,7 @@ const ContactCard = ({ info = [], social = [], onEdit }: ContactCardProps) => {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-xl w-full mx-auto text-gray-900 shadow-sm relative transition hover:shadow-md">
+        <div className="bg-white overflow-hidden border border-gray-200 rounded-2xl p-6 max-w-xl w-full mx-auto text-gray-900 shadow-sm relative transition hover:shadow-md">
             <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
                 Contact Information
             </h2>
@@ -45,10 +45,15 @@ const ContactCard = ({ info = [], social = [], onEdit }: ContactCardProps) => {
                 {info.map(({ icon, title, lines }, idx) => (
                     <li key={idx} className="flex items-start gap-4 border-b border-gray-100 pb-3">
                         <div className="shrink-0">{icon}</div>
-                        <div>
+                        <div className="flex-1 min-w-0">
                             <p className="font-semibold text-gray-700">{title}</p>
                             {lines.map((line, i) => (
-                                <p key={i} className="text-gray-600">{line}</p>
+                                <p
+                                    key={i}
+                                    className="text-gray-600 break-words"
+                                >
+                                    {line}
+                                </p>
                             ))}
                         </div>
                     </li>
@@ -71,8 +76,15 @@ const ContactCard = ({ info = [], social = [], onEdit }: ContactCardProps) => {
                                         {icon}
                                     </a>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-gray-700">{href}</p>
+                                <div className="flex-1 min-w-0">
+                                    <a
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-semibold text-gray-700 hover:underline truncate block"
+                                    >
+                                        {href}
+                                    </a>
                                 </div>
                             </li>
                         );
