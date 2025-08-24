@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import VideoPlayer from '@/app/components/ui/videoPlayer';
 import { Feed } from '@/app/types/feed';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -45,7 +44,7 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
             >
                 <motion.div
                     key="modal"
-                    className="bg-white rounded-2xl w-full max-w-md md:max-w-4xl max-h-[85vh] overflow-hidden shadow-xl flex flex-col md:flex-row"
+                    className=" relative bg-white rounded-2xl w-full max-w-md md:max-w-4xl max-h-[85vh] overflow-hidden shadow-xl flex flex-col md:flex-row"
                     onClick={(e) => e.stopPropagation()}
                     initial={{ scale: 0.95, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -55,12 +54,14 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
                     tabIndex={-1}
                 >
                     {/* Media Section */}
-                    <div className="relative md:w-1/2 bg-gray-50">
+                    <div className="relative md:w-1/2 bg-gray-50 pl-4 py-4">
                         {feed.isVideo ? (
                             <div className="aspect-video w-full">
-                                <VideoPlayer
+                                <video
                                     src={feed.media}
-                                    className="w-full h-full object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                                    className="w-full h-[400px] lg:h-[600px] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                                    controls
+                                    preload="metadata"
                                 />
                             </div>
                         ) : (
@@ -74,7 +75,7 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
                                     alt={feed.title}
                                     width={800}
                                     height={600}
-                                    className="w-full h-auto object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                                    className="w-full h-[400px] object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 400px"
                                     loading="lazy"
                                 />
@@ -88,10 +89,10 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={onClose}
-                        className="absolute top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm"
+                        className="absolute cursor-pointer top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm"
                         aria-label="Close modal"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="red" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </motion.button>
