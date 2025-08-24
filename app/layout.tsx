@@ -113,7 +113,7 @@ export default function RootLayout({
                 }}
             />
         </head>
-        <body className="antialiased">
+        <body className="antialiased max-w-screen overflow-x-hidden">
         <ToastProvider>
             <Navbar />
             {/*<div className="text-center text-green-500 rounded-md px-8 py-2 border border-green-600 w-fit h-fit fixed z-9999 top-20 left-20 bg-black/[0.4]">

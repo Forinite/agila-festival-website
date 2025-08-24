@@ -50,7 +50,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         registerToast({ show });
     }, [show]);
     return (
-        <ToastContext.Provider value={{ show }}>
+        <ToastContext.Provider  value={{ show }}>
             {children}
             <div className="fixed bottom-6 right-6 space-y-3 z-[9999]">
                 {toasts.map((toast) => (
