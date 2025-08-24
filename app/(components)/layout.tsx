@@ -18,7 +18,6 @@ export default function RootLayout({
 
             <>
                 <>
-                {/*<Navbar />*/}
                      <ToastProvider >
 
                          {children}
