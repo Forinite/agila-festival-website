@@ -9,10 +9,11 @@ interface FeedType {
     category: string[],
     media: string,
     isVideo?: boolean,
+
 }
 
 
-const FeedCard = ({ feedInfo } :{feedInfo: FeedType}) => {
+const FeedCard = ({ feedInfo, tapPlayLock } :{feedInfo: FeedType, tapPlayLock?: boolean}) => {
     console.log(feedInfo.media)
 
     if (feedInfo.isVideo ){
@@ -20,7 +21,7 @@ const FeedCard = ({ feedInfo } :{feedInfo: FeedType}) => {
 
             <div className="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all h-full border border-pink-300 py-2 px-2 ">
 
-                <VideoPlayer src={feedInfo.media}  className="w-full min-h-[200px] flex items-center justify-center transition-transform duration-300 col-span-2"
+                <VideoPlayer src={feedInfo.media} tapPlayLock={tapPlayLock}  className="w-full min-h-[200px] flex items-center justify-center transition-transform duration-300 col-span-2"
                 />
                 <h3 className="font-bold mb-1">{feedInfo.title}</h3>
                 <p className="text-sm opacity-90 mb-2">{feedInfo.description}</p>

@@ -8,6 +8,8 @@ interface VideoPlayerProps {
     src: string;
     poster?: string;
     className?: string;
+    fullscreen?: boolean;
+    tapPlayLock?: boolean;
 }
 
 const formatTime = (seconds: number): string => {
@@ -16,7 +18,7 @@ const formatTime = (seconds: number): string => {
     return `${mins}:${secs < 10 ? '0' + secs : secs}`;
 };
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className, fullscreen, tapPlayLock }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -95,7 +97,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => 
                 'relative w-full bg-black rounded-lg overflow-hidden group',
                  `${isFullscreen? '' : className}`
             )}
-            onClick={togglePlay}
+            onClick={!tapPlayLock ? togglePlay : null}
         >
             <video
                 ref={videoRef}
@@ -153,15 +155,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, poster, className }) => 
           </span>
 
                     {/* Fullscreen button */}
-                    <button
+                    {fullscreen && <button
                         onClick={(e) => {
                             e.stopPropagation();
                             toggleFullscreen();
                         }}
                         className="hover:scale-110 transition-transform"
                     >
-                        <Maximize size={18} className="text-white" />
-                    </button>
+                        <Maximize size={18} className="text-white"/>
+                    </button>}
                 </div>
             </div>
         </div>

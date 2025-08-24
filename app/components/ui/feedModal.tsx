@@ -7,9 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface FeedModalProps {
     feed: Feed | null;
     onClose: () => void;
+    onPrevious?: () => void; // Callback for previous feed
+    onNext?: () => void; // Callback for next feed
 }
 
-const FeedModal = ({ feed, onClose }: FeedModalProps) => {
+const FeedModal = ({ feed, onClose, onPrevious, onNext }: FeedModalProps) => {
     const modalRef = useRef<HTMLDivElement>(null);
 
     // Close on ESC and manage focus
@@ -44,7 +46,7 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
             >
                 <motion.div
                     key="modal"
-                    className=" relative bg-white rounded-2xl w-full max-w-md md:max-w-4xl max-h-[85vh] overflow-hidden shadow-xl flex flex-col md:flex-row"
+                    className="relative bg-white rounded-2xl w-full max-w-md md:max-w-4xl max-h-[85vh] overflow-hidden shadow-xl flex flex-col md:flex-row"
                     onClick={(e) => e.stopPropagation()}
                     initial={{ scale: 0.95, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -59,7 +61,7 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
                             <div className="aspect-video w-full">
                                 <video
                                     src={feed.media}
-                                    className="w-full h-[400px] lg:h-[600px] rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+                                    className="w-full h-[400px] lg:h-[600px] object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
                                     controls
                                     preload="metadata"
                                 />
@@ -81,22 +83,48 @@ const FeedModal = ({ feed, onClose }: FeedModalProps) => {
                                 />
                             </motion.div>
                         )}
-
-
+                        {/* Navigation Buttons */}
+                        {(onPrevious || onNext) && (
+                            <div className="absolute inset-y-0 left-0 right-0 flex justify-between items-center px-4 md:px-6 pointer-events-none">
+                                <motion.button
+                                    onClick={onPrevious}
+                                    disabled={!onPrevious}
+                                    className="pointer-events-auto p-2 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    aria-label="Previous feed"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </motion.button>
+                                <motion.button
+                                    onClick={onNext}
+                                    disabled={!onNext}
+                                    className="pointer-events-auto p-2 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    aria-label="Next feed"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </motion.button>
+                            </div>
+                        )}
                     </div>
                     {/* Close Button (Floating) */}
                     <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={onClose}
-                        className="absolute cursor-pointer top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm"
+                        className="absolute top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white text-gray-500 hover:text-gray-700 transition-all shadow-sm"
                         aria-label="Close modal"
                     >
-                        <svg className="w-4 h-4" fill="none" stroke="red" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </motion.button>
-
                     {/* Content Section */}
                     <div className="p-4 sm:p-6 md:w-1/2 flex flex-col overflow-y-auto bg-white">
                         <h2

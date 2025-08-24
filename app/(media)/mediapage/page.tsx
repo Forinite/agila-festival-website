@@ -17,7 +17,7 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
     const feeds = await fetchFeeds(query);
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen w-screen bg-white overflow-hidden absolute z-50">
+        <div className="flex flex-col md:flex-row min-h-screen max-w-screen bg-white overflow-hidden absolute z-50">
             {/* Sidebar Navigation */}
             <nav className="flex md:flex-col items-center justify-between md:justify-start w-full md:w-20 h-16 md:h-screen border-b md:border-b-0 md:border-r p-2 md:pt-20 bg-white">
                 <Link href="/" className="p-3 hover:bg-gray-100 rounded-full">
@@ -82,8 +82,8 @@ const MediaPage: NextPage<MediaPageProps> = async ({ searchParams }) => {
                     </div>
 
                     <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-5 gap-4">
-                        {feeds.map((item) => (
-                            <FeedCardWrapper key={item.id} feed={item} />
+                        {feeds.map((item, index) => (
+                            <FeedCardWrapper key={item.id} feed={item} feeds={feeds} index={index} />
                         ))}
                     </div>
                 </main>
