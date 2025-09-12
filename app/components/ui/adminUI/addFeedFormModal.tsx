@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { toast } from '@/lib/toast';
 import { Feed } from '@/app/types/feed';
+import {sanityWriteClient} from "@/sanity/lib/sanityClient";
 
 interface AddFeedFormModalProps {
     onClose: () => void;
@@ -60,49 +61,56 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
             .filter((word) => word.startsWith('#') && word.length > 1);
     };
 
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
 
         const { title, description, media } = formData;
         const category = extractHashtags(description);
+
         if (!title || !description || !media) {
-            toast.info('All fields are required.');
+            toast.info("All fields are required.");
             return;
         }
 
         setIsSubmitting(true);
 
-        const formPayload = new FormData();
-        formPayload.append('title', title);
-        formPayload.append('description', description);
-        formPayload.append('category', JSON.stringify(category));
-        formPayload.append('media', media);
-
         try {
-            const res = await fetch('/api/create-feed', {
-                method: 'POST',
-                body: formPayload,
+            // 1️⃣ Upload file directly to Sanity (bypasses Vercel limit)
+            const asset = await sanityWriteClient.assets.upload("file", media);
+
+            // 2️⃣ Send only metadata + asset reference to your API
+            const res = await fetch("/api/create-feed", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    category,
+                    assetId: asset._id,
+                }),
             });
 
             const result: { success: boolean; feed?: Feed; error?: string } = await res.json();
 
             if (result.success && result.feed) {
-                console.log('✅ Feed added:', result.feed);
+                console.log("✅ Feed added:", result.feed);
                 onSubmit(result.feed);
                 refetch();
                 onClose();
             } else {
-                console.error('❌ Error:', result.error);
-                toast.error(result.error || 'An error occurred.');
+                console.error("❌ Error:", result.error);
+                toast.error(result.error || "An error occurred.");
             }
         } catch (err) {
-            console.error('❌ Network error:', err);
-            toast.error('Something went wrong.');
+            console.error("❌ Network error:", err);
+            toast.error("Something went wrong.");
         } finally {
             setIsSubmitting(false);
         }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center px-4 pt-12 h-screen overflow-y-scroll">

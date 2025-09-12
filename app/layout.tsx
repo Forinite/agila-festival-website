@@ -116,8 +116,8 @@ export default function RootLayout({
         <body className="antialiased max-w-screen overflow-x-hidden">
         <ToastProvider>
             <Navbar />
-                <div className="text-center text-green-500 rounded-md px-8 py-2 border border-green-600 w-fit h-fit fixed z-9999 top-20 left-20 bg-black/[0.4]">
-                  Developer Inspection In Progress
+                <div className="text-center text-yellow-500 rounded-md px-8 py-2 border border-yellow-600 w-fit max-w-[600px] h-fit fixed z-9999 top-20 left-20 bg-black/[0.7]">
+                  Website Is Now Undergoing Changes. Some features may become unusable.
                 </div>
             {children}
         </ToastProvider>
