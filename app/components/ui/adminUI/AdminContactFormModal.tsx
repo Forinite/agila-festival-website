@@ -164,7 +164,7 @@ const AdminContactFormModal = ({ initialData, onClose, refetch }) => {
                             id="image-upload"
                             onChange={handleImageChange}
                             ref={fileInputRef}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer "
                             aria-describedby="image-upload-desc"
                         />
                         <div className="flex flex-col items-center gap-2">
