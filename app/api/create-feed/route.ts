@@ -1,32 +1,39 @@
-// app/api/create-feed/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { sanityWriteClient } from "@/sanity/lib/sanityClient";
+import { NextRequest, NextResponse } from 'next/server';
+import { sanityWriteClient, uploadMediaToSanity } from '@/sanity/lib/sanityClient';
 
 export async function POST(req: NextRequest) {
     try {
-        const { title, description, category, assetId } = await req.json();
+        const formData = await req.formData();
 
-        if (!title || !description || !category || !assetId) {
-            return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+        const file = formData.get('media') as File; // renamed from 'image'
+        const title = formData.get('title') as string;
+        const description = formData.get('description') as string;
+        const category = JSON.parse(formData.get('category') as string);
+
+        if (!file || !title || !description || !category) {
+            return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
         }
 
+        // Upload file (image or video)
+        const asset = await uploadMediaToSanity(file); // Handles video & image
+
         const newFeed = await sanityWriteClient.create({
-            _type: "feedItem",
+            _type: 'feedItem',
             title,
             description,
             category,
             media: {
-                _type: "file",
+                _type: 'file',
                 asset: {
-                    _type: "reference",
-                    _ref: assetId,
+                    _type: 'reference',
+                    _ref: asset._id,
                 },
             },
         });
 
         return NextResponse.json({ success: true, feed: newFeed });
     } catch (err) {
-        console.error("Error creating feed:", err);
-        return NextResponse.json({ error: "Server error" }, { status: 500 });
+        console.error('Error creating feed:', err);
+        return NextResponse.json({ error: 'Server error' }, { status: 500 });
     }
 }
