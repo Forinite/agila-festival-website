@@ -110,7 +110,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                 onSubmit={handleSubmit}
                 className="bg-white rounded-xl p-6 w-full h-fit max-w-lg text-gray-800 shadow-xl"
             >
-                <h3 className="text-xl font-bold mb-6 text-center">Add New Feed</h3>
+                <h3 className="text-xl font-bold mb-6 text-center">Add New Feed_Dev</h3>
 
                 {/* Title */}
                 <div className="mb-4">
