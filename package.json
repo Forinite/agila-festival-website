@@ -12,7 +12,7 @@
     "@emailjs/browser": "^4.4.1",
     "@emailjs/nodejs": "^5.0.2",
     "@sanity/cli": "^4.5.0",
-    "@sanity/client": "^7.9.0",
+    "@sanity/client": "^7.11.1",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^4.5.0",
     "@uiw/react-md-editor": "^4.0.8",

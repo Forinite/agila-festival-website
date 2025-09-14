@@ -1,3 +1,5 @@
+//app/types/feed.ts
+
 export interface Feed {
     id: string;
     title: string;

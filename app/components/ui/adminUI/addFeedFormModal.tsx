@@ -1,3 +1,4 @@
+// app\components\ui\adminUI\addFeedFormModal.tsx
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
@@ -11,7 +12,7 @@ interface AddFeedFormModalProps {
 }
 
 const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps) => {
-    type FormDataKeys = 'title' | 'description' | 'category';
+    type FormDataKeys = 'title' | 'description';
     const [formData, setFormData] = useState<{
         [key: string]: string | string[] | File | null;
         title: string;
@@ -27,7 +28,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
 
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -66,6 +66,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
 
         const { title, description, media } = formData;
         const category = extractHashtags(description);
+
         if (!title || !description || !media) {
             toast.info('All fields are required.');
             return;
@@ -73,32 +74,31 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
 
         setIsSubmitting(true);
 
-        const formPayload = new FormData();
-        formPayload.append('title', title);
-        formPayload.append('description', description);
-        formPayload.append('category', JSON.stringify(category));
-        formPayload.append('media', media);
-
         try {
+            // Build FormData
+            const body = new FormData();
+            body.append('title', title);
+            body.append('description', description);
+            body.append('category', JSON.stringify(category));
+            body.append('media', media);
+
             const res = await fetch('/api/create-feed', {
                 method: 'POST',
-                body: formPayload,
+                body,
             });
 
             const result: { success: boolean; feed?: Feed; error?: string } = await res.json();
 
             if (result.success && result.feed) {
-                console.log('✅ Feed added:', result.feed);
                 onSubmit(result.feed);
                 refetch();
                 onClose();
             } else {
-                console.error('❌ Error:', result.error);
-                toast.error(result.error || 'An error occurred.');
+                throw new Error(result.error || 'An error occurred.');
             }
-        } catch (err) {
-            console.error('❌ Network error:', err);
-            toast.error('Something went wrong.');
+        } catch (err: any) {
+            console.error('❌ Upload error:', err);
+            toast.error(err.message || 'Something went wrong.');
         } finally {
             setIsSubmitting(false);
         }
@@ -112,6 +112,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
             >
                 <h3 className="text-xl font-bold mb-6 text-center">Add New Feed</h3>
 
+                {/* Title */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Title</label>
                     <input
@@ -123,6 +124,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     />
                 </div>
 
+                {/* Description */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Description</label>
                     <textarea
@@ -135,6 +137,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     />
                 </div>
 
+                {/* File Upload */}
                 <div
                     className={`mb-6 p-4 border-2 border-dashed rounded-md transition-all text-center cursor-pointer ${
                         formData.media ? 'border-indigo-600 bg-indigo-50' : 'border-gray-300'
@@ -181,12 +184,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                                     </div>
                                 ) : (
                                     <div className="mt-2 flex justify-center">
-                                        <video
-                                            controls
-                                            src={previewUrl}
-                                            className="rounded-md max-h-60"
-                                            width="100%"
-                                        />
+                                        <video controls src={previewUrl} className="rounded-md max-h-60" width="100%" />
                                     </div>
                                 )}
                                 <button
@@ -209,6 +207,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     </div>
                 </div>
 
+                {/* Actions */}
                 <div className="flex justify-end gap-4">
                     <button
                         type="button"

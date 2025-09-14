@@ -1,29 +1,38 @@
+// app/api/create-feed/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityWriteClient, uploadMediaToSanity } from '@/sanity/lib/sanityClient';
+import { sanityWriteClient } from '@/sanity/lib/sanityClient';
 
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
-
-        const file = formData.get('media') as File; // renamed from 'image'
         const title = formData.get('title') as string;
         const description = formData.get('description') as string;
         const category = JSON.parse(formData.get('category') as string);
+        const media = formData.get('media') as File | null;
 
-        if (!file || !title || !description || !category) {
-            return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+        if (!title || !description || !media) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // Upload file (image or video)
-        const asset = await uploadMediaToSanity(file); // Handles video & image
+        // Convert File → Buffer
+        const arrayBuffer = await media.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
 
+        // Upload asset
+        const uploadType = media.type.startsWith('video/') ? 'file' : 'image';
+        const asset = await sanityWriteClient.assets.upload(uploadType, buffer, {
+            contentType: media.type,
+            filename: media.name,
+        });
+
+        // Create feed document
         const newFeed = await sanityWriteClient.create({
             _type: 'feedItem',
             title,
             description,
             category,
             media: {
-                _type: 'file',
+                _type: uploadType,
                 asset: {
                     _type: 'reference',
                     _ref: asset._id,
