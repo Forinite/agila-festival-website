@@ -1,9 +1,10 @@
-// app\components\ui\adminUI\addFeedFormModal.tsx
+// app/components/ui/adminUI/addFeedFormModal.tsx
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { toast } from '@/lib/toast';
 import { Feed } from '@/app/types/feed';
+import { sanityWriteClient } from '@/sanity/lib/sanityClient';
 
 interface AddFeedFormModalProps {
     onClose: () => void;
@@ -25,7 +26,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         category: [],
         media: null,
     });
-
+    const [useBlob, setUseBlob] = useState(false); // Toggle for Blob vs Sanity
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +61,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
             .filter((word) => word.startsWith('#') && word.length > 1);
     };
 
+    // Sanity upload (unchanged)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -75,7 +77,6 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         setIsSubmitting(true);
 
         try {
-            // Build FormData
             const body = new FormData();
             body.append('title', title);
             body.append('description', description);
@@ -104,10 +105,79 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         }
     };
 
+    // Vercel Blob upload
+    const handleBlobSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+
+        const { title, description, media } = formData;
+        const category = extractHashtags(description);
+
+        if (!title || !description || !media) {
+            toast.info('All fields are required.');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            // Get signed URL from Vercel Blob
+            const signedRes = await fetch('/api/upload-signed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pathname: `feeds/${media.name}` }),
+            });
+
+            if (!signedRes.ok) {
+                const errorText = await signedRes.text();
+                throw new Error(`Failed to get signed URL: ${errorText}`);
+            }
+
+            const { url } = await signedRes.json();
+
+            // Upload to Vercel Blob
+            const uploadRes = await fetch(url, {
+                method: 'PUT',
+                body: media,
+                headers: { 'Content-Type': media.type },
+            });
+
+            if (!uploadRes.ok) {
+                throw new Error(`Upload to Blob failed: ${uploadRes.status}`);
+            }
+
+            // Create feed item in Sanity with blobUrl
+            const newFeed = await sanityWriteClient.create({
+                _type: 'feedItem',
+                title,
+                description,
+                category,
+                blobUrl: url,
+            });
+
+            toast.success('Feed added!');
+            onSubmit({
+                id: newFeed._id,
+                title,
+                description,
+                category,
+                media: url,
+                isVideo: media.type.startsWith('video/'),
+            });
+            refetch();
+            onClose();
+        } catch (err: any) {
+            console.error('❌ Blob upload error:', err);
+            toast.error('Blob upload failed: ' + err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center px-4 pt-12 h-screen overflow-y-scroll">
             <form
-                onSubmit={handleSubmit}
+                onSubmit={useBlob ? handleBlobSubmit : handleSubmit}
                 className="bg-white rounded-xl p-6 w-full h-fit max-w-lg text-gray-800 shadow-xl"
             >
                 <h3 className="text-xl font-bold mb-6 text-center">Add New Feed_Dev</h3>
@@ -135,6 +205,19 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                         required
                         className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     />
+                </div>
+
+                {/* Toggle */}
+                <div className="mb-4">
+                    <label className="flex items-center space-x-2">
+                        <input
+                            type="checkbox"
+                            checked={useBlob}
+                            onChange={(e) => setUseBlob(e.target.checked)}
+                            className="form-checkbox h-4 w-4 text-indigo-600"
+                        />
+                        <span className="text-sm font-medium">Upload to Vercel Blob (for large files)</span>
+                    </label>
                 </div>
 
                 {/* File Upload */}
@@ -217,13 +300,21 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     >
                         Cancel
                     </button>
-                    <button
+                    {!useBlob && <button
                         type="submit"
                         className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
                         disabled={isSubmitting}
                     >
                         {isSubmitting ? 'Uploading...' : 'Add Feed'}
-                    </button>
+                    </button>}
+                    {useBlob &&
+                        <button
+                        type="submit"
+                        className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded cursor-not-allowed"
+                        disabled={true}
+                    >
+                         Under Development
+                    </button>}
                 </div>
             </form>
         </div>

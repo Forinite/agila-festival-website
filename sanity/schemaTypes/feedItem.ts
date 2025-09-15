@@ -1,4 +1,5 @@
-import { defineType, defineField } from 'sanity'
+// sanity/schemaTypes/feedItem.ts
+import { defineType, defineField } from 'sanity';
 
 export default defineType({
     name: 'feedItem',
@@ -10,8 +11,14 @@ export default defineType({
             title: 'Media',
             type: 'file',
             options: {
-                accept: 'image/*,video/*', // Accept both images and videos
-            }
+                accept: 'image/*,video/*',
+            },
+        }),
+        defineField({
+            name: 'blobUrl',
+            title: 'Blob URL',
+            type: 'url',
+            validation: (Rule) => Rule.uri({ scheme: ['https'] }).optional(),
         }),
         defineField({ name: 'title', title: 'Title', type: 'string' }),
         defineField({ name: 'description', title: 'Description', type: 'text' }),
@@ -23,4 +30,4 @@ export default defineType({
         }),
         defineField({ name: 'id', title: 'ID', type: 'string' }),
     ],
-})
+});

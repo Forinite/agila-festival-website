@@ -1,9 +1,10 @@
+//app/hooks/useFeeds.ts
 'use client';
 import { useEffect, useState } from 'react';
 import { sanityClient } from '@/sanity/lib/client';
 import { Feed } from '@/app/types/feed';
 
-// Interface for the raw Sanity data
+// Interface for raw Sanity data
 interface RawFeed {
     _id: string;
     title: string;
@@ -16,6 +17,7 @@ interface RawFeed {
             mimeType: string;
         };
     };
+    blobUrl?: string;
 }
 
 export const useFeeds = () => {
@@ -25,18 +27,19 @@ export const useFeeds = () => {
     const fetchFeeds = async () => {
         try {
             const query = `*[_type == "feedItem"] | order(_createdAt desc){
-        _id,
-        title,
-        description,
-        category,
-        media {
-          asset->{
-            _id,
-            url,
-            mimeType
-          }
-        }
-      }`;
+                _id,
+                title,
+                description,
+                category,
+                media {
+                    asset->{
+                        _id,
+                        url,
+                        mimeType
+                    }
+                },
+                blobUrl
+            }`;
             const data: RawFeed[] = await sanityClient.fetch(query);
 
             const formatted: Feed[] = data.map((item: RawFeed) => ({
@@ -44,8 +47,10 @@ export const useFeeds = () => {
                 title: item.title,
                 description: item.description,
                 category: item.category,
-                media: item.media?.asset?.url || '',
-                isVideo: item.media?.asset?.mimeType?.startsWith('video') ?? false,
+                media: item.blobUrl || item.media?.asset?.url || '', // Prioritize blobUrl
+                isVideo: item.blobUrl
+                    ? item.blobUrl.includes('.mp4') // Adjust based on your file extensions
+                    : item.media?.asset?.mimeType?.startsWith('video') ?? false,
                 mediaAssetId: item.media?.asset?._id,
             }));
 
