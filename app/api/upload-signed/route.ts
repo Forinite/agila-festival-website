@@ -1,41 +1,40 @@
 // app/api/upload-signed/route.ts
 
-import { NextRequest, NextResponse } from 'next/server';
+import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
+import { NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request): Promise<NextResponse> {
     try {
-        const { pathname } = await req.json();
-        if (!pathname) {
-            return NextResponse.json({ error: 'Pathname is required' }, { status: 400 });
-        }
+        const body = (await request.json()) as HandleUploadBody;
 
-        const token = process.env.BLOB_READ_WRITE_TOKEN;
-        if (!token) {
-            throw new Error('Missing BLOB_READ_WRITE_TOKEN');
-        }
+        // TODO: Add authentication check here (e.g., verify user session)
 
-        // Generate signed URL using Vercel Blob API
-        const response = await fetch(`https://api.vercel.com/v1/blob/put/${encodeURIComponent(pathname)}`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'x-vercel-blob-access': 'public',
-                'x-vercel-blob-add-random-suffix': 'false',
-                'Content-Length': '0',
+        const jsonResponse = await handleUpload({
+            body,
+            request,
+            onBeforeGenerateToken: async (pathname) => {
+                const token = process.env.BLOB_READ_WRITE_TOKEN;
+                if (!token) {
+                    throw new Error('Missing BLOB_READ_WRITE_TOKEN');
+                }
+
+                return {
+                    allowedContentTypes: ['image/*', 'video/*'],
+                    tokenPayload: JSON.stringify({ pathname }),
+                    allowOverwrite: true,
+                    access: 'public',
+                };
             },
-            body: '{}',
+            onUploadCompleted: async ({ blob }) => {
+                console.log('Blob upload completed:', blob.url);
+                console.log('It worked')
+                // Optionally log to a database or trigger further actions
+            },
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Vercel Blob API error: ${errorText}`);
-        }
-
-        const { url } = await response.json();
-        return NextResponse.json({ url });
+        return NextResponse.json(jsonResponse);
     } catch (err) {
         console.error('Signed URL error:', err);
-        return NextResponse.json({ error: 'Server error: ' + err.message }, { status: 500 });
+        return NextResponse.json({ error: 'Server error: ' + (err as Error).message }, { status: 500 });
     }
 }

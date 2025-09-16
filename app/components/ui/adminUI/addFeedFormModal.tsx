@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { toast } from '@/lib/toast';
 import { Feed } from '@/app/types/feed';
 import { sanityWriteClient } from '@/sanity/lib/sanityClient';
+import {upload} from "@vercel/blob/client";
+import {type PutBlobResult} from "@vercel/blob";
 
 interface AddFeedFormModalProps {
     onClose: () => void;
@@ -30,7 +32,14 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [progress, setProgress] = useState<number | null>(0);
+    const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
+    const  addRandomSuffix = (filename) => {
+        const randomString = Math.random().toString(36).substring(2, 8); // 6-char alphanumeric
+        const [name, ext] = filename.split(/\.([^.]+)$/); // Split at last dot
+        return `${name}_${randomString}.${ext}`;
+    }
     useEffect(() => {
         return () => {
             if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -110,6 +119,8 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         e.preventDefault();
         if (isSubmitting) return;
 
+        setProgress(0)
+
         const { title, description, media } = formData;
         const category = extractHashtags(description);
 
@@ -119,56 +130,68 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         }
 
         setIsSubmitting(true);
-
+        // const file = fileInputRef.current?.files[0];
+        // console.log(fileInputRef.current.files, media.name)
         try {
             // Get signed URL from Vercel Blob
-            const signedRes = await fetch('/api/upload-signed', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pathname: `feeds/${media.name}` }),
-            });
+            await upload(`/festival/media/${addRandomSuffix(media.name)}`,media, {
+                access: "public",
+                handleUploadUrl: '/api/upload-signed',
+                onUploadProgress: (progressEvent) => {
+                    setProgress(progressEvent.percentage);
+                }
+            })
 
-            if (!signedRes.ok) {
-                const errorText = await signedRes.text();
-                throw new Error(`Failed to get signed URL: ${errorText}`);
-            }
-
-            const { url } = await signedRes.json();
-
-            // Upload to Vercel Blob
-            const uploadRes = await fetch(url, {
-                method: 'PUT',
-                body: media,
-                headers: { 'Content-Type': media.type },
-            });
-
-            if (!uploadRes.ok) {
-                throw new Error(`Upload to Blob failed: ${uploadRes.status}`);
-            }
-
-            // Create feed item in Sanity with blobUrl
-            const newFeed = await sanityWriteClient.create({
-                _type: 'feedItem',
-                title,
-                description,
-                category,
-                blobUrl: url,
-            });
-
-            toast.success('Feed added!');
-            onSubmit({
-                id: newFeed._id,
-                title,
-                description,
-                category,
-                media: url,
-                isVideo: media.type.startsWith('video/'),
-            });
-            refetch();
-            onClose();
-        } catch (err: any) {
-            console.error('❌ Blob upload error:', err);
-            toast.error('Blob upload failed: ' + err.message);
+            setBlob(blob)
+            /*
+            // const signedRes = await fetch('/api/upload-signed', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ pathname: `feeds/${media.name}` }),
+            // });
+            //
+            // if (!signedRes.ok) {
+            //     const errorText = await signedRes.text();
+            //     throw new Error(`Failed to get signed URL: ${errorText}`);
+            // }
+            //
+            // const { url } = await signedRes.json();
+            //
+            // // Upload to Vercel Blob
+            // const uploadRes = await fetch(url, {
+            //     method: 'PUT',
+            //     body: media,
+            //     headers: { 'Content-Type': media.type },
+            // });
+            //
+            // if (!uploadRes.ok) {
+            //     throw new Error(`Upload to Blob failed: ${uploadRes.status}`);
+            // }
+            //
+            // // Create feed item in Sanity with blobUrl
+            // const newFeed = await sanityWriteClient.create({
+            //     _type: 'feedItem',
+            //     title,
+            //     description,
+            //     category,
+            //     blobUrl: url,
+            // });
+            //
+            // toast.success('Feed added!');
+            // onSubmit({
+            //     id: newFeed._id,
+            //     title,
+            //     description,
+            //     category,
+            //     media: url,
+            //     isVideo: media.type.startsWith('video/'),
+            // });
+            */
+            // refetch();
+            // onClose();
+        } catch (error) {
+            console.error('❌ Blob upload error:', error);
+            toast.error('Blob upload failed: ' + error.message);
         } finally {
             setIsSubmitting(false);
         }
@@ -180,7 +203,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                 onSubmit={useBlob ? handleBlobSubmit : handleSubmit}
                 className="bg-white rounded-xl p-6 w-full h-fit max-w-lg text-gray-800 shadow-xl"
             >
-                <h3 className="text-xl font-bold mb-6 text-center">Add New Feed_Dev</h3>
+                <h3 className="text-xl font-bold mb-6 text-center">Add New Feed_Dev_</h3>
 
                 {/* Title */}
                 <div className="mb-4">
@@ -288,6 +311,8 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                             <p>Click or drag & drop media file here</p>
                         )}
                     </div>
+                    <p>{progress}%</p>
+                    {blob && <div className={"text-xs"}>{blob.url}</div>}
                 </div>
 
                 {/* Actions */}
@@ -311,7 +336,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                         <button
                         type="submit"
                         className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded cursor-not-allowed"
-                        disabled={true}
+                        disabled={isSubmitting || false}
                     >
                          Under Development
                     </button>}
