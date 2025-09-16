@@ -126,13 +126,15 @@ export const FeedsSection = () => {
                 ))}
             </div>
 
-            <ConfirmModal
+            {
+                isModalOpen && <ConfirmModal
                 title="Are you sure?"
                 description="This feed will be permanently deleted."
                 isOpen={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onConfirm={confirmRemove}
             />
+            }
 
             {showAddModal && (
                 <AddFeedFormModal
