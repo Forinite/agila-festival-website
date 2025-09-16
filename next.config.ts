@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['cdn.sanity.io'],
+        domains: ['cdn.sanity.io'], // Keep for Sanity assets
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'e0wq2fmrhxfqihyx.public.blob.vercel-storage.com',
+                pathname: '/festival/media/**', // Restrict to your upload path
+            },
+        ],
     },
     experimental: {
         serverActions: {
@@ -9,10 +16,10 @@ const nextConfig = {
         },
     },
     eslint: {
-        ignoreDuringBuilds: true, // ignore lint errors
+        ignoreDuringBuilds: true,
     },
     typescript: {
-        ignoreBuildErrors: true, // ignore TS errors
+        ignoreBuildErrors: true,
     },
 };
 

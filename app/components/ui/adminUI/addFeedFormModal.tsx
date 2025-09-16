@@ -1,12 +1,10 @@
-// app/components/ui/adminUI/addFeedFormModal.tsx
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { toast } from '@/lib/toast';
 import { Feed } from '@/app/types/feed';
-import { sanityWriteClient } from '@/sanity/lib/sanityClient';
-import {upload} from "@vercel/blob/client";
-import {type PutBlobResult} from "@vercel/blob";
+import { upload } from '@vercel/blob/client';
+import { type PutBlobResult } from '@vercel/blob';
 
 interface AddFeedFormModalProps {
     onClose: () => void;
@@ -28,18 +26,19 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         category: [],
         media: null,
     });
-    const [useBlob, setUseBlob] = useState(false); // Toggle for Blob vs Sanity
+    const [useBlob, setUseBlob] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const [progress, setProgress] = useState<number | null>(0);
     const [blob, setBlob] = useState<PutBlobResult | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const  addRandomSuffix = (filename) => {
-        const randomString = Math.random().toString(36).substring(2, 8); // 6-char alphanumeric
-        const [name, ext] = filename.split(/\.([^.]+)$/); // Split at last dot
+    const addRandomSuffix = (filename: string): string => {
+        const randomString = Math.random().toString(36).substring(2, 8);
+        const [name, ext] = filename.split(/\.([^.]+)$/);
         return `${name}_${randomString}.${ext}`;
-    }
+    };
+
     useEffect(() => {
         return () => {
             if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -119,7 +118,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         e.preventDefault();
         if (isSubmitting) return;
 
-        setProgress(0)
+        setProgress(0);
 
         const { title, description, media } = formData;
         const category = extractHashtags(description);
@@ -130,70 +129,48 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
         }
 
         setIsSubmitting(true);
-        // const file = fileInputRef.current?.files[0];
-        // console.log(fileInputRef.current.files, media.name)
+
         try {
-            // Get signed URL from Vercel Blob
-            await upload(`/festival/media/${addRandomSuffix(media.name)}`,media, {
-                access: "public",
+            // Upload to Vercel Blob
+            const blobResult = await upload(`/festival/media/${addRandomSuffix(media.name)}`, media, {
+                access: 'public',
                 handleUploadUrl: '/api/upload-signed',
                 onUploadProgress: (progressEvent) => {
-                    setProgress(progressEvent.percentage);
-                }
-            })
+                    setProgress(Math.round(progressEvent.percentage));
+                },
+            });
 
-            setBlob(blob)
-            /*
-            // const signedRes = await fetch('/api/upload-signed', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ pathname: `feeds/${media.name}` }),
-            // });
-            //
-            // if (!signedRes.ok) {
-            //     const errorText = await signedRes.text();
-            //     throw new Error(`Failed to get signed URL: ${errorText}`);
-            // }
-            //
-            // const { url } = await signedRes.json();
-            //
-            // // Upload to Vercel Blob
-            // const uploadRes = await fetch(url, {
-            //     method: 'PUT',
-            //     body: media,
-            //     headers: { 'Content-Type': media.type },
-            // });
-            //
-            // if (!uploadRes.ok) {
-            //     throw new Error(`Upload to Blob failed: ${uploadRes.status}`);
-            // }
-            //
-            // // Create feed item in Sanity with blobUrl
-            // const newFeed = await sanityWriteClient.create({
-            //     _type: 'feedItem',
-            //     title,
-            //     description,
-            //     category,
-            //     blobUrl: url,
-            // });
-            //
-            // toast.success('Feed added!');
-            // onSubmit({
-            //     id: newFeed._id,
-            //     title,
-            //     description,
-            //     category,
-            //     media: url,
-            //     isVideo: media.type.startsWith('video/'),
-            // });
-            */
-            // refetch();
-            // onClose();
-        } catch (error) {
+            setBlob(blobResult);
+
+            // Save to Sanity via /api/create-feed/upload-blob
+            const res = await fetch('/api/create-feed/upload-blob', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    category,
+                    blobUrl: blobResult.url,
+                    isVideo: media.type.startsWith('video/'),
+                }),
+            });
+
+            const result: { success: boolean; feed?: Feed; error?: string } = await res.json();
+
+            if (result.success && result.feed) {
+                toast.success('Feed added!');
+                onSubmit(result.feed);
+                refetch();
+                onClose();
+            } else {
+                throw new Error(result.error || 'Failed to create feed');
+            }
+        } catch (error: any) {
             console.error('❌ Blob upload error:', error);
             toast.error('Blob upload failed: ' + error.message);
         } finally {
             setIsSubmitting(false);
+            setProgress(0);
         }
     };
 
@@ -312,7 +289,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                         )}
                     </div>
                     <p>{progress}%</p>
-                    {blob && <div className={"text-xs"}>{blob.url}</div>}
+                    {blob && <div className="text-xs">{blob.url}</div>}
                 </div>
 
                 {/* Actions */}
@@ -325,21 +302,24 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     >
                         Cancel
                     </button>
-                    {!useBlob && <button
-                        type="submit"
-                        className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
-                        disabled={isSubmitting}
-                    >
-                        {isSubmitting ? 'Uploading...' : 'Add Feed'}
-                    </button>}
-                    {useBlob &&
+                    {!useBlob && (
                         <button
-                        type="submit"
-                        className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded cursor-not-allowed"
-                        disabled={isSubmitting || false}
-                    >
-                         Under Development
-                    </button>}
+                            type="submit"
+                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Uploading...' : 'Add Feed'}
+                        </button>
+                    )}
+                    {useBlob && (
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Uploading...' : 'Add Feed'}
+                        </button>
+                    )}
                 </div>
             </form>
         </div>
