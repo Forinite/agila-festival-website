@@ -113,6 +113,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
             console.error('❌ Upload error:', err);
             if (err.message === 'File Too Large') {
                 toast.error('File Too Large');
+                toast.info('Please upload to Vercel Blob instead.');
             } else {
                 toast.error(err.message || 'Something went wrong.');
             }
@@ -296,7 +297,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                             <p>Click or drag & drop media file here</p>
                         )}
                     </div>
-                    <p>{progress}%</p>
+                    {useBlob && <p>{progress}%</p>}
                     {blob && <div className="text-xs">{blob.url}</div>}
                 </div>
 
