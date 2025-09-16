@@ -96,6 +96,10 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                 body,
             });
 
+            if (res.status === 413) {
+                throw new Error('File Too Large');
+            }
+
             const result: { success: boolean; feed?: Feed; error?: string } = await res.json();
 
             if (result.success && result.feed) {
@@ -107,7 +111,11 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
             }
         } catch (err: any) {
             console.error('❌ Upload error:', err);
-            toast.error(err.message || 'Something went wrong.');
+            if (err.message === 'File Too Large') {
+                toast.error('File Too Large');
+            } else {
+                toast.error(err.message || 'Something went wrong.');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -305,7 +313,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     {!useBlob && (
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded"
+                            className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded cursor-pointer disabled:cursor-not-allowed"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Uploading...' : 'Add Feed'}
@@ -314,7 +322,7 @@ const AddFeedFormModal = ({ onClose, onSubmit, refetch }: AddFeedFormModalProps)
                     {useBlob && (
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded"
+                            className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded cursor-pointer disabled:cursor-not-allowed"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Uploading...' : 'Add Feed'}
