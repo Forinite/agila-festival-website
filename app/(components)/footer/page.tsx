@@ -29,7 +29,7 @@ const CONTACT_INFO = {
         country: 'Nigeria'
     },
     email: 'echijaculturalfestival2812ot@gmail.com',
-    phone: '+234 803 0'
+    phone: '+234 803 090 7080'
 };
 
 const LEGAL_LINKS = [
